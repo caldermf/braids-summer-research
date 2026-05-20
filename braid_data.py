@@ -881,9 +881,635 @@ class DataSetBuilder:
             raise ValueError("num_samples must be positive")
         return [self.sample(L, max_attempts=max_attempts) for _ in range(num_samples)]
 
+# ---------------------------------------------------------------------------
+# MCTS-facing braid helpers
+# ---------------------------------------------------------------------------
+# This section turns the lower-level braid/Burau utilities above into a small
+# search interface. The Monte Carlo tree search should be able to ask:
+#
+#   1. What are the valid next Garside factors from this prefix?
+#   2. What is the Burau image of this prefix?
+#   3. What is its projective length?
+#   4. Is this prefix a projective kernel candidate?
+#
+# Keeping these questions here makes monte_carlo_tree_search.py much simpler.
+
+def all_simple_factor_perms(n=4, include_identity=True, include_delta=True) -> list[tuple[int,...]]:
+    """
+    Return all simple braid factors as permutations in S_n.
+
+    In Garside normal form, each simple factor is the positive lift of a
+    permutation. For B_4 there are 24 possible permutations.
+
+    Parameters
+    ----------
+    n:
+        Number of strands.
+    include_identity:
+        Whether to include the identity permutation.
+    include_delta:
+        Whether to include the longest permutation, corresponding to Delta.
+
+    Returns
+    -------
+    list[tuple[int, ...]]
+        Permutations in a stable order.
+    """
+
+    all_perms = list(permutations(range(n)))
+
+    identity = GNF.identity_perm(n)
+    delta = GNF.delta_perm(n)
+
+    result = []
+    for perm in all_perms:
+        if not include_identity and perm == identity:
+            continue
+        if not include_delta and perm == delta:
+            continue
+        result.append(perm)
+
+    return result
+
+def simple_factor_id_maps(n=4):
+    """
+    Build stable maps between simple factor permutations and integer IDs.
+
+    MCTS stores many nodes, so integer IDs are cheaper and easier to serialize
+    than full permutation tuples. The order should match `itertools.permutations`
+    so it stays compatible with the model code in `braidmod`.
+
+    Returns
+    -------
+    tuple[dict[tuple[int, ...], int], dict[int, tuple[int, ...]]]
+        `perm_to_id` and `id_to_perm`.
+    """
+    id_to_perm = {}
+    perm_to_id = {}
+    all_perms = all_simple_factor_perms(n)
+    for i in range(len(all_perms)):
+        id_to_perm[i] = all_perms[i]
+        perm_to_id[all_perms[i]] = i
+    return perm_to_id, id_to_perm
+
+def valid_first_factor_ids(n=4) -> list:
+    """
+    Return factor IDs that are legal as the first GNF factor.
+
+    In left Garside normal form:
+      - the first factor may not be Delta
+      - the final factor may not be identity
+
+    Since a length-1 braid has the same factor as first and final, we exclude
+    both identity and Delta here.
+    """
+    perm_to_id, id_to_perm = simple_factor_id_maps(n)
+    id_list = []
+    for i in perm_to_id:
+        if (i == tuple(range(n - 1, -1, -1))) or (i == tuple(range(0,n))):
+            continue
+        else:
+            id_list.append(perm_to_id[i])
+    return id_list
+
+def valid_suffix_factor_ids(last_factor_id, n=4) -> list:
+    """
+    Return all simple factor IDs that can legally follow `last_factor_id`.
+
+    If the current prefix ends in w, a suffix u is valid exactly when
+
+        R(w) contains L(u).
+
+    We also exclude the identity as a suffix, because the final GNF factor is
+    not allowed to be identity and appending identity does not move the search.
+
+    Parameters
+    ----------
+    last_factor_id:
+        Integer ID of the current final simple factor.
+    n:
+        Number of strands.
+
+    Returns
+    -------
+    list[int]
+        Legal next factor IDs.
+    """
+    perm_to_id, id_to_perm = simple_factor_id_maps(n)
+    id_list = []
+    for i in perm_to_id:
+        if (i == tuple(range(n - 1, -1, -1))) or (i == tuple(range(0,n))):
+            continue
+        else:
+            if (id_to_perm[last_factor_id].right_descent().issuperset(i.left_descent())):
+                id_list.append(perm_to_id[i])
+            else:
+                continue
+    return id_list
+
+def valid_suffix_factor_ids(last_factor_id, n=4):
+    """
+    Return all simple factor IDs that can legally follow `last_factor_id`.
+
+    If the current prefix ends in w, a suffix u is valid exactly when
+
+        R(w) contains L(u).
+
+    We exclude the identity as a suffix because appending identity does not
+    change the braid and a final GNF factor cannot be identity.
+    """
+    perm_to_id, id_to_perm = simple_factor_id_maps(n)
+
+    identity = GNF.identity_perm(n)
+    identity_id = perm_to_id[identity]
+
+    last_perm = id_to_perm[last_factor_id]
+    last_factor = GarsideFactor(last_perm)
+    allowed_right_descents = last_factor.right_descent()
+
+    valid_ids = []
+
+    for candidate_id, candidate_perm in id_to_perm.items():
+        if candidate_id == identity_id:
+            continue
+
+        candidate_factor = GarsideFactor(candidate_perm)
+        candidate_left_descents = candidate_factor.left_descent()
+
+        if allowed_right_descents.issuperset(candidate_left_descents):
+            valid_ids.append(candidate_id)
+
+    return valid_ids
+
+def factor_ids_to_perms(factor_ids, n=4) -> list[tuple[int,...]]:
+    """
+    Convert a list of factor IDs back to permutation tuples.
+
+    This is mostly used for saving readable JSON results.
+    """
+    _, id_to_perm = simple_factor_id_maps(n)
+    factor_perms = []
+    for i in factor_ids:
+        factor_perms.append(id_to_perm[i])
+    return factor_perms
+
+def factor_ids_to_gnf(factor_ids, d=0, n=4):
+    """
+    Convert factor IDs into a `GNF` object.
+
+    Parameters
+    ----------
+    factor_ids:
+        List of simple factor IDs.
+    d:
+        Delta power in the GNF. For the first MCTS version, this can stay 0.
+    n:
+        Number of strands.
+
+    Returns
+    -------
+    GNF
+        The corresponding Garside normal form object.
+    """
+    return GNF(d, factor_ids_to_perms(factor_ids, n))
+
+def factor_ids_to_artin_word(factor_ids, d=0, n=4):
+    """
+    Convert factor IDs directly to a signed Artin generator word.
+
+    This is useful for evaluating the Burau representation and for saving a
+    result in a format that is easy to check independently.
+
+    Returns
+    -------
+    list[int]
+        Signed 1-based Artin generators, e.g. [1, 2, -1].
+    """
+
+    word = []
+    delta_word = [idx + 1 for idx in GarsideFactor(GNF.delta_perm(n)).artin_factors()]
+
+    if d >= 0:
+        for _ in range(d):
+            word.extend(delta_word)
+    else:
+        inverse_delta_word = [-gen for gen in reversed(delta_word)]
+        for _ in range(-d):
+            word.extend(inverse_delta_word)
+
+    for perm in factor_ids_to_perms(factor_ids, n=n):
+        word.extend([idx + 1 for idx in GarsideFactor(perm).artin_factors()])
+
+    return word
+
+def simple_factor_burau_table(p, n=4):
+    """
+    Precompute the Burau matrix of every simple factor modulo p.
+
+    MCTS repeatedly appends one simple factor at a time. Instead of recomputing
+    the simple factor matrix on every expansion, we cache all 24 simple images.
+
+    Returns
+    -------
+    dict[int, matrix]
+        Maps factor ID to its Burau polynomial matrix modulo p.
+    """
+
+    if p <= 1:
+        raise ValueError("p must be >= 2")
+    if n < 2:
+        raise ValueError("n must be >= 2")
+    
+    _, id_to_perm = simple_factor_id_maps(n)
+
+    burau_table = {}
+
+    for i in id_to_perm:
+        word = [idx + 1 for idx in GarsideFactor(id_to_perm[i]).artin_factors()]
+        burau_table[i] = burau_mod_p_polynomial_matrix(word, p, n)
+
+    return burau_table
+
+def multiply_burau_matrices_mod_p(left, right, p):
+    """
+    Multiply two Burau polynomial matrices modulo p.
+
+    This should delegate to the existing `_poly_matrix_mul` helper already in
+    this file. Keeping this public wrapper gives MCTS a clean API and avoids
+    importing underscore-prefixed functions elsewhere.
+    """
+    return _poly_matrix_mul(left, right, p)
+
+def identity_burau_matrix(p, n=4):
+    """
+    Return the identity matrix in the same polynomial-matrix format used by
+    `burau_mod_p_polynomial_matrix`.
+    """
+    if p <= 1:
+        raise ValueError("p must be >= 2")
+    if n < 2:
+        raise ValueError("n must be >= 2")
+
+    return _poly_matrix_eye(n - 1, p)
+
+def append_factor_to_burau_matrix(current_matrix, factor_id, simple_table, p):
+    """
+    Right-multiply the current Burau image by one simple factor.
+
+    Parameters
+    ----------
+    current_matrix:
+        Burau image of the current prefix.
+    factor_id:
+        Integer ID of the simple factor being appended.
+    simple_table:
+        Output of `simple_factor_burau_table(p, n)`.
+    p:
+        Modulus.
+
+    Returns
+    -------
+    matrix
+        Burau image of the child prefix.
+    """
+    return multiply_burau_matrices_mod_p(current_matrix, simple_table[factor_id], p)
+
+def polynomial_matrix_degree_bounds(poly_mat):
+    """
+    Public wrapper around `_poly_matrix_degree_bounds`.
+
+    Returns `(min_degree, max_degree)`. If the matrix is zero, returns `(0, 0)`.
+    """
+    return _poly_matrix_degree_bounds(poly_mat)
+
+def polynomial_matrix_projlen(poly_mat):
+    """
+    Compute projective length of a polynomial matrix.
+
+    The paper uses:
+
+        projlen(A) = deg(A) - val(A)
+
+    where deg is the largest exponent and val is the smallest exponent appearing
+    in any matrix entry.
+    """
+    min_degree, max_degree = polynomial_matrix_degree_bounds(poly_mat)
+    return max_degree - min_degree
+
+def polynomial_matrix_support_width(poly_mat):
+    """
+    Return the number of occupied degree slots after projective normalization.
+
+    This is `projlen + 1` for a nonzero matrix. It is often more convenient for
+    tensor depth checks.
+    """
+    return polynomial_matrix_projlen(poly_mat) + 1
+
+def polynomial_matrix_to_projective_tensor(poly_mat, p, D, n=4):
+    """
+    Convert an already-computed Burau polynomial matrix to a projective tensor.
+
+    Existing helpers evaluate from an Artin word. MCTS will already have the
+    matrix at each node, so this avoids recomputing from scratch.
+
+    Returns
+    -------
+    tuple[list, int]
+        `(tensor, min_degree)` where tensor has shape `D x 3 x 3`.
+    """
+    min_exp, max_exp = polynomial_matrix_degree_bounds(poly_mat)
+    width = polynomial_matrix_support_width(poly_mat)
+    if width > D:
+        raise ValueError(
+            f"Tensor depth D={D} too small for projective support width {width} "
+            f"(degree range {min_exp}..{max_exp})"
+        )
+    tensor = [[[0 for _ in range(3)] for _ in range(3)] for _ in range(D)]
+
+    for i in range(3):
+        for j in range(3):
+            for exp, coeff in poly_mat[i][j].items():
+                shifted_exp = exp - min_exp
+                tensor[shifted_exp][i][j] = coeff % p
+
+    return tensor, min_exp
+
+def is_projective_identity_matrix(poly_mat, p, n=4):
+    """
+    Check whether `poly_mat` equals c*v^k*I modulo p.
+
+    Returns a structured dictionary so search logs can record the scalar
+    coefficient and degree.
+    """
+    if p <= 1:
+        raise ValueError("p must be >= 2")
+
+    size = n - 1
+    scalar = None
+
+    for i in range(size):
+        for j in range(size):
+            entry = poly_mat[i][j]
+
+            if i != j:
+                # Off-diagonal entries must be zero.
+                if entry:
+                    return {
+                        "matches": False,
+                        "kernel_type": None,
+                        "scalar": None,
+                    }
+                continue
+
+            # Diagonal entries must be exactly one monomial.
+            if len(entry) != 1:
+                return {
+                    "matches": False,
+                    "kernel_type": None,
+                    "scalar": None,
+                }
+
+            # Extract the only term in the diagonal polynomial.
+            exponent, coeff = next(iter(entry.items()))
+            coeff %= p
+
+            if coeff == 0:
+                return {
+                    "matches": False,
+                    "kernel_type": None,
+                    "scalar": None,
+                }
+
+            current_scalar = {exponent: coeff}
+
+            # First diagonal entry sets the scalar c*v^k.
+            if scalar is None:
+                scalar = current_scalar
+
+            # Every other diagonal entry must match exactly.
+            elif current_scalar != scalar:
+                return {
+                    "matches": False,
+                    "kernel_type": None,
+                    "scalar": None,
+                }
+
+    return {
+        "matches": True,
+        "kernel_type": "identity",
+        "delta_power": 0,
+        "scalar": scalar,
+    }
+
+def delta_burau_matrix(p, n=4):
+    """
+    Return the Burau matrix of Delta modulo p.
+
+    Delta is the Garside half-twist. In this code it corresponds to the
+    longest permutation in S_n, namely `(n-1, ..., 1, 0)`.
+
+    The returned matrix uses the same polynomial-matrix format as
+    `burau_mod_p_polynomial_matrix`.
+    """
+    if p <= 1:
+        raise ValueError("p must be >= 2")
+
+    delta_perm = GNF.delta_perm(n)
+
+    # GarsideFactor.artin_factors() returns 0-based adjacent transpositions.
+    # The Burau code expects 1-based Artin generators.
+    delta_word = [
+        idx + 1
+        for idx in GarsideFactor(delta_perm).artin_factors()
+    ]
+
+    return burau_mod_p_polynomial_matrix(delta_word, p=p, n=n)
+
+def is_projective_delta_matrix(poly_mat, p, n=4):
+    """
+    Check whether `poly_mat` is a monomial scalar multiple of Burau(Delta).
+
+    Returns a structured result rather than just True/False so the search can
+    save the scalar degree and coefficient in its results.
+    """
+    if p <= 1:
+        raise ValueError("p must be >= 2")
+    if n < 2:
+        raise ValueError("n must be >= 2")
+
+    target = delta_burau_matrix(p=p, n=n)
+    size = n - 1
+    scalar = None
+
+    def normalize_entry(entry):
+        """
+        Remove zero coefficients and reduce all coefficients modulo p.
+
+        Polynomial entries should already be reduced, but normalizing here makes
+        the comparison robust if a caller builds a matrix by hand.
+        """
+        normalized = {}
+        for exp, coeff in entry.items():
+            coeff = coeff % p
+            if coeff != 0:
+                normalized[exp] = coeff
+        return normalized
+
+    for i in range(size):
+        for j in range(size):
+            target_entry = normalize_entry(target[i][j])
+            image_entry = normalize_entry(poly_mat[i][j])
+
+            # Zero entries of Burau(Delta) must stay zero after scalar
+            # multiplication.
+            if not target_entry:
+                if image_entry:
+                    return {
+                        "matches": False,
+                        "kernel_type": None,
+                        "delta_power": None,
+                        "scalar": None,
+                    }
+                continue
+
+            # The scalar is a single monomial c*v^k, so the first nonzero
+            # target/image pair must both be monomials. This determines c and k.
+            if scalar is None:
+                if len(target_entry) != 1 or len(image_entry) != 1:
+                    return {
+                        "matches": False,
+                        "kernel_type": None,
+                        "delta_power": None,
+                        "scalar": None,
+                    }
+
+                target_exp, target_coeff = next(iter(target_entry.items()))
+                image_exp, image_coeff = next(iter(image_entry.items()))
+                if target_coeff % p == 0:
+                    return {
+                        "matches": False,
+                        "kernel_type": None,
+                        "delta_power": None,
+                        "scalar": None,
+                    }
+
+                scalar_exp = image_exp - target_exp
+                scalar_coeff = (image_coeff * pow(target_coeff, -1, p)) % p
+                scalar = {scalar_exp: scalar_coeff}
+
+            # Once the scalar is known, every entry must equal scalar*target.
+            expected_entry = normalize_entry(_poly_mul(scalar, target_entry, p))
+            if image_entry != expected_entry:
+                return {
+                    "matches": False,
+                    "kernel_type": None,
+                    "delta_power": None,
+                    "scalar": None,
+                }
+
+    return {
+        "matches": scalar is not None,
+        "kernel_type": "delta" if scalar is not None else None,
+        "delta_power": 1 if scalar is not None else None,
+        "scalar": scalar,
+    }
+
+def projective_kernel_match(poly_mat, p, n=4):
+    """
+    Check whether a matrix matches identity or Delta projectively.
+
+    Returns
+    -------
+    dict
+        Example:
+        {
+            "matches": True,
+            "kernel_type": "identity",
+            "delta_power": 0,
+            "scalar": {3: 5},
+        }
+
+        If no match:
+        {
+            "matches": False,
+            "kernel_type": None,
+            "delta_power": None,
+            "scalar": None,
+        }
+    """
+    identity_match = is_projective_identity_matrix(poly_mat, p=p, n=n)
+    if identity_match["matches"]:
+        return identity_match
+
+    delta_match = is_projective_delta_matrix(poly_mat, p=p, n=n)
+    if delta_match["matches"]:
+        return delta_match
+
+    return {
+        "matches": False,
+        "kernel_type": None,
+        "delta_power": None,
+        "scalar": None,
+    }
+
+def serialize_prefix_state(factor_ids, poly_mat=None, p=None, n=4):
+    """
+    Convert a prefix into a JSON-friendly dictionary.
+
+    This should be used by MCTS when writing logs. Include enough information
+    to reproduce/check the candidate later:
+      - factor IDs
+      - GNF factors as permutations
+      - Artin word
+      - Garside length
+      - optional projlen
+      - optional kernel match
+    """
+    factor_ids = [int(factor_id) for factor_id in factor_ids]
+    factor_perms = factor_ids_to_perms(factor_ids, n=n)
+
+    result = {
+        "garside_length": len(factor_ids),
+        "factor_ids": factor_ids,
+        "gnf_factors": [list(perm) for perm in factor_perms],
+        "artin_word": factor_ids_to_artin_word(factor_ids, d=0, n=n),
+    }
+
+    if poly_mat is not None:
+        min_degree, max_degree = polynomial_matrix_degree_bounds(poly_mat)
+        result.update(
+            {
+                "burau_min_degree": min_degree,
+                "burau_max_degree": max_degree,
+                "projlen": polynomial_matrix_projlen(poly_mat),
+                "support_width": polynomial_matrix_support_width(poly_mat),
+            }
+        )
+
+        if p is not None:
+            result["kernel_match"] = projective_kernel_match(poly_mat, p=p, n=n)
+
+    return result
+
+
+def run_sanity_checks():
+    """
+    Run quick checks for the braid helpers that MCTS will depend on.
+
+    These are intentionally small: they catch broken helper wiring without
+    doing an expensive search.
+    """
+    assert len(all_simple_factor_perms(4)) == 24
+    assert len(valid_first_factor_ids(4)) == 22
+
+    root = identity_burau_matrix(7)
+    assert projective_kernel_match(root, 7)["kernel_type"] == "identity"
+
+    delta = delta_burau_matrix(7)
+    assert projective_kernel_match(delta, 7)["kernel_type"] == "delta"
+
+    print("braid_data sanity checks passed")
+
 
 if __name__ == "__main__":
-    g = GarsideFactor((1,2,0,3))
-    print(g.artin_factors())
-    print(g.right_descent())
-    print(g.left_descent())
+    run_sanity_checks()
