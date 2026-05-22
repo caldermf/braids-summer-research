@@ -1,0 +1,8 @@
+
+# Generated search outputs
+Initial_MCTS_results/
+results*/
+new_MCTS/
+prefix_mcts_tests/
+*.jsonl
+iterations.jsonl

@@ -33,11 +33,11 @@ from braid_data import (
 """
 Monte Carlo tree search for promising positive GNF braid prefixes.
 
-First version:
+Prefix-scoring version:
 - value function is based only on projective length
 - no neural model / transformer
-- saves JSONL logs
-- saves basic plots
+- scores every prefix visited during rollout, not only the final endpoint
+- saves JSONL logs and basic plots
 """
 
 
@@ -117,6 +117,8 @@ class MonteCarloTreeSearch:
         self.best_candidate: Optional[dict] = None
         self.best_value = float("-inf")
         self.best_projlen: Optional[int] = None
+        self.best_candidate_by_depth: Dict[int, dict] = {}
+        self.best_projlen_by_depth: Dict[int, int] = {}
         self.kernel_hits: List[dict] = []
 
         # Create the output layout up front so every iteration can append to the
@@ -300,30 +302,13 @@ class MonteCarloTreeSearch:
         action = node.untried_actions.pop(action_index)
         return self.create_child(node, action)
 
-    def rollout(self, node: MCTSNode) -> dict:
+    def score_prefix(self, factor_ids, burau_matrix) -> dict:
         """
-        Randomly complete a braid prefix from `node` up to max_depth.
+        Score one braid prefix and return a JSON-friendly record.
 
-        Returns a dictionary containing:
-        - final factor IDs
-        - final Burau matrix
-        - final projlen
-        - kernel match result
-        - value
+        This is what lets the prefix-scoring MCTS notice a short kernel element
+        even when the rollout continues to a larger max_depth.
         """
-        factor_ids = list(node.factor_ids)
-        burau_matrix = node.burau_matrix
-
-        while len(factor_ids) < self.config.max_depth:
-            actions = (
-                valid_first_factor_ids(n=self.config.n)
-                if not factor_ids
-                else valid_suffix_factor_ids(factor_ids[-1], n=self.config.n)
-            )
-            if not actions:
-                break
-            factor_ids, burau_matrix = self.rollout_step(factor_ids, burau_matrix)
-
         projlen = polynomial_matrix_projlen(burau_matrix)
         kernel_match = projective_kernel_match(
             burau_matrix,
@@ -337,13 +322,74 @@ class MonteCarloTreeSearch:
             p=self.config.p,
             n=self.config.n,
         )
+        state["gnf_d"] = 0
         return {
-            "factor_ids": factor_ids,
+            "factor_ids": list(factor_ids),
             "depth": len(factor_ids),
             "projlen": projlen,
+            "projlen_per_length": projlen / max(1, len(factor_ids)),
             "kernel_match": kernel_match,
             "value": value,
             "state": state,
+        }
+
+    def rollout(self, node: MCTSNode) -> dict:
+        """
+        Complete a braid prefix from `node` up to max_depth.
+
+        Returns a dictionary containing:
+        - endpoint score for the final rollout prefix
+        - best prefix score seen anywhere along this rollout
+        - all kernel hits seen along this rollout
+        - all prefix scores in compact form
+        """
+        factor_ids = list(node.factor_ids)
+        burau_matrix = node.burau_matrix
+        prefix_scores = []
+
+        if factor_ids:
+            prefix_scores.append(self.score_prefix(factor_ids, burau_matrix))
+
+        while len(factor_ids) < self.config.max_depth:
+            actions = (
+                valid_first_factor_ids(n=self.config.n)
+                if not factor_ids
+                else valid_suffix_factor_ids(factor_ids[-1], n=self.config.n)
+            )
+            if not actions:
+                break
+            factor_ids, burau_matrix = self.rollout_step(factor_ids, burau_matrix)
+            prefix_scores.append(self.score_prefix(factor_ids, burau_matrix))
+
+        if not prefix_scores:
+            prefix_scores.append(self.score_prefix(factor_ids, burau_matrix))
+
+        endpoint = prefix_scores[-1]
+        best_prefix = max(prefix_scores, key=lambda item: item["value"])
+        rollout_kernel_hits = [
+            score for score in prefix_scores if score["kernel_match"].get("matches")
+        ]
+        return {
+            "factor_ids": endpoint["factor_ids"],
+            "depth": endpoint["depth"],
+            "projlen": endpoint["projlen"],
+            "projlen_per_length": endpoint["projlen_per_length"],
+            "kernel_match": endpoint["kernel_match"],
+            "value": best_prefix["value"],
+            "state": endpoint["state"],
+            "endpoint": endpoint,
+            "best_prefix": best_prefix,
+            "prefix_scores": [
+                {
+                    "depth": score["depth"],
+                    "projlen": score["projlen"],
+                    "projlen_per_length": score["projlen_per_length"],
+                    "value": score["value"],
+                    "kernel_match": score["kernel_match"],
+                }
+                for score in prefix_scores
+            ],
+            "rollout_kernel_hits": rollout_kernel_hits,
         }
 
     def rollout_step(self, factor_ids, burau_matrix) -> tuple:
@@ -435,18 +481,30 @@ class MonteCarloTreeSearch:
         """
         Track the best candidate seen so far.
         """
-        value = float(rollout_result["value"])
-        projlen = int(rollout_result["projlen"])
+        best_prefix = rollout_result["best_prefix"]
+        value = float(best_prefix["value"])
+        projlen = int(best_prefix["projlen"])
+        depth = int(best_prefix["depth"])
 
         if value > self.best_value:
             self.best_value = value
             self.best_projlen = projlen
-            self.best_candidate = rollout_result["state"]
+            self.best_candidate = best_prefix["state"]
             self.best_candidate["value"] = value
+            self.best_candidate["projlen_per_length"] = best_prefix["projlen_per_length"]
 
-        if rollout_result["kernel_match"].get("matches"):
-            hit = dict(rollout_result["state"])
-            hit["value"] = value
+        current_depth_best = self.best_projlen_by_depth.get(depth)
+        if current_depth_best is None or projlen < current_depth_best:
+            candidate = dict(best_prefix["state"])
+            candidate["value"] = value
+            candidate["projlen_per_length"] = best_prefix["projlen_per_length"]
+            self.best_projlen_by_depth[depth] = projlen
+            self.best_candidate_by_depth[depth] = candidate
+
+        for hit_score in rollout_result["rollout_kernel_hits"]:
+            hit = dict(hit_score["state"])
+            hit["value"] = hit_score["value"]
+            hit["projlen_per_length"] = hit_score["projlen_per_length"]
             self.kernel_hits.append(hit)
 
     def log_iteration(self, iteration: int, path: List[int], rollout_result: dict) -> None:
@@ -463,11 +521,18 @@ class MonteCarloTreeSearch:
             "expanded_or_selected_node_id": leaf.node_id,
             "rollout_depth": rollout_result["depth"],
             "rollout_projlen": rollout_result["projlen"],
-            "rollout_value": rollout_result["value"],
+            "rollout_projlen_per_length": rollout_result["projlen_per_length"],
+            "rollout_value": rollout_result["endpoint"]["value"],
+            "best_prefix_depth": rollout_result["best_prefix"]["depth"],
+            "best_prefix_projlen": rollout_result["best_prefix"]["projlen"],
+            "best_prefix_projlen_per_length": rollout_result["best_prefix"]["projlen_per_length"],
+            "best_prefix_value": rollout_result["best_prefix"]["value"],
             "best_value": self.best_value,
             "best_projlen": self.best_projlen,
             "kernel_match": rollout_result["kernel_match"],
             "rollout_state": rollout_result["state"],
+            "best_prefix_state": rollout_result["best_prefix"]["state"],
+            "prefix_scores": rollout_result["prefix_scores"],
         }
         with self.iterations_path.open("a", encoding="utf-8") as f:
             f.write(json.dumps(record) + "\n")
@@ -531,6 +596,12 @@ class MonteCarloTreeSearch:
         """
         with (self.run_dir / "best_candidate.json").open("w", encoding="utf-8") as f:
             json.dump(self.best_candidate, f, indent=2)
+        by_depth = {
+            str(depth): candidate
+            for depth, candidate in sorted(self.best_candidate_by_depth.items())
+        }
+        with (self.run_dir / "best_candidate_by_depth.json").open("w", encoding="utf-8") as f:
+            json.dump(by_depth, f, indent=2)
         with (self.run_dir / "kernel_hits.json").open("w", encoding="utf-8") as f:
             json.dump(self.kernel_hits, f, indent=2)
         summary = {
@@ -538,6 +609,10 @@ class MonteCarloTreeSearch:
             "num_nodes": len(self.nodes),
             "best_value": self.best_value,
             "best_projlen": self.best_projlen,
+            "best_projlen_by_depth": {
+                str(depth): projlen
+                for depth, projlen in sorted(self.best_projlen_by_depth.items())
+            },
             "num_kernel_hits": len(self.kernel_hits),
             "run_dir": str(self.run_dir),
         }
@@ -568,6 +643,7 @@ class MonteCarloTreeSearch:
         iterations = [record["iteration"] for record in records]
         rollout_projlen = [record["rollout_projlen"] for record in records]
         best_projlen = [record["best_projlen"] for record in records]
+        best_prefix_projlen = [record["best_prefix_projlen"] for record in records]
         best_value = [record["best_value"] for record in records]
         path_depth = [record["path_depth"] for record in records]
 
@@ -590,9 +666,15 @@ class MonteCarloTreeSearch:
         )
         save_line_plot(
             best_projlen,
-            "Best projective length over time",
+            "Best prefix projective length over time",
             "Best projlen",
             "best_projlen_over_time.png",
+        )
+        save_line_plot(
+            best_prefix_projlen,
+            "Best prefix within each rollout over time",
+            "Best prefix projlen in rollout",
+            "best_prefix_projlen_per_rollout.png",
         )
         save_line_plot(
             best_value,
@@ -644,6 +726,7 @@ class MonteCarloTreeSearch:
             "num_nodes": len(self.nodes),
             "best_value": self.best_value,
             "best_projlen": self.best_projlen,
+            "best_projlen_by_depth": self.best_projlen_by_depth,
             "num_kernel_hits": len(self.kernel_hits),
             "elapsed_sec": round(time.time() - start, 4),
         }
@@ -653,7 +736,10 @@ def parse_args() -> MCTSConfig:
     Parse command line arguments into an MCTSConfig.
     """
     parser = argparse.ArgumentParser(
-        description="Run a projlen-only Monte Carlo tree search for B_4 Burau mod p."
+        description=(
+            "Run prefix-scoring projlen-only Monte Carlo tree search. "
+            "This variant checks every rollout prefix for low projlen/kernel hits."
+        )
     )
     parser.add_argument("--p", type=int, default=7, help="Modulus for Burau arithmetic")
     parser.add_argument("--n", type=int, default=4, help="Number of braid strands")
