@@ -1,0 +1,104 @@
+{
+  "garside_length": 8,
+  "factor_ids": [
+    7,
+    10,
+    13,
+    10,
+    16,
+    13,
+    10,
+    13
+  ],
+  "gnf_factors": [
+    [
+      1,
+      0,
+      3,
+      2
+    ],
+    [
+      1,
+      3,
+      0,
+      2
+    ],
+    [
+      2,
+      0,
+      3,
+      1
+    ],
+    [
+      1,
+      3,
+      0,
+      2
+    ],
+    [
+      2,
+      3,
+      0,
+      1
+    ],
+    [
+      2,
+      0,
+      3,
+      1
+    ],
+    [
+      1,
+      3,
+      0,
+      2
+    ],
+    [
+      2,
+      0,
+      3,
+      1
+    ]
+  ],
+  "artin_word": [
+    1,
+    3,
+    1,
+    3,
+    2,
+    2,
+    1,
+    3,
+    1,
+    3,
+    2,
+    2,
+    1,
+    3,
+    2,
+    2,
+    1,
+    3,
+    1,
+    3,
+    2,
+    2,
+    1,
+    3
+  ],
+  "burau_min_degree": 16,
+  "burau_max_degree": 16,
+  "projlen": 0,
+  "support_width": 1,
+  "kernel_match": {
+    "matches": true,
+    "kernel_type": "identity",
+    "delta_power": 0,
+    "scalar": {
+      "16": 1
+    }
+  },
+  "gnf_d": 0,
+  "value": 1001.00625,
+  "projlen_per_length": 0.0
+}
