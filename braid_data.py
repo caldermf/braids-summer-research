@@ -261,6 +261,10 @@ def _burau_generator_matrix_exact(n, i, inverse=False):
     minus_v_inv = _poly_int_monomial(-1, -1)
     minus_v_inv_sq = _poly_int_monomial(-1, -2)
 
+    if n == 2:
+        mat[0][0] = minus_v_inv_sq if inverse else minus_v_sq
+        return mat
+
     if i == 1:
         if not inverse:
             mat[0][0] = minus_v_sq
@@ -530,6 +534,10 @@ def _burau_generator_matrix_poly(n, i, p, inverse=False):
     minus_v_sq = _poly_monomial(-1, 2, p)
     minus_v_inv = _poly_monomial(-1, -1, p)
     minus_v_inv_sq = _poly_monomial(-1, -2, p)
+
+    if n == 2:
+        mat[0][0] = minus_v_inv_sq if inverse else minus_v_sq
+        return mat
 
     # Convert generator index to reduced Burau matrix coordinates.
     # sigma_1 uses rows/cols 0..1, sigma_{n-1} uses m-2..m-1,
