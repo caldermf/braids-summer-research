@@ -1029,7 +1029,9 @@ def valid_suffix_factor_ids(last_factor_id, n=4):
     perm_to_id, id_to_perm = simple_factor_id_maps(n)
 
     identity = GNF.identity_perm(n)
+    delta = GNF.delta_perm(n)
     identity_id = perm_to_id[identity]
+    delta_id = perm_to_id[delta]
 
     last_perm = id_to_perm[last_factor_id]
     last_factor = GarsideFactor(last_perm)
@@ -1039,6 +1041,8 @@ def valid_suffix_factor_ids(last_factor_id, n=4):
 
     for candidate_id, candidate_perm in id_to_perm.items():
         if candidate_id == identity_id:
+            continue
+        if n > 2 and candidate_id == delta_id:
             continue
 
         candidate_factor = GarsideFactor(candidate_perm)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Diagnose whether projlen-surprise lights up on a known kernel trajectory.
+Diagnose whether projlen-surprise lights up on a known kernel trajectory. (used only for the smallest we know yet)
 
 Given a known GNF JSON file, this script computes prefix projlen, typical
 projlen, surprise, and surprise z-score for every prefix. It also samples random
