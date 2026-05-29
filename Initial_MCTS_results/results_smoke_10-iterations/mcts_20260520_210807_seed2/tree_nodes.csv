@@ -1,4 +1,0 @@
-node_id,parent_id,action_from_parent,depth,visits,total_value,average_value,factor_ids,projlen
-0,,,0,2,0.26785714285714285,0.13392857142857142,[],0
-1,0,2,1,1,0.14285714285714285,0.14285714285714285,[2],2
-2,0,13,1,1,0.125,0.125,[13],2
