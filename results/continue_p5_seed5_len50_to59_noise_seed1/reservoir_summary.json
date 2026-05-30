@@ -1,0 +1,135 @@
+[
+    {
+      "projlen": 44,
+      "seen": 1,
+      "kept": 1,
+      "best_depth": 50,
+      "best_value": 20.285919303914476
+    },
+    {
+      "projlen": 46,
+      "seen": 5,
+      "kept": 5,
+      "best_depth": 51,
+      "best_value": 20.23975668109699
+    },
+    {
+      "projlen": 47,
+      "seen": 6,
+      "kept": 6,
+      "best_depth": 51,
+      "best_value": 19.97586300843418
+    },
+    {
+      "projlen": 48,
+      "seen": 27,
+      "kept": 27,
+      "best_depth": 52,
+      "best_value": 20.04102762031304
+    },
+    {
+      "projlen": 49,
+      "seen": 30,
+      "kept": 30,
+      "best_depth": 52,
+      "best_value": 19.781105519583146
+    },
+    {
+      "projlen": 50,
+      "seen": 127,
+      "kept": 32,
+      "best_depth": 53,
+      "best_value": 19.908485100432028
+    },
+    {
+      "projlen": 51,
+      "seen": 65,
+      "kept": 32,
+      "best_depth": 53,
+      "best_value": 19.651554737214113
+    },
+    {
+      "projlen": 52,
+      "seen": 140,
+      "kept": 32,
+      "best_depth": 54,
+      "best_value": 19.783033974739208
+    },
+    {
+      "projlen": 53,
+      "seen": 64,
+      "kept": 32,
+      "best_depth": 54,
+      "best_value": 19.529089590707894
+    },
+    {
+      "projlen": 54,
+      "seen": 144,
+      "kept": 32,
+      "best_depth": 55,
+      "best_value": 19.784966136326418
+    },
+    {
+      "projlen": 55,
+      "seen": 76,
+      "kept": 32,
+      "best_depth": 55,
+      "best_value": 19.532286397410445
+    },
+    {
+      "projlen": 56,
+      "seen": 142,
+      "kept": 32,
+      "best_depth": 56,
+      "best_value": 19.79784686870225
+    },
+    {
+      "projlen": 57,
+      "seen": 70,
+      "kept": 32,
+      "best_depth": 56,
+      "best_value": 19.546317328887778
+    },
+    {
+      "projlen": 58,
+      "seen": 113,
+      "kept": 32,
+      "best_depth": 57,
+      "best_value": 19.651168008403328
+    },
+    {
+      "projlen": 59,
+      "seen": 61,
+      "kept": 32,
+      "best_depth": 57,
+      "best_value": 19.40274450717528
+    },
+    {
+      "projlen": 60,
+      "seen": 115,
+      "kept": 32,
+      "best_depth": 58,
+      "best_value": 19.57541612453652
+    },
+    {
+      "projlen": 61,
+      "seen": 61,
+      "kept": 32,
+      "best_depth": 59,
+      "best_value": 19.763756122156657
+    },
+    {
+      "projlen": 62,
+      "seen": 108,
+      "kept": 32,
+      "best_depth": 59,
+      "best_value": 19.519618421665797
+    },
+    {
+      "projlen": 63,
+      "seen": 62,
+      "kept": 32,
+      "best_depth": 59,
+      "best_value": 19.275480721174937
+    }
+  ]

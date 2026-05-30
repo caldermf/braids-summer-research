@@ -1,0 +1,40 @@
+{
+    "config": {
+      "p": 5,
+      "n": 4,
+      "max_depth": 59,
+      "iterations": 2000,
+      "exploration_weight": 1.4,
+      "baseline_samples": 1024,
+      "beam_width": 8,
+      "reservoir_size": 16,
+      "progressive_widening_k": 0.5,
+      "progressive_widening_alpha": 0.5,
+      "seed": 1,
+      "output_dir": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/trajectory_surprise_p5_n4_seed1",
+      "trajectory_top_k": 5,
+      "latest_surprise_weight": 0.7,
+      "history_surprise_weight": 0.3
+    },
+    "num_nodes": 2001,
+    "best_value": 19.532642201534326,
+    "best_projlen": 59,
+    "best_projlen_by_depth": {
+      "59": 64,
+      "56": 77,
+      "48": 61,
+      "47": 58,
+      "58": 59,
+      "49": 69,
+      "51": 63,
+      "43": 55,
+      "45": 57
+    },
+    "num_kernel_hits": 0,
+    "baseline_samples": 1024,
+    "beam_width": 8,
+    "run_dir": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/trajectory_surprise_p5_n4_seed1/mcts_trajectory_surprise_20260529_035355_seed1",
+    "trajectory_top_k": 5,
+    "latest_surprise_weight": 0.7,
+    "history_surprise_weight": 0.3
+  }

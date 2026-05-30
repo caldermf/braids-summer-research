@@ -1,0 +1,32 @@
+{
+  "config": {
+    "p": 5,
+    "n": 4,
+    "max_depth": 59,
+    "iterations": 2000,
+    "exploration_weight": 1.4,
+    "baseline_samples": 1024,
+    "beam_width": 8,
+    "reservoir_size": 16,
+    "progressive_widening_k": 0.5,
+    "progressive_widening_alpha": 0.5,
+    "seed": 1,
+    "output_dir": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/breakout_surprise_p5_n4_seed1",
+    "breakout_weight": 0.5,
+    "depth_power": 1.0
+  },
+  "num_nodes": 2001,
+  "best_value": 22.049028602822414,
+  "best_projlen": 53,
+  "best_projlen_by_depth": {
+    "59": 53,
+    "58": 80,
+    "57": 108
+  },
+  "num_kernel_hits": 0,
+  "baseline_samples": 1024,
+  "beam_width": 8,
+  "run_dir": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/breakout_surprise_p5_n4_seed1/mcts_breakout_surprise_20260529_052557_seed1",
+  "breakout_weight": 0.5,
+  "depth_power": 1.0
+}

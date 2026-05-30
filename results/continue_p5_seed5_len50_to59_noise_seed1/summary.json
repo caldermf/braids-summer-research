@@ -1,0 +1,11 @@
+{
+    "run_dir": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/continue_p5_seed5_len50_to59_noise_seed1/continue_len50_to59_20260529_003855_seed1",
+    "start_garside_length": 50,
+    "max_depth": 59,
+    "beam_width": 32,
+    "best_value": 20.285919303914476,
+    "best_projlen": 44,
+    "best_garside_length": 50,
+    "num_kernel_hits": 0,
+    "elapsed_sec": 0.4599
+  }

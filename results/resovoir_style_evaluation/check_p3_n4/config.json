@@ -1,0 +1,15 @@
+{
+    "p": 3,
+    "n": 4,
+    "max_depth": 30,
+    "iterations": 500,
+    "exploration_weight": 1.4,
+    "rollout_policy": "epsilon_greedy_projlen",
+    "epsilon": 0.25,
+    "playouts_per_expansion": 32,
+    "reservoir_size": 16,
+    "progressive_widening_k": 0.5,
+    "progressive_widening_alpha": 0.5,
+    "seed": 1,
+    "output_dir": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/slurm_p3_n4_seed1"
+  }

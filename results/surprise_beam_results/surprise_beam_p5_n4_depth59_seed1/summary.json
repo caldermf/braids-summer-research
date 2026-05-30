@@ -1,0 +1,31 @@
+{
+    "config": {
+      "p": 5,
+      "n": 4,
+      "max_depth": 59,
+      "iterations": 2000,
+      "exploration_weight": 1.4,
+      "baseline_samples": 512,
+      "beam_width": 8,
+      "reservoir_size": 16,
+      "progressive_widening_k": 0.5,
+      "progressive_widening_alpha": 0.5,
+      "seed": 1,
+      "output_dir": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/surprise_beam_p5_n4_depth59_seed1"
+    },
+    "num_nodes": 2001,
+    "best_value": 19.475550944937154,
+    "best_projlen": 52,
+    "best_projlen_by_depth": {
+      "59": 64,
+      "56": 90,
+      "52": 52,
+      "53": 86,
+      "58": 94,
+      "55": 81
+    },
+    "num_kernel_hits": 0,
+    "baseline_samples": 512,
+    "beam_width": 8,
+    "run_dir": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/surprise_beam_p5_n4_depth59_seed1/mcts_surprise_beam_20260528_232850_seed1"
+  }

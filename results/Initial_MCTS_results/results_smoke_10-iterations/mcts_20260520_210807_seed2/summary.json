@@ -1,0 +1,17 @@
+{
+  "config": {
+    "p": 7,
+    "n": 4,
+    "max_depth": 3,
+    "iterations": 2,
+    "exploration_weight": 1.4,
+    "rollout_policy": "random",
+    "seed": 2,
+    "output_dir": "braids-summer-research/results_smoke"
+  },
+  "num_nodes": 3,
+  "best_value": 0.14285714285714285,
+  "best_projlen": 6,
+  "num_kernel_hits": 0,
+  "run_dir": "braids-summer-research/results_smoke/mcts_20260520_210807_seed2"
+}

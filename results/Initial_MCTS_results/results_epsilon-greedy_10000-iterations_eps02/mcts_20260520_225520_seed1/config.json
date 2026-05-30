@@ -1,0 +1,11 @@
+{
+  "p": 7,
+  "n": 4,
+  "max_depth": 40,
+  "iterations": 10000,
+  "exploration_weight": 1.4,
+  "rollout_policy": "epsilon_greedy_projlen",
+  "epsilon": 0.2,
+  "seed": 1,
+  "output_dir": "braids-summer-research/Initial_MCTS_results/results_epsilon-greedy_10000-iterations_eps02"
+}

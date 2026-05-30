@@ -1,0 +1,16 @@
+{
+  "out_dir": "results/diagnosis_known_p5_kernel_surprise/known_kernel_surprise_p5_len54_20260529_032121_seed1",
+  "gnf_json": "../braidmod/data/geordie_kernel_gnf.json",
+  "p": 5,
+  "n": 4,
+  "garside_length": 54,
+  "baseline_samples": 1024,
+  "random_controls": 64,
+  "final_projlen": 0,
+  "final_kernel_match": true,
+  "max_surprise": 129.908203125,
+  "max_surprise_z": 32.704249057743844,
+  "depth_of_max_surprise_z": 54,
+  "final_surprise": 129.908203125,
+  "final_surprise_z": 32.704249057743844
+}

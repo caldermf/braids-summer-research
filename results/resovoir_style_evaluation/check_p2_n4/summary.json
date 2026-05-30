@@ -1,0 +1,28 @@
+{
+  "config": {
+    "p": 2,
+    "n": 4,
+    "max_depth": 8,
+    "iterations": 100,
+    "exploration_weight": 1.4,
+    "rollout_policy": "greedy_projlen",
+    "epsilon": 0.2,
+    "playouts_per_expansion": 16,
+    "reservoir_size": 4,
+    "seed": 1,
+    "output_dir": "results/check_p2_n4"
+  },
+  "num_nodes": 101,
+  "best_value": 1001.00625,
+  "best_projlen": 0,
+  "best_projlen_by_depth": {
+    "1": 2,
+    "8": 0,
+    "2": 4,
+    "3": 5,
+    "4": 6,
+    "6": 7
+  },
+  "num_kernel_hits": 275,
+  "run_dir": "results/check_p2_n4/mcts_reservoir_20260528_013520_seed1"
+}

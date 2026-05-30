@@ -1,0 +1,17 @@
+{
+  "config": {
+    "p": 7,
+    "n": 4,
+    "max_depth": 40,
+    "iterations": 10000,
+    "exploration_weight": 1.4,
+    "rollout_policy": "greedy_projlen",
+    "seed": 1,
+    "output_dir": "braids-summer-research/initial_MCTS_results/results_greedy_10000-iterations"
+  },
+  "num_nodes": 10001,
+  "best_value": 0.014084507042253521,
+  "best_projlen": 70,
+  "num_kernel_hits": 0,
+  "run_dir": "braids-summer-research/initial_MCTS_results/results_greedy_10000-iterations/mcts_20260520_224025_seed1"
+}

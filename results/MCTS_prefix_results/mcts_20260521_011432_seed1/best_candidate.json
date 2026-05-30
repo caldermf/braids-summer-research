@@ -1,0 +1,34 @@
+{
+  "garside_length": 1,
+  "factor_ids": [
+    17
+  ],
+  "gnf_factors": [
+    [
+      2,
+      3,
+      1,
+      0
+    ]
+  ],
+  "artin_word": [
+    1,
+    2,
+    1,
+    3,
+    2
+  ],
+  "burau_min_degree": 2,
+  "burau_max_degree": 4,
+  "projlen": 2,
+  "support_width": 3,
+  "kernel_match": {
+    "matches": false,
+    "kernel_type": null,
+    "delta_power": null,
+    "scalar": null
+  },
+  "gnf_d": 0,
+  "value": 0.3333333333333333,
+  "projlen_per_length": 2.0
+}

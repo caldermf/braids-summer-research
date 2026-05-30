@@ -1,7 +1,15 @@
 # Generated search outputs
 Initial_MCTS_results/
 results*/
+!results/
+!results/**/
+!results/**/*.json
+!results/**/*.csv
+!results/**/*.png
+!results/**/*.out
 new_MCTS/
 prefix_mcts_tests/
 *.jsonl
 iterations.jsonl
+results/**/iterations.json
+results/**/iterations.jsonl

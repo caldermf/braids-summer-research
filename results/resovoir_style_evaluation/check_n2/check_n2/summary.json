@@ -1,0 +1,25 @@
+{
+  "config": {
+    "p": 7,
+    "n": 2,
+    "max_depth": 4,
+    "iterations": 3,
+    "exploration_weight": 1.4,
+    "rollout_policy": "random",
+    "epsilon": 0.2,
+    "playouts_per_expansion": 4,
+    "reservoir_size": 2,
+    "seed": 1,
+    "output_dir": "results/check_n2"
+  },
+  "num_nodes": 4,
+  "best_value": 1001.025,
+  "best_projlen": 0,
+  "best_projlen_by_depth": {
+    "2": 0,
+    "3": 0,
+    "4": 0
+  },
+  "num_kernel_hits": 27,
+  "run_dir": "results/check_n2/mcts_reservoir_20260528_013431_seed1"
+}

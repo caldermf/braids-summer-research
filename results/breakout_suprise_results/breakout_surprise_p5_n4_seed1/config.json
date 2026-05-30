@@ -1,0 +1,16 @@
+{
+  "p": 5,
+  "n": 4,
+  "max_depth": 59,
+  "iterations": 2000,
+  "exploration_weight": 1.4,
+  "baseline_samples": 1024,
+  "beam_width": 8,
+  "reservoir_size": 16,
+  "progressive_widening_k": 0.5,
+  "progressive_widening_alpha": 0.5,
+  "seed": 1,
+  "output_dir": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/breakout_surprise_p5_n4_seed1",
+  "breakout_weight": 0.5,
+  "depth_power": 1.0
+}

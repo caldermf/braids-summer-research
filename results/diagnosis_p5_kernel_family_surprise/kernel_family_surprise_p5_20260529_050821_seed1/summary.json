@@ -1,0 +1,17 @@
+{
+  "out_dir": "results/diagnosis_p5_kernel_family_surprise/kernel_family_surprise_p5_20260529_050821_seed1",
+  "p": 5,
+  "n": 4,
+  "num_kernels": 6,
+  "baseline_samples": 1024,
+  "max_depth": 60,
+  "inputs": [
+    "../braidmod/data/geordie_kernel_gnf.json",
+    "../burau-experiments/braidmod/figure_data/search/kernel_hits_len60.json"
+  ],
+  "num_final_kernel_matches": 6,
+  "mean_depth_of_max_fraction": 1.0,
+  "mean_final_surprise_z": 33.17556123813426,
+  "mean_top5_surprise_z": 31.677537387269666,
+  "num_peak_in_late_third": 6
+}

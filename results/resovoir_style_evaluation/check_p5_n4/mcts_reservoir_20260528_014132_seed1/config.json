@@ -1,0 +1,13 @@
+{
+  "p": 5,
+  "n": 4,
+  "max_depth": 65,
+  "iterations": 1000,
+  "exploration_weight": 1.4,
+  "rollout_policy": "epsilon_greedy_projlen",
+  "epsilon": 0.25,
+  "playouts_per_expansion": 64,
+  "reservoir_size": 16,
+  "seed": 1,
+  "output_dir": "results/check_p5_n4"
+}

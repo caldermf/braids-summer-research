@@ -1,0 +1,11 @@
+{
+  "p": 5,
+  "n": 4,
+  "max_depth": 60,
+  "iterations": 10000,
+  "exploration_weight": 1.4,
+  "rollout_policy": "random",
+  "epsilon": 0.2,
+  "seed": 1,
+  "output_dir": "braids-summer-research/new_MCTS"
+}
