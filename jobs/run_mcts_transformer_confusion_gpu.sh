@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Run late-breakout MCTS with transformer confusion on one GPU.
 #
-# This is the GPU variant of run_mcts_transformer_confusion.sh. It requires a
-# CUDA-enabled PyTorch environment; the CPU-only torch wheel will fail the
-# preflight check below.
+# This mirrors the braidmod GPU Slurm scripts: request scavenge_gpu + one GPU,
+# then run a CUDA-enabled Python env with --device cuda. A CPU-only torch wheel
+# will fail the preflight check below.
 
 #SBATCH --job-name=braids-mcts-xconf-gpu
 #SBATCH --partition=scavenge_gpu
@@ -24,7 +24,6 @@ REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-/nfs/roberts/project/pi_com36/as4843
 
 module purge
 module load miniconda || true
-module load CUDA || true
 
 if [[ -z "${PYTHON_PATH:-}" ]]; then
   PYTHON_PATH="$(command -v python3 || true)"
@@ -70,9 +69,15 @@ export PYTHONUNBUFFERED=1
 export PYTHONDONTWRITEBYTECODE=1
 export MPLCONFIGDIR="${MPLCONFIGDIR:-/tmp/braids_mcts_matplotlib_$USER}"
 
+echo "GPU allocation check:"
+nvidia-smi || true
+
 "$PYTHON_PATH" - <<'PY'
 import torch
+import sys
+print("Python:", sys.executable)
 print("Torch:", torch.__version__)
+print("torch.version.cuda:", torch.version.cuda)
 print("CUDA available:", torch.cuda.is_available())
 if not torch.cuda.is_available():
     raise SystemExit("CUDA is not available in this Python environment on this node.")
