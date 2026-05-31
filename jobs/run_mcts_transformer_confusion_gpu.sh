@@ -6,8 +6,8 @@
 # preflight check below.
 
 #SBATCH --job-name=braids-mcts-xconf-gpu
-#SBATCH --partition=scavenge_GPU
-#SBATCH --gres=gpu:1
+#SBATCH --partition=scavenge_gpu
+#SBATCH --gpus=1
 #SBATCH --time=12:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
