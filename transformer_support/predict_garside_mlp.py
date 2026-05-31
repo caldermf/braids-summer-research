@@ -16,6 +16,11 @@ def resolve_device(device_arg: str) -> torch.device:
         if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
             return torch.device("mps")
         return torch.device("cpu")
+    if device_arg.startswith("cuda") and not torch.cuda.is_available():
+        raise RuntimeError(
+            f"Requested device {device_arg!r}, but torch.cuda.is_available() is false. "
+            "Use a CUDA PyTorch build on a GPU node, or set DEVICE=cpu."
+        )
     return torch.device(device_arg)
 
 
