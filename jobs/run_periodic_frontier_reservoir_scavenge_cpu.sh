@@ -35,10 +35,12 @@ P="${P:-5}"
 N="${N:-4}"
 MAX_DEPTH="${MAX_DEPTH:-65}"
 BASELINE_SAMPLES="${BASELINE_SAMPLES:-2048}"
-BUCKET_SIZE="${BUCKET_SIZE:-256}"
+BOOTSTRAP_DEPTH="${BOOTSTRAP_DEPTH:-6}"
+BUCKET_SIZE="${BUCKET_SIZE:-3000}"
 USE_BEST="${USE_BEST:-50000}"
 PROJLEN_BUCKET_WIDTH="${PROJLEN_BUCKET_WIDTH:-1}"
-RANDOM_KEEP_RATE="${RANDOM_KEEP_RATE:-0.02}"
+ELITE_FRACTION="${ELITE_FRACTION:-0.35}"
+RANDOM_KEEP_RATE="${RANDOM_KEEP_RATE:-1.0}"
 SLOPE_WINDOW="${SLOPE_WINDOW:-8}"
 SURPRISE_Z_WEIGHT="${SURPRISE_Z_WEIGHT:-1.0}"
 SURPRISE_PER_DEPTH_WEIGHT="${SURPRISE_PER_DEPTH_WEIGHT:-0.1}"
@@ -68,16 +70,18 @@ echo "Host: $(hostname)"
 echo "Python: $PYTHON_PATH"
 echo "Repo: $REPO_ROOT"
 echo "Output: $OUTPUT_DIR"
-echo "Parameters: p=$P n=$N max_depth=$MAX_DEPTH baseline_samples=$BASELINE_SAMPLES bucket_size=$BUCKET_SIZE use_best=$USE_BEST projlen_bucket_width=$PROJLEN_BUCKET_WIDTH random_keep_rate=$RANDOM_KEEP_RATE slope_window=$SLOPE_WINDOW surprise_z_weight=$SURPRISE_Z_WEIGHT surprise_per_depth_weight=$SURPRISE_PER_DEPTH_WEIGHT low_projlen_weight=$LOW_PROJLEN_WEIGHT drop_weight=$DROP_WEIGHT slope_weight=$SLOPE_WEIGHT periodic_frontier_weight=$PERIODIC_FRONTIER_WEIGHT exact_periodic_bonus=$EXACT_PERIODIC_BONUS seed=$SEED"
+echo "Parameters: p=$P n=$N max_depth=$MAX_DEPTH baseline_samples=$BASELINE_SAMPLES bootstrap_depth=$BOOTSTRAP_DEPTH bucket_size=$BUCKET_SIZE use_best=$USE_BEST projlen_bucket_width=$PROJLEN_BUCKET_WIDTH elite_fraction=$ELITE_FRACTION random_keep_rate=$RANDOM_KEEP_RATE slope_window=$SLOPE_WINDOW surprise_z_weight=$SURPRISE_Z_WEIGHT surprise_per_depth_weight=$SURPRISE_PER_DEPTH_WEIGHT low_projlen_weight=$LOW_PROJLEN_WEIGHT drop_weight=$DROP_WEIGHT slope_weight=$SLOPE_WEIGHT periodic_frontier_weight=$PERIODIC_FRONTIER_WEIGHT exact_periodic_bonus=$EXACT_PERIODIC_BONUS seed=$SEED"
 
 "$PYTHON_PATH" -u monte_carlo_algorithms/periodic_frontier_reservoir_search.py \
   --p "$P" \
   --n "$N" \
   --max-depth "$MAX_DEPTH" \
   --baseline-samples "$BASELINE_SAMPLES" \
+  --bootstrap-depth "$BOOTSTRAP_DEPTH" \
   --bucket-size "$BUCKET_SIZE" \
   --use-best "$USE_BEST" \
   --projlen-bucket-width "$PROJLEN_BUCKET_WIDTH" \
+  --elite-fraction "$ELITE_FRACTION" \
   --random-keep-rate "$RANDOM_KEEP_RATE" \
   --slope-window "$SLOPE_WINDOW" \
   --surprise-z-weight "$SURPRISE_Z_WEIGHT" \

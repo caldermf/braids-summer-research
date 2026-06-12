@@ -107,10 +107,12 @@ class PeriodicFrontierConfig:
     n: int = 4
     max_depth: int = 65
     baseline_samples: int = 2048
-    bucket_size: int = 256
+    bootstrap_depth: int = 6
+    bucket_size: int = 3000
     use_best: int = 50000
     projlen_bucket_width: int = 1
-    random_keep_rate: float = 0.02
+    elite_fraction: float = 0.35
+    random_keep_rate: float = 1.0
     slope_window: int = 8
     surprise_z_weight: float = 1.0
     surprise_per_depth_weight: float = 0.1
@@ -145,30 +147,43 @@ class Candidate:
 
 
 class ScoredReservoirBucket:
-    def __init__(self, max_size: int, rng: random.Random, random_keep_rate: float):
+    def __init__(self, max_size: int, rng: random.Random, elite_fraction: float, random_keep_rate: float):
         self.max_size = max_size
         self.rng = rng
+        self.elite_size = min(max_size, max(1, int(round(max_size * elite_fraction))))
+        self.random_size = max(0, max_size - self.elite_size)
         self.random_keep_rate = random_keep_rate
         self.seen = 0
-        self.items: List[Candidate] = []
+        self.elite_items: List[Candidate] = []
+        self.random_items: List[Candidate] = []
+
+    @property
+    def items(self) -> List[Candidate]:
+        return self.elite_items + self.random_items
 
     def add(self, candidate: Candidate) -> None:
         self.seen += 1
-        if len(self.items) < self.max_size:
-            self.items.append(candidate)
+
+        if len(self.elite_items) < self.elite_size:
+            self.elite_items.append(candidate)
+        else:
+            worst_idx, worst = min(enumerate(self.elite_items), key=lambda item: item[1].score)
+            if candidate.score > worst.score:
+                self.elite_items[worst_idx] = candidate
+
+        if self.random_size == 0 or self.random_keep_rate <= 0:
             return
 
-        worst_idx, worst = min(enumerate(self.items), key=lambda item: item[1].score)
-        if candidate.score > worst.score:
-            self.items[worst_idx] = candidate
+        if self.rng.random() > self.random_keep_rate:
             return
 
-        if self.random_keep_rate <= 0:
+        if len(self.random_items) < self.random_size:
+            self.random_items.append(candidate)
             return
 
-        reservoir_probability = self.random_keep_rate * min(1.0, self.max_size / max(1, self.seen))
-        if self.rng.random() < reservoir_probability:
-            self.items[self.rng.randrange(len(self.items))] = candidate
+        j = self.rng.randint(1, self.seen)
+        if j <= self.random_size:
+            self.random_items[j - 1] = candidate
 
     def best(self) -> Candidate:
         return max(self.items, key=lambda item: item.score)
@@ -307,10 +322,16 @@ class PeriodicFrontierSearch:
             raise ValueError("p must be at least 2")
         if config.bucket_size <= 0:
             raise ValueError("bucket_size must be positive")
+        if config.bootstrap_depth < 0:
+            raise ValueError("bootstrap_depth must be nonnegative")
+        if config.bootstrap_depth > config.max_depth:
+            raise ValueError("bootstrap_depth cannot exceed max_depth")
         if config.use_best <= 0:
             raise ValueError("use_best must be positive")
         if config.projlen_bucket_width <= 0:
             raise ValueError("projlen_bucket_width must be positive")
+        if not (0.0 <= config.elite_fraction <= 1.0):
+            raise ValueError("elite_fraction must be in [0, 1]")
         if config.random_keep_rate < 0:
             raise ValueError("random_keep_rate must be nonnegative")
 
@@ -446,6 +467,7 @@ class PeriodicFrontierSearch:
             buckets[key] = ScoredReservoirBucket(
                 max_size=self.config.bucket_size,
                 rng=self.rng,
+                elite_fraction=self.config.elite_fraction,
                 random_keep_rate=self.config.random_keep_rate,
             )
         buckets[key].add(candidate)
@@ -460,9 +482,14 @@ class PeriodicFrontierSearch:
             ),
         )
         selected: List[Candidate] = []
+        selected_keys = set()
         for _, bucket in ordered_buckets:
             candidates = sorted(bucket.items, key=lambda item: item.score, reverse=True)
             for candidate in candidates:
+                key = tuple(candidate.factor_ids)
+                if key in selected_keys:
+                    continue
+                selected_keys.add(key)
                 selected.append(candidate)
                 if len(selected) >= self.config.use_best:
                     return selected
@@ -550,6 +577,8 @@ class PeriodicFrontierSearch:
             generated = 0
             depth_kernel_hits = 0
             parents_expanded = len(frontier)
+            exhaustive_bootstrap = depth <= self.config.bootstrap_depth
+            next_exhaustive_frontier: List[Candidate] = []
 
             for parent in frontier:
                 for action in self.legal_actions_from_factors(parent.factor_ids):
@@ -564,21 +593,30 @@ class PeriodicFrontierSearch:
                     generated += 1
                     self.add_to_buckets(buckets, child)
                     self.update_best(child)
+                    if exhaustive_bootstrap and depth < self.config.bootstrap_depth:
+                        next_exhaustive_frontier.append(child)
 
                     if child.kernel_match.get("matches"):
                         depth_kernel_hits += 1
                         if len(self.kernel_hits) < self.config.max_kernel_hits:
                             self.kernel_hits.append(self.candidate_to_json(child))
 
-            frontier = self.select_frontier(buckets)
-            best_depth_candidate = max(frontier, key=lambda item: item.score) if frontier else None
-            min_projlen = min((candidate.projlen for candidate in frontier), default=None)
+            selected_frontier = self.select_frontier(buckets)
+            if exhaustive_bootstrap and depth < self.config.bootstrap_depth:
+                frontier = next_exhaustive_frontier
+            else:
+                frontier = selected_frontier
+
+            best_depth_candidate = max(selected_frontier, key=lambda item: item.score) if selected_frontier else None
+            min_projlen = min((candidate.projlen for candidate in selected_frontier), default=None)
             summary = {
                 "depth": depth,
+                "exhaustive_bootstrap": exhaustive_bootstrap,
                 "parents_expanded": parents_expanded,
                 "generated_children": generated,
                 "num_buckets": len(buckets),
-                "frontier_size": len(frontier),
+                "selected_frontier_size": len(selected_frontier),
+                "next_frontier_size": len(frontier),
                 "min_frontier_projlen": min_projlen,
                 "best_score_candidate_projlen": self.best_candidate.projlen if self.best_candidate else None,
                 "best_score_candidate_depth": self.best_candidate.depth if self.best_candidate else None,
@@ -631,10 +669,12 @@ def parse_args() -> PeriodicFrontierConfig:
     parser.add_argument("--n", type=int, default=4)
     parser.add_argument("--max-depth", type=int, default=65)
     parser.add_argument("--baseline-samples", type=int, default=2048)
-    parser.add_argument("--bucket-size", type=int, default=256)
+    parser.add_argument("--bootstrap-depth", type=int, default=6)
+    parser.add_argument("--bucket-size", type=int, default=3000)
     parser.add_argument("--use-best", type=int, default=50000)
     parser.add_argument("--projlen-bucket-width", type=int, default=1)
-    parser.add_argument("--random-keep-rate", type=float, default=0.02)
+    parser.add_argument("--elite-fraction", type=float, default=0.35)
+    parser.add_argument("--random-keep-rate", type=float, default=1.0)
     parser.add_argument("--slope-window", type=int, default=8)
     parser.add_argument("--surprise-z-weight", type=float, default=1.0)
     parser.add_argument("--surprise-per-depth-weight", type=float, default=0.1)
@@ -653,9 +693,11 @@ def parse_args() -> PeriodicFrontierConfig:
         n=args.n,
         max_depth=args.max_depth,
         baseline_samples=args.baseline_samples,
+        bootstrap_depth=args.bootstrap_depth,
         bucket_size=args.bucket_size,
         use_best=args.use_best,
         projlen_bucket_width=args.projlen_bucket_width,
+        elite_fraction=args.elite_fraction,
         random_keep_rate=args.random_keep_rate,
         slope_window=args.slope_window,
         surprise_z_weight=args.surprise_z_weight,
