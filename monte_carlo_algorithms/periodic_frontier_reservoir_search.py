@@ -114,12 +114,17 @@ class PeriodicFrontierConfig:
     elite_fraction: float = 0.35
     random_keep_rate: float = 1.0
     slope_window: int = 8
+    descent_start_depth: int = 35
     surprise_z_weight: float = 1.0
     surprise_per_depth_weight: float = 0.1
     low_projlen_weight: float = 0.25
     drop_weight: float = 0.25
     slope_weight: float = 0.75
     periodic_frontier_weight: float = 4.0
+    periodic_distance_weight: float = 0.25
+    periodic_drop_weight: float = 0.8
+    periodic_slope_weight: float = 1.0
+    late_descent_multiplier: float = 2.0
     exact_periodic_bonus: float = 1000.0
     stop_at_kernel: bool = True
     max_kernel_hits: int = 20
@@ -132,6 +137,7 @@ class Candidate:
     factor_ids: List[int]
     burau_matrix: object
     projlen_history: List[int]
+    periodic_distance_history: List[float]
     depth: int
     projlen: int
     typical_projlen: float
@@ -142,6 +148,8 @@ class Candidate:
     identity_distance: float
     delta_distance: float
     periodic_distance: float
+    periodic_drop: float
+    periodic_slope: float
     score: float
     kernel_match: dict
 
@@ -305,12 +313,12 @@ def projective_target_distance(poly_mat, target_mat, p: int, n: int) -> float:
     return penalty
 
 
-def recent_slope(projlen_history: List[int], window: int) -> float:
-    if len(projlen_history) < 2:
+def recent_downward_slope(values: List[float], window: int) -> float:
+    if len(values) < 2:
         return 0.0
-    width = min(max(2, window), len(projlen_history))
-    old = projlen_history[-width]
-    new = projlen_history[-1]
+    width = min(max(2, window), len(values))
+    old = values[-width]
+    new = values[-1]
     return max(0.0, float(old - new) / float(width - 1))
 
 
@@ -334,6 +342,10 @@ class PeriodicFrontierSearch:
             raise ValueError("elite_fraction must be in [0, 1]")
         if config.random_keep_rate < 0:
             raise ValueError("random_keep_rate must be nonnegative")
+        if config.descent_start_depth < 0:
+            raise ValueError("descent_start_depth must be nonnegative")
+        if config.late_descent_multiplier < 0:
+            raise ValueError("late_descent_multiplier must be nonnegative")
 
         self.config = config
         self.rng = random.Random(config.seed)
@@ -413,25 +425,43 @@ class PeriodicFrontierSearch:
 
         if parent is None:
             history = [projlen]
+            periodic_history = []
             recent_drop = 0.0
         else:
             history = parent.projlen_history + [projlen]
+            periodic_history = list(parent.periodic_distance_history)
             recent_drop = max(0.0, float(parent.projlen - projlen))
-        slope = recent_slope(history, self.config.slope_window)
 
         identity_distance = projective_identity_distance(matrix, p=self.config.p, n=self.config.n)
         delta_distance = projective_target_distance(matrix, self.delta_target, p=self.config.p, n=self.config.n)
         periodic_distance = min(identity_distance, delta_distance)
+        if parent is None:
+            periodic_drop = 0.0
+        else:
+            periodic_drop = max(0.0, float(parent.periodic_distance - periodic_distance))
+        periodic_history.append(periodic_distance)
+
+        slope = recent_downward_slope([float(item) for item in history], self.config.slope_window)
+        periodic_slope = recent_downward_slope(periodic_history, self.config.slope_window)
         frontier_closeness = 1.0 / (1.0 + periodic_distance)
         low_projlen_advantage = max(0.0, 1.0 - float(projlen) / max(1.0, typical))
+        periodic_distance_norm = periodic_distance / max(1.0, float(depth))
+        descent_multiplier = (
+            self.config.late_descent_multiplier
+            if depth >= self.config.descent_start_depth
+            else 1.0
+        )
 
         score = 0.0
         score += self.config.surprise_z_weight * surprise_z
         score += self.config.surprise_per_depth_weight * surprise / max(1.0, float(depth))
         score += self.config.low_projlen_weight * low_projlen_advantage
-        score += self.config.drop_weight * recent_drop
-        score += self.config.slope_weight * slope
+        score += descent_multiplier * self.config.drop_weight * recent_drop
+        score += descent_multiplier * self.config.slope_weight * slope
         score += self.config.periodic_frontier_weight * frontier_closeness
+        score -= self.config.periodic_distance_weight * periodic_distance_norm
+        score += descent_multiplier * self.config.periodic_drop_weight * (periodic_drop / 10.0)
+        score += descent_multiplier * self.config.periodic_slope_weight * (periodic_slope / 10.0)
         if kernel_match.get("matches"):
             score += self.config.exact_periodic_bonus
 
@@ -439,6 +469,7 @@ class PeriodicFrontierSearch:
             factor_ids=factor_ids,
             burau_matrix=matrix,
             projlen_history=history,
+            periodic_distance_history=periodic_history,
             depth=depth,
             projlen=projlen,
             typical_projlen=typical,
@@ -449,6 +480,8 @@ class PeriodicFrontierSearch:
             identity_distance=identity_distance,
             delta_distance=delta_distance,
             periodic_distance=periodic_distance,
+            periodic_drop=periodic_drop,
+            periodic_slope=periodic_slope,
             score=score,
             kernel_match=kernel_match,
         )
@@ -515,6 +548,8 @@ class PeriodicFrontierSearch:
             "identity_distance": candidate.identity_distance,
             "delta_distance": candidate.delta_distance,
             "periodic_distance": candidate.periodic_distance,
+            "periodic_drop": candidate.periodic_drop,
+            "periodic_slope": candidate.periodic_slope,
             "kernel_match": candidate.kernel_match,
             "burau_min_degree": min_degree,
             "burau_max_degree": max_degree,
@@ -556,6 +591,7 @@ class PeriodicFrontierSearch:
             factor_ids=[],
             burau_matrix=identity_burau_matrix(p=self.config.p, n=self.config.n),
             projlen_history=[],
+            periodic_distance_history=[],
             depth=0,
             projlen=0,
             typical_projlen=0.0,
@@ -566,6 +602,8 @@ class PeriodicFrontierSearch:
             identity_distance=0.0,
             delta_distance=0.0,
             periodic_distance=0.0,
+            periodic_drop=0.0,
+            periodic_slope=0.0,
             score=0.0,
             kernel_match={"matches": False, "kernel_type": None, "delta_power": None, "scalar": None},
         )
@@ -676,12 +714,17 @@ def parse_args() -> PeriodicFrontierConfig:
     parser.add_argument("--elite-fraction", type=float, default=0.35)
     parser.add_argument("--random-keep-rate", type=float, default=1.0)
     parser.add_argument("--slope-window", type=int, default=8)
+    parser.add_argument("--descent-start-depth", type=int, default=35)
     parser.add_argument("--surprise-z-weight", type=float, default=1.0)
     parser.add_argument("--surprise-per-depth-weight", type=float, default=0.1)
     parser.add_argument("--low-projlen-weight", type=float, default=0.25)
     parser.add_argument("--drop-weight", type=float, default=0.25)
     parser.add_argument("--slope-weight", type=float, default=0.75)
     parser.add_argument("--periodic-frontier-weight", type=float, default=4.0)
+    parser.add_argument("--periodic-distance-weight", type=float, default=0.25)
+    parser.add_argument("--periodic-drop-weight", type=float, default=0.8)
+    parser.add_argument("--periodic-slope-weight", type=float, default=1.0)
+    parser.add_argument("--late-descent-multiplier", type=float, default=2.0)
     parser.add_argument("--exact-periodic-bonus", type=float, default=1000.0)
     parser.add_argument("--no-stop-at-kernel", action="store_true")
     parser.add_argument("--max-kernel-hits", type=int, default=20)
@@ -700,12 +743,17 @@ def parse_args() -> PeriodicFrontierConfig:
         elite_fraction=args.elite_fraction,
         random_keep_rate=args.random_keep_rate,
         slope_window=args.slope_window,
+        descent_start_depth=args.descent_start_depth,
         surprise_z_weight=args.surprise_z_weight,
         surprise_per_depth_weight=args.surprise_per_depth_weight,
         low_projlen_weight=args.low_projlen_weight,
         drop_weight=args.drop_weight,
         slope_weight=args.slope_weight,
         periodic_frontier_weight=args.periodic_frontier_weight,
+        periodic_distance_weight=args.periodic_distance_weight,
+        periodic_drop_weight=args.periodic_drop_weight,
+        periodic_slope_weight=args.periodic_slope_weight,
+        late_descent_multiplier=args.late_descent_multiplier,
         exact_periodic_bonus=args.exact_periodic_bonus,
         stop_at_kernel=not args.no_stop_at_kernel,
         max_kernel_hits=args.max_kernel_hits,
