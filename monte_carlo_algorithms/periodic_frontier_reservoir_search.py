@@ -112,6 +112,7 @@ class PeriodicFrontierConfig:
     use_best: int = 50000
     projlen_bucket_width: int = 1
     elite_fraction: float = 0.35
+    descent_fraction: float = 0.25
     random_keep_rate: float = 1.0
     slope_window: int = 8
     descent_start_depth: int = 35
@@ -151,33 +152,59 @@ class Candidate:
     periodic_drop: float
     periodic_slope: float
     score: float
+    descent_score: float
     kernel_match: dict
 
 
 class ScoredReservoirBucket:
-    def __init__(self, max_size: int, rng: random.Random, elite_fraction: float, random_keep_rate: float):
+    def __init__(
+        self,
+        max_size: int,
+        rng: random.Random,
+        elite_fraction: float,
+        descent_fraction: float,
+        random_keep_rate: float,
+    ):
         self.max_size = max_size
         self.rng = rng
-        self.elite_size = min(max_size, max(1, int(round(max_size * elite_fraction))))
-        self.random_size = max(0, max_size - self.elite_size)
+        self.elite_size = max(0, int(round(max_size * elite_fraction)))
+        if elite_fraction > 0 and self.elite_size == 0:
+            self.elite_size = 1
+        self.elite_size = min(max_size, self.elite_size)
+
+        remaining = max_size - self.elite_size
+        self.descent_size = max(0, int(round(max_size * descent_fraction)))
+        if descent_fraction > 0 and self.descent_size == 0 and remaining > 0:
+            self.descent_size = 1
+        self.descent_size = min(remaining, self.descent_size)
+
+        self.random_size = max(0, max_size - self.elite_size - self.descent_size)
         self.random_keep_rate = random_keep_rate
         self.seen = 0
         self.elite_items: List[Candidate] = []
+        self.descent_items: List[Candidate] = []
         self.random_items: List[Candidate] = []
 
     @property
     def items(self) -> List[Candidate]:
-        return self.elite_items + self.random_items
+        return self.elite_items + self.descent_items + self.random_items
 
     def add(self, candidate: Candidate) -> None:
         self.seen += 1
 
         if len(self.elite_items) < self.elite_size:
             self.elite_items.append(candidate)
-        else:
+        elif self.elite_size > 0:
             worst_idx, worst = min(enumerate(self.elite_items), key=lambda item: item[1].score)
             if candidate.score > worst.score:
                 self.elite_items[worst_idx] = candidate
+
+        if len(self.descent_items) < self.descent_size:
+            self.descent_items.append(candidate)
+        elif self.descent_size > 0:
+            worst_idx, worst = min(enumerate(self.descent_items), key=lambda item: item[1].descent_score)
+            if candidate.descent_score > worst.descent_score:
+                self.descent_items[worst_idx] = candidate
 
         if self.random_size == 0 or self.random_keep_rate <= 0:
             return
@@ -340,8 +367,18 @@ class PeriodicFrontierSearch:
             raise ValueError("projlen_bucket_width must be positive")
         if not (0.0 <= config.elite_fraction <= 1.0):
             raise ValueError("elite_fraction must be in [0, 1]")
+        if not (0.0 <= config.descent_fraction <= 1.0):
+            raise ValueError("descent_fraction must be in [0, 1]")
+        if config.elite_fraction + config.descent_fraction > 1.0:
+            raise ValueError("elite_fraction + descent_fraction must be at most 1")
         if config.random_keep_rate < 0:
             raise ValueError("random_keep_rate must be nonnegative")
+        if (
+            config.elite_fraction == 0
+            and config.descent_fraction == 0
+            and config.random_keep_rate == 0
+        ):
+            raise ValueError("at least one bucket retention lane must be enabled")
         if config.descent_start_depth < 0:
             raise ValueError("descent_start_depth must be nonnegative")
         if config.late_descent_multiplier < 0:
@@ -465,6 +502,14 @@ class PeriodicFrontierSearch:
         if kernel_match.get("matches"):
             score += self.config.exact_periodic_bonus
 
+        descent_score = -float(projlen)
+        descent_score += 0.5 * surprise_z
+        descent_score += descent_multiplier * (2.0 * recent_drop + 4.0 * slope)
+        descent_score += descent_multiplier * (0.2 * periodic_drop + 0.4 * periodic_slope)
+        descent_score -= 0.05 * periodic_distance_norm
+        if kernel_match.get("matches"):
+            descent_score += self.config.exact_periodic_bonus
+
         return Candidate(
             factor_ids=factor_ids,
             burau_matrix=matrix,
@@ -483,6 +528,7 @@ class PeriodicFrontierSearch:
             periodic_drop=periodic_drop,
             periodic_slope=periodic_slope,
             score=score,
+            descent_score=descent_score,
             kernel_match=kernel_match,
         )
 
@@ -501,9 +547,27 @@ class PeriodicFrontierSearch:
                 max_size=self.config.bucket_size,
                 rng=self.rng,
                 elite_fraction=self.config.elite_fraction,
+                descent_fraction=self.config.descent_fraction,
                 random_keep_rate=self.config.random_keep_rate,
             )
         buckets[key].add(candidate)
+
+    def candidates_for_selection(self, bucket: ScoredReservoirBucket) -> List[Candidate]:
+        by_score = sorted(bucket.items, key=lambda item: item.score, reverse=True)
+        by_descent = sorted(bucket.items, key=lambda item: item.descent_score, reverse=True)
+        ordered: List[Candidate] = []
+        seen = set()
+        for index in range(max(len(by_score), len(by_descent))):
+            for candidate_list in (by_score, by_descent):
+                if index >= len(candidate_list):
+                    continue
+                candidate = candidate_list[index]
+                key = tuple(candidate.factor_ids)
+                if key in seen:
+                    continue
+                seen.add(key)
+                ordered.append(candidate)
+        return ordered
 
     def select_frontier(self, buckets: Dict[Tuple[int, int], ScoredReservoirBucket]) -> List[Candidate]:
         ordered_buckets = sorted(
@@ -517,8 +581,7 @@ class PeriodicFrontierSearch:
         selected: List[Candidate] = []
         selected_keys = set()
         for _, bucket in ordered_buckets:
-            candidates = sorted(bucket.items, key=lambda item: item.score, reverse=True)
-            for candidate in candidates:
+            for candidate in self.candidates_for_selection(bucket):
                 key = tuple(candidate.factor_ids)
                 if key in selected_keys:
                     continue
@@ -550,6 +613,7 @@ class PeriodicFrontierSearch:
             "periodic_distance": candidate.periodic_distance,
             "periodic_drop": candidate.periodic_drop,
             "periodic_slope": candidate.periodic_slope,
+            "descent_score": candidate.descent_score,
             "kernel_match": candidate.kernel_match,
             "burau_min_degree": min_degree,
             "burau_max_degree": max_degree,
@@ -605,6 +669,7 @@ class PeriodicFrontierSearch:
             periodic_drop=0.0,
             periodic_slope=0.0,
             score=0.0,
+            descent_score=0.0,
             kernel_match={"matches": False, "kernel_type": None, "delta_power": None, "scalar": None},
         )
         frontier = [root]
@@ -646,6 +711,24 @@ class PeriodicFrontierSearch:
                 frontier = selected_frontier
 
             best_depth_candidate = max(selected_frontier, key=lambda item: item.score) if selected_frontier else None
+            best_descent_candidate = (
+                max(selected_frontier, key=lambda item: item.descent_score)
+                if selected_frontier
+                else None
+            )
+            min_periodic_candidate = (
+                min(selected_frontier, key=lambda item: item.periodic_distance)
+                if selected_frontier
+                else None
+            )
+            min_projlen_candidate = (
+                min(
+                    selected_frontier,
+                    key=lambda item: (item.projlen, item.periodic_distance, -item.score),
+                )
+                if selected_frontier
+                else None
+            )
             min_projlen = min((candidate.projlen for candidate in selected_frontier), default=None)
             summary = {
                 "depth": depth,
@@ -656,6 +739,21 @@ class PeriodicFrontierSearch:
                 "selected_frontier_size": len(selected_frontier),
                 "next_frontier_size": len(frontier),
                 "min_frontier_projlen": min_projlen,
+                "min_periodic_distance": (
+                    min_periodic_candidate.periodic_distance if min_periodic_candidate else None
+                ),
+                "min_periodic_distance_candidate_projlen": (
+                    min_periodic_candidate.projlen if min_periodic_candidate else None
+                ),
+                "min_projlen_candidate_periodic_distance": (
+                    min_projlen_candidate.periodic_distance if min_projlen_candidate else None
+                ),
+                "min_projlen_candidate_score": (
+                    min_projlen_candidate.score if min_projlen_candidate else None
+                ),
+                "min_projlen_candidate_descent_score": (
+                    min_projlen_candidate.descent_score if min_projlen_candidate else None
+                ),
                 "best_score_candidate_projlen": self.best_candidate.projlen if self.best_candidate else None,
                 "best_score_candidate_depth": self.best_candidate.depth if self.best_candidate else None,
                 "best_score_candidate_score": self.best_candidate.score if self.best_candidate else None,
@@ -671,6 +769,14 @@ class PeriodicFrontierSearch:
                         "best_depth_projlen": best_depth_candidate.projlen,
                         "best_depth_surprise_z": best_depth_candidate.surprise_z,
                         "best_depth_periodic_distance": best_depth_candidate.periodic_distance,
+                    }
+                )
+            if best_descent_candidate is not None:
+                summary.update(
+                    {
+                        "best_descent_score": best_descent_candidate.descent_score,
+                        "best_descent_projlen": best_descent_candidate.projlen,
+                        "best_descent_periodic_distance": best_descent_candidate.periodic_distance,
                     }
                 )
             self.log_depth(summary)
@@ -712,6 +818,7 @@ def parse_args() -> PeriodicFrontierConfig:
     parser.add_argument("--use-best", type=int, default=50000)
     parser.add_argument("--projlen-bucket-width", type=int, default=1)
     parser.add_argument("--elite-fraction", type=float, default=0.35)
+    parser.add_argument("--descent-fraction", type=float, default=0.25)
     parser.add_argument("--random-keep-rate", type=float, default=1.0)
     parser.add_argument("--slope-window", type=int, default=8)
     parser.add_argument("--descent-start-depth", type=int, default=35)
@@ -741,6 +848,7 @@ def parse_args() -> PeriodicFrontierConfig:
         use_best=args.use_best,
         projlen_bucket_width=args.projlen_bucket_width,
         elite_fraction=args.elite_fraction,
+        descent_fraction=args.descent_fraction,
         random_keep_rate=args.random_keep_rate,
         slope_window=args.slope_window,
         descent_start_depth=args.descent_start_depth,

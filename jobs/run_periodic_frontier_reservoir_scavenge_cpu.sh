@@ -40,6 +40,7 @@ BUCKET_SIZE="${BUCKET_SIZE:-3000}"
 USE_BEST="${USE_BEST:-50000}"
 PROJLEN_BUCKET_WIDTH="${PROJLEN_BUCKET_WIDTH:-1}"
 ELITE_FRACTION="${ELITE_FRACTION:-0.35}"
+DESCENT_FRACTION="${DESCENT_FRACTION:-0.25}"
 RANDOM_KEEP_RATE="${RANDOM_KEEP_RATE:-1.0}"
 SLOPE_WINDOW="${SLOPE_WINDOW:-8}"
 DESCENT_START_DEPTH="${DESCENT_START_DEPTH:-35}"
@@ -75,7 +76,7 @@ echo "Host: $(hostname)"
 echo "Python: $PYTHON_PATH"
 echo "Repo: $REPO_ROOT"
 echo "Output: $OUTPUT_DIR"
-echo "Parameters: p=$P n=$N max_depth=$MAX_DEPTH baseline_samples=$BASELINE_SAMPLES bootstrap_depth=$BOOTSTRAP_DEPTH bucket_size=$BUCKET_SIZE use_best=$USE_BEST projlen_bucket_width=$PROJLEN_BUCKET_WIDTH elite_fraction=$ELITE_FRACTION random_keep_rate=$RANDOM_KEEP_RATE slope_window=$SLOPE_WINDOW descent_start_depth=$DESCENT_START_DEPTH surprise_z_weight=$SURPRISE_Z_WEIGHT surprise_per_depth_weight=$SURPRISE_PER_DEPTH_WEIGHT low_projlen_weight=$LOW_PROJLEN_WEIGHT drop_weight=$DROP_WEIGHT slope_weight=$SLOPE_WEIGHT periodic_frontier_weight=$PERIODIC_FRONTIER_WEIGHT periodic_distance_weight=$PERIODIC_DISTANCE_WEIGHT periodic_drop_weight=$PERIODIC_DROP_WEIGHT periodic_slope_weight=$PERIODIC_SLOPE_WEIGHT late_descent_multiplier=$LATE_DESCENT_MULTIPLIER exact_periodic_bonus=$EXACT_PERIODIC_BONUS seed=$SEED"
+echo "Parameters: p=$P n=$N max_depth=$MAX_DEPTH baseline_samples=$BASELINE_SAMPLES bootstrap_depth=$BOOTSTRAP_DEPTH bucket_size=$BUCKET_SIZE use_best=$USE_BEST projlen_bucket_width=$PROJLEN_BUCKET_WIDTH elite_fraction=$ELITE_FRACTION descent_fraction=$DESCENT_FRACTION random_keep_rate=$RANDOM_KEEP_RATE slope_window=$SLOPE_WINDOW descent_start_depth=$DESCENT_START_DEPTH surprise_z_weight=$SURPRISE_Z_WEIGHT surprise_per_depth_weight=$SURPRISE_PER_DEPTH_WEIGHT low_projlen_weight=$LOW_PROJLEN_WEIGHT drop_weight=$DROP_WEIGHT slope_weight=$SLOPE_WEIGHT periodic_frontier_weight=$PERIODIC_FRONTIER_WEIGHT periodic_distance_weight=$PERIODIC_DISTANCE_WEIGHT periodic_drop_weight=$PERIODIC_DROP_WEIGHT periodic_slope_weight=$PERIODIC_SLOPE_WEIGHT late_descent_multiplier=$LATE_DESCENT_MULTIPLIER exact_periodic_bonus=$EXACT_PERIODIC_BONUS seed=$SEED"
 
 "$PYTHON_PATH" -u monte_carlo_algorithms/periodic_frontier_reservoir_search.py \
   --p "$P" \
@@ -87,6 +88,7 @@ echo "Parameters: p=$P n=$N max_depth=$MAX_DEPTH baseline_samples=$BASELINE_SAMP
   --use-best "$USE_BEST" \
   --projlen-bucket-width "$PROJLEN_BUCKET_WIDTH" \
   --elite-fraction "$ELITE_FRACTION" \
+  --descent-fraction "$DESCENT_FRACTION" \
   --random-keep-rate "$RANDOM_KEEP_RATE" \
   --slope-window "$SLOPE_WINDOW" \
   --descent-start-depth "$DESCENT_START_DEPTH" \
