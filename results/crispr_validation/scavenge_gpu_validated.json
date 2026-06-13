@@ -1,0 +1,16 @@
+{
+    "status": "passed",
+    "partition": "scavenge_gpu",
+    "gpu": "NVIDIA H200",
+    "pytorch": "2.12.0+cu126",
+    "cuda_runtime": "12.6",
+    "random_trajectories_compared_per_prime": 64,
+    "primes_compared": [
+      3,
+      5,
+      7
+    ],
+    "legal_mutations_checked": 250,
+    "known_p5_kernel_verified": true
+  }
+  
