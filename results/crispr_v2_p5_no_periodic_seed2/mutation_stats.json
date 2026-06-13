@@ -1,0 +1,204 @@
+{
+  "locations": {
+    "escape:0": {
+      "attempts": 47151.612465,
+      "successes": 10616.225132,
+      "archive_survivals": 1977.923035,
+      "improvement_sum": 313938.00064,
+      "success_rate": 0.225151,
+      "archive_survival_rate": 0.041948,
+      "mean_positive_improvement": 6.658054
+    },
+    "escape:1": {
+      "attempts": 45547.577197,
+      "successes": 8448.719114,
+      "archive_survivals": 1224.722523,
+      "improvement_sum": 268989.797735,
+      "success_rate": 0.185492,
+      "archive_survival_rate": 0.026889,
+      "mean_positive_improvement": 5.905688
+    },
+    "escape:2": {
+      "attempts": 46580.534893,
+      "successes": 6682.842173,
+      "archive_survivals": 705.353046,
+      "improvement_sum": 227794.792072,
+      "success_rate": 0.143469,
+      "archive_survival_rate": 0.015143,
+      "mean_positive_improvement": 4.890343
+    },
+    "escape:3": {
+      "attempts": 42445.955827,
+      "successes": 5188.404027,
+      "archive_survivals": 267.51565,
+      "improvement_sum": 231871.778436,
+      "success_rate": 0.122236,
+      "archive_survival_rate": 0.006303,
+      "mean_positive_improvement": 5.462753
+    },
+    "escape:4": {
+      "attempts": 44957.558126,
+      "successes": 5018.278616,
+      "archive_survivals": 635.509725,
+      "improvement_sum": 326020.688411,
+      "success_rate": 0.111623,
+      "archive_survival_rate": 0.014136,
+      "mean_positive_improvement": 7.251744
+    },
+    "escape:5": {
+      "attempts": 36861.149751,
+      "successes": 3194.75176,
+      "archive_survivals": 665.940268,
+      "improvement_sum": 177777.758843,
+      "success_rate": 0.08667,
+      "archive_survival_rate": 0.018066,
+      "mean_positive_improvement": 4.822903
+    },
+    "escape:6": {
+      "attempts": 16318.435163,
+      "successes": 917.008131,
+      "archive_survivals": 447.87304,
+      "improvement_sum": 33256.015004,
+      "success_rate": 0.056195,
+      "archive_survival_rate": 0.027446,
+      "mean_positive_improvement": 2.037941
+    },
+    "escape:7": {
+      "attempts": 1705.12775,
+      "successes": 63.398529,
+      "archive_survivals": 94.989669,
+      "improvement_sum": 2039.626386,
+      "success_rate": 0.037181,
+      "archive_survival_rate": 0.055708,
+      "mean_positive_improvement": 1.196172
+    },
+    "local:0": {
+      "attempts": 32945.441438,
+      "successes": 6356.737834,
+      "archive_survivals": 4007.055018,
+      "improvement_sum": 89612.336592,
+      "success_rate": 0.192947,
+      "archive_survival_rate": 0.121627,
+      "mean_positive_improvement": 2.720022
+    },
+    "local:1": {
+      "attempts": 32279.414427,
+      "successes": 4914.001036,
+      "archive_survivals": 2220.920145,
+      "improvement_sum": 78183.203786,
+      "success_rate": 0.152233,
+      "archive_survival_rate": 0.068803,
+      "mean_positive_improvement": 2.422076
+    },
+    "local:2": {
+      "attempts": 32786.491906,
+      "successes": 4143.721929,
+      "archive_survivals": 1410.608934,
+      "improvement_sum": 72746.173609,
+      "success_rate": 0.126385,
+      "archive_survival_rate": 0.043024,
+      "mean_positive_improvement": 2.218785
+    },
+    "local:3": {
+      "attempts": 31281.629942,
+      "successes": 3606.768046,
+      "archive_survivals": 787.299311,
+      "improvement_sum": 70633.93129,
+      "success_rate": 0.1153,
+      "archive_survival_rate": 0.025168,
+      "mean_positive_improvement": 2.258
+    },
+    "local:4": {
+      "attempts": 72372.158931,
+      "successes": 8463.853654,
+      "archive_survivals": 2779.360286,
+      "improvement_sum": 273509.163722,
+      "success_rate": 0.116949,
+      "archive_survival_rate": 0.038404,
+      "mean_positive_improvement": 3.779204
+    },
+    "local:5": {
+      "attempts": 69216.513116,
+      "successes": 6203.328576,
+      "archive_survivals": 2211.153315,
+      "improvement_sum": 238440.216383,
+      "success_rate": 0.089622,
+      "archive_survival_rate": 0.031945,
+      "mean_positive_improvement": 3.444846
+    },
+    "local:6": {
+      "attempts": 73898.806207,
+      "successes": 4755.23996,
+      "archive_survivals": 3623.971726,
+      "improvement_sum": 144808.448097,
+      "success_rate": 0.064348,
+      "archive_survival_rate": 0.04904,
+      "mean_positive_improvement": 1.959551
+    },
+    "local:7": {
+      "attempts": 33121.452303,
+      "successes": 1688.919009,
+      "archive_survivals": 4294.588936,
+      "improvement_sum": 50739.046461,
+      "success_rate": 0.050992,
+      "archive_survival_rate": 0.129662,
+      "mean_positive_improvement": 1.531909
+    }
+  },
+  "block_lengths": {
+    "escape:5": {
+      "attempts": 51303.219733,
+      "successes": 6585.563011,
+      "archive_survivals": 1616.969444,
+      "improvement_sum": 183790.608748,
+      "success_rate": 0.128365,
+      "archive_survival_rate": 0.031518,
+      "mean_positive_improvement": 3.582438
+    },
+    "escape:8": {
+      "attempts": 60316.036939,
+      "successes": 8424.164695,
+      "archive_survivals": 1556.201052,
+      "improvement_sum": 275173.407708,
+      "success_rate": 0.139667,
+      "archive_survival_rate": 0.025801,
+      "mean_positive_improvement": 4.562193
+    },
+    "escape:12": {
+      "attempts": 75871.898259,
+      "successes": 11194.033724,
+      "archive_survivals": 1468.238257,
+      "improvement_sum": 448928.526293,
+      "success_rate": 0.147539,
+      "archive_survival_rate": 0.019352,
+      "mean_positive_improvement": 5.916928
+    },
+    "escape:16": {
+      "attempts": 94076.796242,
+      "successes": 13925.866054,
+      "archive_survivals": 1378.418203,
+      "improvement_sum": 673795.914778,
+      "success_rate": 0.148027,
+      "archive_survival_rate": 0.014652,
+      "mean_positive_improvement": 7.16219
+    },
+    "local:1": {
+      "attempts": 122336.577632,
+      "successes": 9206.154991,
+      "archive_survivals": 8144.758704,
+      "improvement_sum": 239143.9943,
+      "success_rate": 0.075253,
+      "archive_survival_rate": 0.066577,
+      "mean_positive_improvement": 1.954804
+    },
+    "local:3": {
+      "attempts": 255565.330639,
+      "successes": 30926.415052,
+      "archive_survivals": 13190.198966,
+      "improvement_sum": 779528.52564,
+      "success_rate": 0.121012,
+      "archive_survival_rate": 0.051612,
+      "mean_positive_improvement": 3.050212
+    }
+  }
+}
