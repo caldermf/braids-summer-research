@@ -1,0 +1,20 @@
+{
+    "status": "passed",
+    "algorithm": "crispr_trajectory_search_v3",
+    "partition": "scavenge_gpu",
+    "gpu": "NVIDIA H200",
+    "pytorch": "2.12.0+cu126",
+    "cuda_runtime": "12.6",
+    "random_trajectories_compared_per_prime": 64,
+    "primes_compared": [
+      3,
+      5,
+      7
+    ],
+    "legal_mutations_checked_per_island": 250,
+    "legal_crossovers_checked_per_island": 100,
+    "known_p5_kernel_verified": true,
+    "three_island_scoring_verified": true,
+    "periodic_distance_used": false
+  }
+  
