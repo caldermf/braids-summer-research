@@ -71,8 +71,22 @@ All CUDA experiments for this project are restricted to Yale's
 `scavenge_gpu` is valid; `scavenge_GPU` is not.
 
 The Python evaluator checks `SLURM_JOB_PARTITION` and refuses CUDA execution
-outside `scavenge_gpu`. Submit the project script only after the CPU and
-small-scale validation gates have passed:
+outside `scavenge_gpu`. Before any full search, submit the validation job:
+
+```bash
+PYTHON_PATH=/home/as4843/braids-torch/bin/python \
+sbatch crispr_trajectory_search/validate_scavenge_gpu.sh
+```
+
+It checks CPU/CUDA projlen parity for p=3, p=5, and p=7, verifies 250 legal
+mutations, and recovers the known p=5 kernel on CUDA. On success it writes:
+
+```text
+results/crispr_validation/scavenge_gpu_validated.json
+```
+
+The full search script refuses to run until that validation marker exists.
+After validation passes, submit the p=3 calibration search:
 
 ```bash
 PYTHON_PATH=/home/as4843/braids-torch/bin/python \

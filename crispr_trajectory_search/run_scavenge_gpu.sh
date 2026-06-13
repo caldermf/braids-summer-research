@@ -34,6 +34,7 @@ SEED_POPULATION_FRACTION="${SEED_POPULATION_FRACTION:-0.0}"
 SEED_CORRUPTION_FRACTION="${SEED_CORRUPTION_FRACTION:-0.20}"
 SEED="${SEED:-1}"
 OUTPUT_DIR="${OUTPUT_DIR:-$REPO_ROOT/results/crispr_p${P}_n${N}_seed${SEED}}"
+VALIDATION_MARKER="${VALIDATION_MARKER:-$REPO_ROOT/results/crispr_validation/scavenge_gpu_validated.json}"
 
 module purge
 module load miniconda
@@ -51,6 +52,12 @@ if [[ ! -x "$PYTHON_PATH" ]]; then
   exit 1
 fi
 
+if [[ ! -f "$VALIDATION_MARKER" ]]; then
+  echo "Refusing the full search: scavenge_gpu validation has not passed." >&2
+  echo "First submit crispr_trajectory_search/validate_scavenge_gpu.sh" >&2
+  exit 1
+fi
+
 export PYTHONUNBUFFERED=1
 export PYTHONDONTWRITEBYTECODE=1
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
@@ -60,6 +67,7 @@ echo "Partition: ${SLURM_JOB_PARTITION}"
 echo "Host: $(hostname)"
 echo "Python: $PYTHON_PATH"
 echo "Output: $OUTPUT_DIR"
+echo "Validation marker: $VALIDATION_MARKER"
 echo "Parameters: p=$P n=$N horizons=$HORIZONS population=$POPULATION_SIZE generations=$GENERATIONS elite_fraction=$ELITE_FRACTION eval_batch_size=$EVAL_BATCH_SIZE seed=$SEED"
 
 "$PYTHON_PATH" - <<'PY'
