@@ -86,6 +86,9 @@ results/crispr_validation/scavenge_gpu_validated.json
 ```
 
 The full search script refuses to run until that validation marker exists.
+The GPU model reported in the validation output is informational: the scripts
+request one generic GPU from `scavenge_gpu`, and Slurm chooses the physical
+model. The project never explicitly requests an H200.
 After validation passes, submit the p=3 calibration search:
 
 ```bash

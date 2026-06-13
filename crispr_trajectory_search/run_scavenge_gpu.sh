@@ -61,6 +61,7 @@ fi
 export PYTHONUNBUFFERED=1
 export PYTHONDONTWRITEBYTECODE=1
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+export VALIDATION_MARKER
 
 echo "Starting CRISPR trajectory search at $(date)"
 echo "Partition: ${SLURM_JOB_PARTITION}"
@@ -71,13 +72,23 @@ echo "Validation marker: $VALIDATION_MARKER"
 echo "Parameters: p=$P n=$N horizons=$HORIZONS population=$POPULATION_SIZE generations=$GENERATIONS elite_fraction=$ELITE_FRACTION eval_batch_size=$EVAL_BATCH_SIZE seed=$SEED"
 
 "$PYTHON_PATH" - <<'PY'
+import json
+import os
+from pathlib import Path
+
 import torch
 
 if not torch.cuda.is_available():
     raise SystemExit("CUDA is unavailable in this scavenge_gpu job.")
+
+gpu_name = torch.cuda.get_device_name(0)
+marker = json.loads(Path(os.environ["VALIDATION_MARKER"]).read_text())
+if marker.get("status") != "passed" or marker.get("partition") != "scavenge_gpu":
+    raise SystemExit("Validation marker is not a successful scavenge_gpu validation.")
+
 print(f"PyTorch: {torch.__version__}")
 print(f"CUDA runtime: {torch.version.cuda}")
-print(f"GPU: {torch.cuda.get_device_name(0)}")
+print(f"GPU: {gpu_name}")
 PY
 
 SEARCH_ARGS=(

@@ -89,6 +89,7 @@ def main() -> None:
     if not torch.cuda.is_available():
         raise SystemExit("CUDA is unavailable in this scavenge_gpu job.")
 
+    gpu_name = torch.cuda.get_device_name(0)
     automaton = GNFAutomaton(n=4)
     rng = random.Random(20260613)
     trajectories = [
@@ -114,7 +115,7 @@ def main() -> None:
     payload = {
         "status": "passed",
         "partition": os.environ["SLURM_JOB_PARTITION"],
-        "gpu": torch.cuda.get_device_name(0),
+        "gpu": gpu_name,
         "pytorch": torch.__version__,
         "cuda_runtime": torch.version.cuda,
         "random_trajectories_compared_per_prime": len(trajectories),
