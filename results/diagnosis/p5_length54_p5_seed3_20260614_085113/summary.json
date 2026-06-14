@@ -1,0 +1,21 @@
+{
+  "kernel_name": "p5_length54",
+  "output_dir": "results/diagnosis/p5_length54_p5_seed3_20260614_085113",
+  "depths_audited": 54,
+  "elapsed_sec": 763.6424,
+  "paper_cumulative_log10_survival": -4.479470573999838,
+  "paper_cumulative_survival_probability": 3.3153503249518175e-05,
+  "paper_first_global_rejection_depth": null,
+  "paper_first_realized_rejection_depth": 7,
+  "paper_first_probability_below_one_depth": 5,
+  "paper_first_forced_depth": 7,
+  "periodic_first_rejection_depth": 5,
+  "mcts_proxy_first_rejection_depth": 7,
+  "breakout_proxy_first_rejection_depth": 3,
+  "crispr_endpoint_proxy_first_rejection_depth": 28,
+  "crispr_envelope_proxy_first_rejection_depth": 28,
+  "crispr_collapse_proxy_first_rejection_depth": 26,
+  "crispr_suffix_proxy_first_rejection_depth": 17,
+  "final_target_projlen": 0,
+  "final_target_kernel_match": true
+}
