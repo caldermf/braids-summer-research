@@ -1,0 +1,5 @@
+# Runtime packages supplied by the cluster Python environment.
+# The paper backbone needs NumPy and pandas; the CUDA branches need PyTorch.
+numpy>=1.26
+pandas>=2.1
+torch>=2.0
