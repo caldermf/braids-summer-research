@@ -1,0 +1,28 @@
+{
+    "checkpoint": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/hybrid_p5/paper_frontier_depth_035.json.gz",
+    "frontier": {
+      "count": 17462,
+      "depths": {
+        "35": 17462
+      },
+      "author_projlen": {
+        "23": 10,
+        "24": 22,
+        "25": 147,
+        "26": 565,
+        "27": 2280,
+        "28": 4116,
+        "29": 10322
+      },
+      "last_factor_classes": 22,
+      "unique_matrix_states": 17462,
+      "unique_words": 17462
+    },
+    "branches": {
+      "suffix-lookup": {
+        "kernel_hits": 0,
+        "best_count": 200
+      }
+    },
+    "failures": {}
+  }

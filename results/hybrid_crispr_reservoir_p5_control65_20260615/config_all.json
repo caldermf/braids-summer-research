@@ -1,0 +1,31 @@
+{
+  "output_dir": "/tmp/hybrid_crispr_reservoir_p5_control65_20260615",
+  "crispr_max_depth": 80,
+  "stop_at_kernel": true,
+  "reservoir": {
+    "n": 4,
+    "r": 1,
+    "p": 5,
+    "bootstrap_depth": 5,
+    "target_depth": 65,
+    "step_size": 1,
+    "bucket_size": 15000,
+    "use_best": 30000,
+    "seed": 3,
+    "stop_at_author_projlen_one": true
+  },
+  "crispr": {
+    "pool_size": 30000,
+    "population_per_island": 7500,
+    "generations": 60,
+    "offspring_multiplier": 3,
+    "elite_fraction": 0.2,
+    "parent_fraction": 0.35,
+    "append_fraction": 0.45,
+    "boundary_fraction": 0.3,
+    "boundary_margin": 1,
+    "backend": "cpu",
+    "device": "cpu",
+    "seed": 104
+  }
+}

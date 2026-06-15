@@ -1,0 +1,13 @@
+{
+    "status": "passed",
+    "algorithm": "hybrid_of_reservoir_crispr_mcts_suffix",
+    "partition": "scavenge_gpu",
+    "gpu": "NVIDIA H200",
+    "pytorch": "2.12.0+cu126",
+    "cuda_runtime": "12.6",
+    "random_legal_words_compared": 32,
+    "crispr_cpu_cuda_match": true,
+    "suffix_exact_cpu_cuda_match": true,
+    "suffix_gf_p2_cpu_cuda_match": true
+  }
+  

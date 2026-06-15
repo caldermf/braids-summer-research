@@ -1,0 +1,40 @@
+{
+    "checkpoint": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/hybrid_p5/paper_frontier_depth_035.json.gz",
+    "metadata": {
+      "author_repo": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/hybrid_of_reservoir_crispr_mcts_suffix/third_party/braids_project",
+      "n": 4,
+      "r": 1,
+      "p": 5,
+      "bootstrap_depth": 5,
+      "target_depth": 35,
+      "step_size": 1,
+      "bucket_size": 15000,
+      "use_best": 30000,
+      "seed": 3,
+      "paper_tracker_class": "peyl.braidsearch.Tracker",
+      "bucket_keys": [
+        "length",
+        "projlen"
+      ],
+      "selection_rule": "whole buckets whose cumulative stored count is <= use_best",
+      "elapsed_seconds": 185.725
+    },
+    "summary": {
+      "count": 17462,
+      "depths": {
+        "35": 17462
+      },
+      "author_projlen": {
+        "23": 10,
+        "24": 22,
+        "25": 147,
+        "26": 565,
+        "27": 2280,
+        "28": 4116,
+        "29": 10322
+      },
+      "last_factor_classes": 22,
+      "unique_matrix_states": 17462,
+      "unique_words": 17462
+    }
+  }

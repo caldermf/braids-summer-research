@@ -1,0 +1,52 @@
+{
+    "output_dir": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/hybrid_p5",
+    "max_depth": 45,
+    "stop_at_kernel": true,
+    "backbone": {
+      "n": 4,
+      "r": 1,
+      "p": 5,
+      "bootstrap_depth": 5,
+      "target_depth": 35,
+      "step_size": 1,
+      "bucket_size": 15000,
+      "use_best": 30000,
+      "seed": 3
+    },
+    "crispr": {
+      "pool_size": 30000,
+      "population_per_island": 7500,
+      "generations": 40,
+      "offspring_multiplier": 3,
+      "elite_fraction": 0.2,
+      "parent_fraction": 0.35,
+      "append_fraction": 0.35,
+      "backend": "torch",
+      "device": "cuda",
+      "seed": 104
+    },
+    "reservoir_mcts": {
+      "pool_size": 30000,
+      "database_limit": 100000,
+      "iterations": 80,
+      "selected_nodes_per_iteration": 8,
+      "children_per_node": 0,
+      "playout_bucket_size": 1500,
+      "playout_use_best": 6000,
+      "exploration_floor": 0.08,
+      "seed": 205
+    },
+    "suffix_lookup": {
+      "prefix_pool_size": 30000,
+      "suffixes_per_length": 50000,
+      "field_points": 8,
+      "lsh_tables": 16,
+      "lsh_key_components": 4,
+      "max_lsh_candidates": 2048,
+      "joins_per_prefix": 6,
+      "exact_candidates_per_depth": 25000,
+      "backend": "torch",
+      "device": "cuda",
+      "seed": 306
+    }
+  }
