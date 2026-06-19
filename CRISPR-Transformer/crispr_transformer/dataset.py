@@ -88,7 +88,7 @@ def _augment_parent_lengths(
                 break
             try:
                 word = apply_geometry(word, rng.choice(actions), automaton, rng)
-            except RuntimeError:
+            except (ValueError, RuntimeError):
                 continue
         if word in seen:
             continue

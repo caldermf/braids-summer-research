@@ -74,12 +74,17 @@ def apply_geometry(
     left = original[start - 1] if start else None
     right = original[end] if end < len(original) else None
     for _ in range(attempts):
-        replacement = automaton.sample_bridge(
-            left=left,
-            right=right,
-            length=geometry.insert_length,
-            rng=rng,
-        )
+        try:
+            replacement = automaton.sample_bridge(
+                left=left,
+                right=right,
+                length=geometry.insert_length,
+                rng=rng,
+            )
+        except ValueError as exc:
+            raise RuntimeError(
+                "edit geometry has no legal GNF bridge for its boundaries"
+            ) from exc
         child = original[:start] + replacement + original[end:]
         if child != original and automaton.is_legal(child):
             return child
