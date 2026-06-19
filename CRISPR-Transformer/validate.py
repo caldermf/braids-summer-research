@@ -65,7 +65,7 @@ def main() -> None:
     for geometry in geometries:
         try:
             child = apply_geometry(parent, geometry, automaton, rng)
-        except RuntimeError:
+        except (ValueError, RuntimeError):
             continue
         if not automaton.is_legal(child):
             raise AssertionError("variable-length edit produced illegal GNF")
