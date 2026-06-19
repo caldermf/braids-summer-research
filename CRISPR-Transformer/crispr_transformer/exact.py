@@ -14,6 +14,27 @@ from .braid_data import (
 )
 
 
+def require_compatible_cuda(torch, required_partition: str = "scavenge_gpu") -> None:
+    partition = os.environ.get("SLURM_JOB_PARTITION")
+    if partition != required_partition:
+        raise RuntimeError(
+            f"CUDA is restricted to partition {required_partition!r}; "
+            f"active partition is {partition!r}"
+        )
+    if not torch.cuda.is_available():
+        raise RuntimeError("CUDA is unavailable in this Python environment")
+    major, minor = torch.cuda.get_device_capability(0)
+    required_arch = f"sm_{major}{minor}"
+    supported_arches = set(torch.cuda.get_arch_list())
+    if required_arch not in supported_arches:
+        raise RuntimeError(
+            f"GPU {torch.cuda.get_device_name(0)!r} requires {required_arch}, but "
+            f"PyTorch {torch.__version__} only contains {sorted(supported_arches)}. "
+            "Use a PyTorch CUDA 13.0+ build; the project setup script installs "
+            "a separate compatible environment."
+        )
+
+
 @dataclass(frozen=True)
 class Evaluation:
     factor_ids: tuple[int, ...]
@@ -93,14 +114,7 @@ class TorchExactEvaluator:
         self.device = torch.device(device)
         self.batch_size = int(batch_size)
         if self.device.type == "cuda":
-            partition = os.environ.get("SLURM_JOB_PARTITION")
-            if partition != required_partition:
-                raise RuntimeError(
-                    f"CUDA is restricted to partition {required_partition!r}; "
-                    f"active partition is {partition!r}"
-                )
-            if not torch.cuda.is_available():
-                raise RuntimeError("CUDA is unavailable in this Python environment")
+            require_compatible_cuda(torch, required_partition)
         self.simple_table = simple_factor_burau_table(p=self.p, n=self.n)
         self.max_factor_id = max(self.simple_table)
         self.max_shift = 4

@@ -1,4 +1,3 @@
 numpy>=1.26
 pandas>=2.1
-torch
-
+# Install torch from the official cu130 index as documented in README.md.

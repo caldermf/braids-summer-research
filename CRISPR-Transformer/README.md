@@ -73,27 +73,38 @@ Slurm scripts. Repair writes `generations.jsonl`, `best_candidate.json`,
 
 Run from the `braids-summer-research` repository root:
 
+The old `/home/as4843/braids-torch` CUDA 12.6 build does not contain kernels
+for an `sm_120` RTX PRO 6000 Blackwell card. Create a separate CUDA 13
+environment once on a login node:
+
+```bash
+bash CRISPR-Transformer/jobs/install_cuda13_environment.sh
+```
+
+This creates `/home/as4843/braids-torch-cu130` without changing the old
+environment. Use that new Python for the commands below.
+
 ```bash
 mkdir -p slurm_logs
 
-PYTHON_PATH=/home/as4843/braids-torch/bin/python P=5 SEED=1 \
+PYTHON_PATH=/home/as4843/braids-torch-cu130/bin/python P=5 SEED=1 \
   sbatch CRISPR-Transformer/jobs/validate_scavenge_gpu.sh
 
-PYTHON_PATH=/home/as4843/braids-torch/bin/python P=5 SEED=1 \
+PYTHON_PATH=/home/as4843/braids-torch-cu130/bin/python P=5 SEED=1 \
   sbatch CRISPR-Transformer/jobs/run_paper_reservoir_scavenge_cpu.sh
 ```
 
 After the reservoir job completes:
 
 ```bash
-PYTHON_PATH=/home/as4843/braids-torch/bin/python P=5 RESERVOIR_SEED=1 SEED=1 \
+PYTHON_PATH=/home/as4843/braids-torch-cu130/bin/python P=5 RESERVOIR_SEED=1 SEED=1 \
   sbatch CRISPR-Transformer/jobs/generate_dataset_scavenge_gpu.sh
 ```
 
 After label generation completes:
 
 ```bash
-PYTHON_PATH=/home/as4843/braids-torch/bin/python P=5 DATASET_SEED=1 SEED=1 \
+PYTHON_PATH=/home/as4843/braids-torch-cu130/bin/python P=5 DATASET_SEED=1 SEED=1 \
   sbatch CRISPR-Transformer/jobs/train_transformer_scavenge_gpu.sh
 ```
 
@@ -101,10 +112,10 @@ After training completes, submit both the guided search and its equal-budget
 random control:
 
 ```bash
-PYTHON_PATH=/home/as4843/braids-torch/bin/python P=5 MODE=guided SEED=1 \
+PYTHON_PATH=/home/as4843/braids-torch-cu130/bin/python P=5 MODE=guided SEED=1 \
   sbatch CRISPR-Transformer/jobs/run_repair_scavenge_gpu.sh
 
-PYTHON_PATH=/home/as4843/braids-torch/bin/python P=5 MODE=random SEED=1 \
+PYTHON_PATH=/home/as4843/braids-torch-cu130/bin/python P=5 MODE=random SEED=1 \
   sbatch CRISPR-Transformer/jobs/run_repair_scavenge_gpu.sh
 ```
 

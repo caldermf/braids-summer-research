@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import math
-import os
 import random
 import time
 from pathlib import Path
@@ -10,6 +9,7 @@ import torch
 from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
 
+from .exact import require_compatible_cuda
 from .io_utils import read_json, read_jsonl, write_json
 from .model import GeometryTransformer, ModelConfig
 
@@ -144,13 +144,7 @@ def train_geometry_model(
 ) -> dict:
     started = time.perf_counter()
     if device.startswith("cuda"):
-        partition = os.environ.get("SLURM_JOB_PARTITION")
-        if partition != "scavenge_gpu":
-            raise RuntimeError(
-                f"CUDA training is restricted to scavenge_gpu; active partition is {partition!r}"
-            )
-        if not torch.cuda.is_available():
-            raise RuntimeError("CUDA is unavailable in this Python environment")
+        require_compatible_cuda(torch)
     torch.manual_seed(seed)
     random.seed(seed)
     target_device = torch.device(device)

@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import random
 import sys
 from pathlib import Path
@@ -18,7 +17,11 @@ for path in (REPO_ROOT, PROJECT_ROOT):
 import torch
 
 from crispr_transformer.edits import apply_geometry, valid_geometries
-from crispr_transformer.exact import CPUExactEvaluator, TorchExactEvaluator
+from crispr_transformer.exact import (
+    CPUExactEvaluator,
+    TorchExactEvaluator,
+    require_compatible_cuda,
+)
 from crispr_transformer.gnf import GNFAutomaton
 from crispr_transformer.io_utils import write_json
 from crispr_transformer.model import GeometryTransformer, ModelConfig
@@ -36,10 +39,7 @@ def main() -> None:
     parser.add_argument("--marker", required=True)
     parser.add_argument("--seed", type=int, default=19)
     args = parser.parse_args()
-    if os.environ.get("SLURM_JOB_PARTITION") != "scavenge_gpu":
-        raise RuntimeError("validation must run on scavenge_gpu")
-    if not torch.cuda.is_available():
-        raise RuntimeError("CUDA is unavailable")
+    require_compatible_cuda(torch)
 
     rng = random.Random(args.seed)
     automaton = GNFAutomaton(4)

@@ -13,7 +13,7 @@ set -euo pipefail
 [[ "${SLURM_JOB_PARTITION:-}" == "scavenge_gpu" ]] || { echo "Must run on scavenge_gpu" >&2; exit 2; }
 REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-$(pwd)}}"
 PROJECT_ROOT="$REPO_ROOT/CRISPR-Transformer"
-PYTHON_PATH="${PYTHON_PATH:-/home/as4843/braids-torch/bin/python}"
+PYTHON_PATH="${PYTHON_PATH:-/home/as4843/braids-torch-cu130/bin/python}"
 P="${P:-5}"
 DATASET_SEED="${DATASET_SEED:-1}"
 SEED="${SEED:-1}"

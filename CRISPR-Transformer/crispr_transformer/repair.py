@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import random
-import os
 import time
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -10,7 +9,7 @@ import torch
 
 from .checkpoint import load_checkpoints
 from .edits import EditGeometry, enumerate_and_apply, valid_geometries
-from .exact import Evaluation, make_evaluator
+from .exact import Evaluation, make_evaluator, require_compatible_cuda
 from .gnf import GNFAutomaton
 from .io_utils import append_jsonl, write_json
 from .model import load_model
@@ -207,8 +206,8 @@ def run_guided_repair(
         raise ValueError("mode must be 'guided' or 'random'")
     if mode == "guided" and model_path is None:
         raise ValueError("guided repair requires a trained model")
-    if device.startswith("cuda") and os.environ.get("SLURM_JOB_PARTITION") != "scavenge_gpu":
-        raise RuntimeError("CUDA repair is restricted to scavenge_gpu")
+    if device.startswith("cuda"):
+        require_compatible_cuda(torch)
     started = time.perf_counter()
     output = Path(output_dir).resolve()
     output.mkdir(parents=True, exist_ok=True)
