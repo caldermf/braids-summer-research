@@ -82,12 +82,13 @@ bash CRISPR-Transformer/jobs/install_cuda13_environment.sh
 ```
 
 This creates `/home/as4843/braids-torch-cu130` without changing the old
-environment. Use that new Python for the commands below.
+environment. Use the original environment for the CPU paper reservoir and the
+CUDA 13 environment for validation, labeling, training, and repair.
 
 ```bash
 mkdir -p slurm_logs
 
-PYTHON_PATH=/home/as4843/braids-torch-cu130/bin/python P=5 SEED=1 \
+PYTHON_PATH=/home/as4843/braids-torch/bin/python P=5 SEED=1 \
   sbatch CRISPR-Transformer/jobs/validate_scavenge_gpu.sh
 
 PYTHON_PATH=/home/as4843/braids-torch-cu130/bin/python P=5 SEED=1 \

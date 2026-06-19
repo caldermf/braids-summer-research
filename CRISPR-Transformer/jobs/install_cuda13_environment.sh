@@ -18,7 +18,6 @@ fi
 
 "$BASE_PYTHON" -m venv "$ENV_DIR"
 "$ENV_DIR/bin/python" -m pip install --upgrade pip setuptools wheel
-"$ENV_DIR/bin/python" -m pip install numpy pandas
 "$ENV_DIR/bin/python" -m pip install \
   torch==2.11.0 \
   --index-url https://download.pytorch.org/whl/cu130

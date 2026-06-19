@@ -1,0 +1,25 @@
+{
+    "status": "passed",
+    "algorithm": "CRISPR-Transformer",
+    "partition": "scavenge_gpu",
+    "gpu": "NVIDIA L40S",
+    "pytorch": "2.11.0+cu130",
+    "cuda_runtime": "13.0",
+    "random_trajectories_compared_per_prime": 32,
+    "primes_compared": [
+      3,
+      5,
+      7
+    ],
+    "legal_variable_edits_checked": 250,
+    "all_integer_delete_lengths": [
+      1,
+      16
+    ],
+    "all_integer_insert_lengths": [
+      1,
+      16
+    ],
+    "known_p5_kernel_verified": true,
+    "model_forward_verified": true
+  }

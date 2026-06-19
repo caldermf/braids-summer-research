@@ -24,6 +24,13 @@ CHECKPOINT="${CHECKPOINT:-$OUTPUT_DIR/paper_reservoir_depth_$(printf '%03d' "$DE
 
 cd "$REPO_ROOT"
 mkdir -p slurm_logs "$OUTPUT_DIR"
+echo "Python executable: $PYTHON_PATH"
+if ! "$PYTHON_PATH" -c \
+  'import numpy, pandas; print("NumPy:", numpy.__version__); print("pandas:", pandas.__version__)' \
+  ; then
+  echo "The paper reservoir requires working NumPy and pandas packages." >&2
+  exit 2
+fi
 echo "Starting paper reservoir at $(date)"
 echo "Partition: ${SLURM_JOB_PARTITION:-unknown}"
 echo "Checkpoint: $CHECKPOINT"
