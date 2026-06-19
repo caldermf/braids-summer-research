@@ -1,0 +1,67 @@
+Python executable: /home/as4843/braids-torch/bin/python
+NumPy: 2.2.6
+pandas: 2.3.3
+Starting paper reservoir at Fri Jun 19 14:02:30 EDT 2026
+Partition: scavenge
+Checkpoint: /nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/crispr_transformer/p5/reservoir_seed1/paper_reservoir_depth_060.json.gz
+{"depth": 5, "selected_buckets": 5, "selected_braids": 28574, "lowest_author_projlen": 10, "author_projlen_one_candidates": 0, "elapsed_seconds": 2.589}
+{"depth": 6, "selected_buckets": 2, "selected_braids": 15068, "lowest_author_projlen": 12, "author_projlen_one_candidates": 0, "elapsed_seconds": 9.604}
+{"depth": 7, "selected_buckets": 3, "selected_braids": 15438, "lowest_author_projlen": 13, "author_projlen_one_candidates": 0, "elapsed_seconds": 13.495}
+{"depth": 8, "selected_buckets": 4, "selected_braids": 17317, "lowest_author_projlen": 14, "author_projlen_one_candidates": 0, "elapsed_seconds": 17.656}
+{"depth": 9, "selected_buckets": 5, "selected_braids": 26253, "lowest_author_projlen": 15, "author_projlen_one_candidates": 0, "elapsed_seconds": 22.55}
+{"depth": 10, "selected_buckets": 4, "selected_braids": 17267, "lowest_author_projlen": 16, "author_projlen_one_candidates": 0, "elapsed_seconds": 29.744}
+{"depth": 11, "selected_buckets": 6, "selected_braids": 26979, "lowest_author_projlen": 16, "author_projlen_one_candidates": 0, "elapsed_seconds": 34.782}
+{"depth": 12, "selected_buckets": 6, "selected_braids": 28130, "lowest_author_projlen": 17, "author_projlen_one_candidates": 0, "elapsed_seconds": 42.375}
+{"depth": 13, "selected_buckets": 6, "selected_braids": 22681, "lowest_author_projlen": 18, "author_projlen_one_candidates": 0, "elapsed_seconds": 50.072}
+{"depth": 14, "selected_buckets": 6, "selected_braids": 22293, "lowest_author_projlen": 19, "author_projlen_one_candidates": 0, "elapsed_seconds": 56.902}
+{"depth": 15, "selected_buckets": 7, "selected_braids": 24504, "lowest_author_projlen": 19, "author_projlen_one_candidates": 0, "elapsed_seconds": 63.805}
+{"depth": 16, "selected_buckets": 7, "selected_braids": 29149, "lowest_author_projlen": 20, "author_projlen_one_candidates": 0, "elapsed_seconds": 71.465}
+{"depth": 17, "selected_buckets": 7, "selected_braids": 23675, "lowest_author_projlen": 20, "author_projlen_one_candidates": 0, "elapsed_seconds": 80.344}
+{"depth": 18, "selected_buckets": 6, "selected_braids": 15437, "lowest_author_projlen": 21, "author_projlen_one_candidates": 0, "elapsed_seconds": 87.577}
+{"depth": 19, "selected_buckets": 7, "selected_braids": 27542, "lowest_author_projlen": 21, "author_projlen_one_candidates": 0, "elapsed_seconds": 92.773}
+{"depth": 20, "selected_buckets": 7, "selected_braids": 21143, "lowest_author_projlen": 21, "author_projlen_one_candidates": 0, "elapsed_seconds": 101.26}
+{"depth": 21, "selected_buckets": 8, "selected_braids": 29051, "lowest_author_projlen": 21, "author_projlen_one_candidates": 0, "elapsed_seconds": 108.021}
+{"depth": 22, "selected_buckets": 9, "selected_braids": 24669, "lowest_author_projlen": 20, "author_projlen_one_candidates": 0, "elapsed_seconds": 116.944}
+{"depth": 23, "selected_buckets": 9, "selected_braids": 21927, "lowest_author_projlen": 20, "author_projlen_one_candidates": 0, "elapsed_seconds": 124.468}
+{"depth": 24, "selected_buckets": 9, "selected_braids": 19717, "lowest_author_projlen": 20, "author_projlen_one_candidates": 0, "elapsed_seconds": 131.577}
+{"depth": 25, "selected_buckets": 11, "selected_braids": 28761, "lowest_author_projlen": 19, "author_projlen_one_candidates": 0, "elapsed_seconds": 138.306}
+{"depth": 26, "selected_buckets": 8, "selected_braids": 15217, "lowest_author_projlen": 21, "author_projlen_one_candidates": 0, "elapsed_seconds": 147.103}
+{"depth": 27, "selected_buckets": 7, "selected_braids": 19570, "lowest_author_projlen": 22, "author_projlen_one_candidates": 0, "elapsed_seconds": 152.39}
+{"depth": 28, "selected_buckets": 9, "selected_braids": 29676, "lowest_author_projlen": 20, "author_projlen_one_candidates": 0, "elapsed_seconds": 159.198}
+{"depth": 29, "selected_buckets": 11, "selected_braids": 24295, "lowest_author_projlen": 19, "author_projlen_one_candidates": 0, "elapsed_seconds": 168.468}
+{"depth": 30, "selected_buckets": 11, "selected_braids": 17998, "lowest_author_projlen": 19, "author_projlen_one_candidates": 0, "elapsed_seconds": 176.43}
+{"depth": 31, "selected_buckets": 12, "selected_braids": 29946, "lowest_author_projlen": 19, "author_projlen_one_candidates": 0, "elapsed_seconds": 182.96}
+{"depth": 32, "selected_buckets": 9, "selected_braids": 17746, "lowest_author_projlen": 21, "author_projlen_one_candidates": 0, "elapsed_seconds": 192.47}
+{"depth": 33, "selected_buckets": 9, "selected_braids": 23212, "lowest_author_projlen": 21, "author_projlen_one_candidates": 0, "elapsed_seconds": 198.887}
+{"depth": 34, "selected_buckets": 9, "selected_braids": 28453, "lowest_author_projlen": 21, "author_projlen_one_candidates": 0, "elapsed_seconds": 206.974}
+{"depth": 35, "selected_buckets": 7, "selected_braids": 15122, "lowest_author_projlen": 22, "author_projlen_one_candidates": 0, "elapsed_seconds": 215.821}
+{"depth": 36, "selected_buckets": 9, "selected_braids": 25251, "lowest_author_projlen": 21, "author_projlen_one_candidates": 0, "elapsed_seconds": 221.31}
+{"depth": 37, "selected_buckets": 8, "selected_braids": 17740, "lowest_author_projlen": 22, "author_projlen_one_candidates": 0, "elapsed_seconds": 229.41}
+{"depth": 38, "selected_buckets": 7, "selected_braids": 15737, "lowest_author_projlen": 23, "author_projlen_one_candidates": 0, "elapsed_seconds": 235.286}
+{"depth": 39, "selected_buckets": 8, "selected_braids": 27277, "lowest_author_projlen": 23, "author_projlen_one_candidates": 0, "elapsed_seconds": 241.206}
+{"depth": 40, "selected_buckets": 9, "selected_braids": 25494, "lowest_author_projlen": 22, "author_projlen_one_candidates": 0, "elapsed_seconds": 250.418}
+{"depth": 41, "selected_buckets": 9, "selected_braids": 19731, "lowest_author_projlen": 22, "author_projlen_one_candidates": 0, "elapsed_seconds": 258.774}
+{"depth": 42, "selected_buckets": 8, "selected_braids": 23923, "lowest_author_projlen": 23, "author_projlen_one_candidates": 0, "elapsed_seconds": 266.096}
+{"depth": 43, "selected_buckets": 9, "selected_braids": 25836, "lowest_author_projlen": 22, "author_projlen_one_candidates": 0, "elapsed_seconds": 274.264}
+{"depth": 44, "selected_buckets": 9, "selected_braids": 26861, "lowest_author_projlen": 22, "author_projlen_one_candidates": 0, "elapsed_seconds": 282.813}
+{"depth": 45, "selected_buckets": 9, "selected_braids": 24855, "lowest_author_projlen": 22, "author_projlen_one_candidates": 0, "elapsed_seconds": 292.016}
+{"depth": 46, "selected_buckets": 9, "selected_braids": 24228, "lowest_author_projlen": 22, "author_projlen_one_candidates": 0, "elapsed_seconds": 300.488}
+{"depth": 47, "selected_buckets": 9, "selected_braids": 24563, "lowest_author_projlen": 22, "author_projlen_one_candidates": 0, "elapsed_seconds": 308.497}
+{"depth": 48, "selected_buckets": 8, "selected_braids": 23746, "lowest_author_projlen": 23, "author_projlen_one_candidates": 0, "elapsed_seconds": 317.058}
+{"depth": 49, "selected_buckets": 8, "selected_braids": 23244, "lowest_author_projlen": 23, "author_projlen_one_candidates": 0, "elapsed_seconds": 325.338}
+{"depth": 50, "selected_buckets": 8, "selected_braids": 24906, "lowest_author_projlen": 23, "author_projlen_one_candidates": 0, "elapsed_seconds": 333.678}
+{"depth": 51, "selected_buckets": 9, "selected_braids": 22218, "lowest_author_projlen": 22, "author_projlen_one_candidates": 0, "elapsed_seconds": 342.294}
+{"depth": 52, "selected_buckets": 10, "selected_braids": 17192, "lowest_author_projlen": 21, "author_projlen_one_candidates": 0, "elapsed_seconds": 350.348}
+{"depth": 53, "selected_buckets": 11, "selected_braids": 15567, "lowest_author_projlen": 20, "author_projlen_one_candidates": 0, "elapsed_seconds": 356.422}
+{"depth": 54, "selected_buckets": 10, "selected_braids": 16928, "lowest_author_projlen": 21, "author_projlen_one_candidates": 0, "elapsed_seconds": 362.272}
+{"depth": 55, "selected_buckets": 11, "selected_braids": 18894, "lowest_author_projlen": 20, "author_projlen_one_candidates": 0, "elapsed_seconds": 368.51}
+{"depth": 56, "selected_buckets": 11, "selected_braids": 21887, "lowest_author_projlen": 19, "author_projlen_one_candidates": 0, "elapsed_seconds": 375.359}
+{"depth": 57, "selected_buckets": 14, "selected_braids": 21416, "lowest_author_projlen": 17, "author_projlen_one_candidates": 0, "elapsed_seconds": 382.853}
+{"depth": 58, "selected_buckets": 16, "selected_braids": 24936, "lowest_author_projlen": 15, "author_projlen_one_candidates": 0, "elapsed_seconds": 390.767}
+{"depth": 59, "selected_buckets": 17, "selected_braids": 23843, "lowest_author_projlen": 13, "author_projlen_one_candidates": 0, "elapsed_seconds": 399.01}
+{"depth": 60, "selected_buckets": 20, "selected_braids": 26946, "lowest_author_projlen": 11, "author_projlen_one_candidates": 0, "elapsed_seconds": 407.806}
+{"checkpoint": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/crispr_transformer/p5/reservoir_seed1/paper_reservoir_depth_060.json.gz", "actual_depth": 60, "candidates": 26946, "author_projlen_one_candidates": 0, "halt_reason": "target_depth", "elapsed_seconds": 407.806}
+{
+  "checkpoint": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/crispr_transformer/p5/reservoir_seed1/paper_reservoir_depth_060.json.gz"
+}
+Finished at Fri Jun 19 14:09:30 EDT 2026
