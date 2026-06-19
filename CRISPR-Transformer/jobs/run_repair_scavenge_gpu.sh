@@ -30,6 +30,7 @@ GENERATIONS="${GENERATIONS:-40}"
 
 cd "$REPO_ROOT"
 mkdir -p slurm_logs "$OUTPUT_DIR"
+source "$PROJECT_ROOT/jobs/require_torch.sh"
 echo "Starting $MODE repair at $(date)"
 ARGS=(
   repair --checkpoint "$CHECKPOINT"

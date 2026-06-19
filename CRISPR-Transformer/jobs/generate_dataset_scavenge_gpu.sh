@@ -26,6 +26,7 @@ REPLACEMENTS_PER_ACTION="${REPLACEMENTS_PER_ACTION:-4}"
 
 cd "$REPO_ROOT"
 mkdir -p slurm_logs "$OUTPUT_DIR"
+source "$PROJECT_ROOT/jobs/require_torch.sh"
 echo "Starting exact mutation-label generation at $(date)"
 echo "Checkpoint: $CHECKPOINT"
 echo "Output: $OUTPUT_DIR"

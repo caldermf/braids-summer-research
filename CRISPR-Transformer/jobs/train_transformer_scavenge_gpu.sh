@@ -23,6 +23,7 @@ EPOCHS="${EPOCHS:-30}"
 
 cd "$REPO_ROOT"
 mkdir -p slurm_logs "$OUTPUT_DIR"
+source "$PROJECT_ROOT/jobs/require_torch.sh"
 echo "Starting p=$P geometry-transformer training at $(date)"
 "$PYTHON_PATH" "$PROJECT_ROOT/run.py" train \
   --dataset "$DATASET_DIR/mutation_groups.jsonl.gz" \
