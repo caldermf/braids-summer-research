@@ -73,6 +73,8 @@ def verify_commutator_kernel(word_list, gen_idx, n=4, r=1, p=2):
         g_inv = g.inv()
         sigma_inv = sigma.inv()
         commutator = sigma * g_inv * sigma_inv * g
+        if commutator == GNF.identity(n):
+            return False, "Trivial commutator in the braid group"
         
         # Evaluate Burau representation
         rep = JonesCellRep(n=n, r=r, p=p)
@@ -146,6 +148,7 @@ def find_commutator_kernel(
     matmul_chunk_size=8000,
     frontier_limit=30000,
     seed=1,
+    max_witnesses_to_print=20,
 ):
     """Search for kernel elements of the form [σ_i, g^{-1}]."""
     random.seed(seed)
@@ -241,6 +244,11 @@ def find_commutator_kernel(
     if not kernel_braids:
         print("No kernel elements found.")
 
+    printed_witnesses = 0
+    printed_rejections = 0
+    trivial_verified = 0
+    rejected_candidates = 0
+
     for batch_idx, batch in enumerate(kernel_braids):
         print(f"\nBatch {batch_idx}: {len(batch)} candidates")
         
@@ -256,23 +264,30 @@ def find_commutator_kernel(
             
             if is_kernel:
                 verified.append(word_list)
-                print(f"\n  🎉 KERNEL ELEMENT #{len(verified)} 🎉")
-                print(f"    g factors: {word_list}")
-                print(f"    g length: {len(word_list)}")
-                print(f"    {msg}")
-                
-                # Show the permutations
-                perms = [index_to_perm(idx) for idx in word_list]
-                print(f"    g permutations: {perms[:5]}{'...' if len(perms) > 5 else ''}")
-                
-                if PEYL_AVAILABLE:
-                    g = GNF(n=4, power=0, factors=tuple(word_list))
-                    sigma_factors = {1: (6,), 2: (2,), 3: (1,)}
-                    sigma = GNF(n=4, power=0, factors=sigma_factors[gen_idx])
-                    comm = sigma * g.inv() * sigma.inv() * g
-                    print(f"    [σ_{gen_idx}, g^{{-1}}] Artin word: {comm.magma_artin_word()}")
-            elif i < 20:
+                if printed_witnesses < max_witnesses_to_print:
+                    printed_witnesses += 1
+                    print(f"\n  🎉 KERNEL ELEMENT #{len(verified)} 🎉")
+                    print(f"    g factors: {word_list}")
+                    print(f"    g length: {len(word_list)}")
+                    print(f"    {msg}")
+
+                    # Show the permutations
+                    perms = [index_to_perm(idx) for idx in word_list]
+                    print(f"    g permutations: {perms[:5]}{'...' if len(perms) > 5 else ''}")
+
+                    if PEYL_AVAILABLE:
+                        g = GNF(n=4, power=0, factors=tuple(word_list))
+                        sigma_factors = {1: (6,), 2: (2,), 3: (1,)}
+                        sigma = GNF(n=4, power=0, factors=sigma_factors[gen_idx])
+                        comm = sigma * g.inv() * sigma.inv() * g
+                        print(f"    [σ_{gen_idx}, g^{{-1}}] Artin word: {comm.magma_artin_word()}")
+            elif printed_rejections < 20:
+                printed_rejections += 1
                 print(f"  Candidate {i}: {word_list[:8]}{'...' if len(word_list) > 8 else ''} - {msg}")
+            if not is_kernel:
+                rejected_candidates += 1
+                if "Trivial commutator" in msg:
+                    trivial_verified += 1
     
     print(f"\n{'=' * 60}")
     print(f"SUMMARY")
@@ -281,6 +296,8 @@ def find_commutator_kernel(
     print(f"Prime: p={p}")
     print(f"Total candidates with projlen=1: {sum(len(b) for b in kernel_braids)}")
     print(f"Verified kernel elements: {len(verified)}")
+    print(f"Rejected kernel candidates: {rejected_candidates}")
+    print(f"Rejected exact trivial commutators: {trivial_verified}")
     
     if verified:
         print(f"\n✓ SUCCESS! Found {len(verified)} kernel elements of the form [σ_{gen_idx}, g^{{-1}}]")
@@ -302,6 +319,8 @@ def find_commutator_kernel(
             "seed": seed,
         },
         "verified_witnesses": verified,
+        "rejected_candidates": rejected_candidates,
+        "rejected_exact_trivial_commutators": trivial_verified,
         "candidates": frontier,
     }
 
@@ -361,6 +380,8 @@ Centralizer avoidance conditions:
                         help="Maximum final-frontier candidates to export")
     parser.add_argument("--seed", type=int, default=1,
                         help="Random seed for reservoir sampling")
+    parser.add_argument("--max-witnesses-to-print", type=int, default=20,
+                        help="Maximum verified witnesses to print in the log")
     
     return parser.parse_args()
 
@@ -381,6 +402,7 @@ if __name__ == "__main__":
         matmul_chunk_size=args.matmul_chunk,
         frontier_limit=args.frontier_limit,
         seed=args.seed,
+        max_witnesses_to_print=args.max_witnesses_to_print,
     )
     if args.output:
         output = Path(args.output)
