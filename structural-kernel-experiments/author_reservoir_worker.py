@@ -47,24 +47,143 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--downturn-min-negative-fraction", type=float, default=0.50)
     parser.add_argument("--downturn-confirmation-steps", type=int, default=2)
     parser.add_argument("--handoff-extra-depths", type=int, default=4)
+    parser.add_argument(
+        "--collision-index",
+        action="store_true",
+        help="Index selected projective Burau matrices and verify distinct-word collisions.",
+    )
+    parser.add_argument(
+        "--collision-scope",
+        choices=("run", "depth"),
+        default="run",
+        help=(
+            "Use one collision index across all selected depths, or reset the index "
+            "at every depth. Run-wide indexing can find collisions between lengths."
+        ),
+    )
+    parser.add_argument(
+        "--max-collision-records",
+        type=int,
+        default=100,
+        help="Maximum detailed collision witnesses to store in the checkpoint.",
+    )
     return parser
 
 
+def _record_for_braid(braid, bucket: tuple[int, int], image: np.ndarray) -> dict:
+    power, factors = braid.canonical_decomposition()
+    return {
+        "depth": int(bucket[0]),
+        "power": int(power),
+        "factor_ids": [int(value) for value in braid.factors],
+        "factor_permutations": [list(factor.word) for factor in factors],
+        "author_projlen": int(bucket[1]),
+        "matrix_fingerprint": image_fingerprint(image),
+    }
+
+
 def _export_bucket(tracker, bucket: tuple[int, int]) -> list[dict]:
-    records = []
     braids, images = tracker.bucket_braids_images(bucket)
-    for braid, image in zip(braids, images):
-        power, factors = braid.canonical_decomposition()
-        records.append(
-            {
-                "depth": int(bucket[0]),
-                "power": int(power),
-                "factor_permutations": [list(factor.word) for factor in factors],
-                "author_projlen": int(bucket[1]),
-                "matrix_fingerprint": image_fingerprint(image),
+    return [_record_for_braid(braid, bucket, image) for braid, image in zip(braids, images)]
+
+
+def _is_projective_scalar_identity(polymat_module, image: np.ndarray) -> tuple[bool, dict]:
+    projected = polymat_module.projectivise(image)
+    if projected.shape[-1] != 1:
+        return False, {"reason": "width_not_one", "width": int(projected.shape[-1])}
+    matrix = projected[..., 0]
+    diagonal = np.diag(matrix)
+    scalar = int(diagonal[0])
+    if scalar == 0:
+        return False, {"reason": "zero_diagonal_scalar"}
+    if not np.all(diagonal == scalar):
+        return False, {"reason": "diagonal_not_scalar", "diagonal": [int(x) for x in diagonal]}
+    off_diagonal = matrix.copy()
+    np.fill_diagonal(off_diagonal, 0)
+    if np.any(off_diagonal != 0):
+        return False, {"reason": "off_diagonal_nonzero"}
+    return True, {"scalar": scalar, "projective_width": 1}
+
+
+class CollisionIndex:
+    """Track projective matrix collisions among retained reservoir states."""
+
+    def __init__(self, rep, polymat_module, evaluate_braid, *, max_records: int):
+        self.rep = rep
+        self.polymat = polymat_module
+        self.evaluate_braid = evaluate_braid
+        self.max_records = max_records
+        self.representatives: dict[str, dict] = {}
+        self.records_seen = 0
+        self.raw_collisions = 0
+        self.duplicate_braids = 0
+        self.verified_kernel_quotients = 0
+        self.trivial_quotients = 0
+        self.failed_verifications = 0
+        self.collision_records: list[dict] = []
+
+    def clear(self) -> None:
+        self.representatives.clear()
+
+    def observe(self, *, braid, image: np.ndarray, record: dict) -> dict | None:
+        self.records_seen += 1
+        fingerprint = record["matrix_fingerprint"]
+        previous = self.representatives.get(fingerprint)
+        if previous is None:
+            self.representatives[fingerprint] = {
+                "braid": braid,
+                "record": record,
             }
-        )
-    return records
+            return None
+
+        self.raw_collisions += 1
+        other = previous["braid"]
+        if braid == other:
+            self.duplicate_braids += 1
+            return None
+
+        quotient = braid * other.inv()
+        if quotient == braid.identity(braid.n):
+            self.trivial_quotients += 1
+            return None
+
+        quotient_image = self.evaluate_braid(self.rep, quotient)
+        verified, match = _is_projective_scalar_identity(self.polymat, quotient_image)
+        if verified:
+            self.verified_kernel_quotients += 1
+        else:
+            self.failed_verifications += 1
+
+        if len(self.collision_records) < self.max_records:
+            quotient_power, quotient_factors = quotient.canonical_decomposition()
+            collision = {
+                "fingerprint": fingerprint,
+                "verified_projective_identity": verified,
+                "match": match,
+                "left": record,
+                "right": previous["record"],
+                "quotient": {
+                    "power": int(quotient_power),
+                    "factor_ids": [int(value) for value in quotient.factors],
+                    "factor_permutations": [list(factor.word) for factor in quotient_factors],
+                    "garside_length": int(quotient.canonical_length()),
+                },
+            }
+            self.collision_records.append(collision)
+            return collision
+        return None
+
+    def summary(self) -> dict:
+        return {
+            "records_seen": self.records_seen,
+            "unique_fingerprints": len(self.representatives),
+            "raw_collisions": self.raw_collisions,
+            "duplicate_braids": self.duplicate_braids,
+            "trivial_quotients": self.trivial_quotients,
+            "verified_kernel_quotients": self.verified_kernel_quotients,
+            "failed_verifications": self.failed_verifications,
+            "stored_collision_records": len(self.collision_records),
+        }
 
 
 def main() -> None:
@@ -79,6 +198,8 @@ def main() -> None:
     # Keep the paper's package isolated from this repository's experimental peyl.
     sys.path.insert(0, str(author_repo))
     import peyl  # type: ignore
+    from peyl import polymat  # type: ignore
+    from peyl.braidsearch import evaluate_braid_factors  # type: ignore
 
     rep = peyl.JonesSummand(n=args.n, r=args.r, p=args.p)
     tracker = peyl.Tracker(
@@ -110,6 +231,16 @@ def main() -> None:
     selected_records: list[dict] = []
     selection_rows: list[dict] = []
     kernel_candidates: list[dict] = []
+    collision_index = (
+        CollisionIndex(
+            rep,
+            polymat,
+            evaluate_braid_factors,
+            max_records=args.max_collision_records,
+        )
+        if args.collision_index
+        else None
+    )
     actual_depth = args.bootstrap_depth
     halt_reason = "target_depth"
 
@@ -142,11 +273,20 @@ def main() -> None:
             }
             for row in selection.itertuples(index=False)
         ]
-        selected_records = [
-            record
-            for bucket in selected_buckets
-            for record in _export_bucket(tracker, bucket)
-        ]
+        if collision_index is not None and args.collision_scope == "depth":
+            collision_index.clear()
+        depth_collision_start = (
+            collision_index.summary() if collision_index is not None else None
+        )
+        selected_records = []
+        for bucket in selected_buckets:
+            braids, images = tracker.bucket_braids_images(bucket)
+            for braid, image in zip(braids, images):
+                record = _record_for_braid(braid, bucket, image)
+                selected_records.append(record)
+                if collision_index is not None:
+                    collision_index.observe(braid=braid, image=image, record=record)
+
         row = {
             "depth": process_depth,
             "selected_buckets": len(selected_buckets),
@@ -157,6 +297,25 @@ def main() -> None:
             "author_projlen_one_candidates": len(depth_kernel_candidates),
             "elapsed_seconds": round(time.perf_counter() - started, 3),
         }
+        if collision_index is not None and depth_collision_start is not None:
+            current_collision_summary = collision_index.summary()
+            row["collision_index"] = {
+                "scope": args.collision_scope,
+                "records_seen": current_collision_summary["records_seen"],
+                "unique_fingerprints": current_collision_summary["unique_fingerprints"],
+                "raw_collisions": current_collision_summary["raw_collisions"],
+                "verified_kernel_quotients": current_collision_summary[
+                    "verified_kernel_quotients"
+                ],
+                "raw_collisions_this_depth": (
+                    current_collision_summary["raw_collisions"]
+                    - depth_collision_start["raw_collisions"]
+                ),
+                "verified_kernel_quotients_this_depth": (
+                    current_collision_summary["verified_kernel_quotients"]
+                    - depth_collision_start["verified_kernel_quotients"]
+                ),
+            }
         downturn = None
         if downturn_monitor is not None and row["lowest_author_projlen"] is not None:
             downturn = downturn_monitor.observe(
@@ -212,6 +371,8 @@ def main() -> None:
             "halt_reason": halt_reason,
             "adaptive_downturn": args.adaptive_downturn,
             "downturn": downturn_monitor.metadata() if downturn_monitor else None,
+            "collision_index_enabled": args.collision_index,
+            "collision_scope": args.collision_scope if args.collision_index else None,
             "paper_tracker_class": "peyl.braidsearch.Tracker",
             "bucket_keys": ["length", "projlen"],
             "selection_rule": "whole buckets whose cumulative stored count is <= use_best",
@@ -220,6 +381,8 @@ def main() -> None:
         "selection": selection_rows,
         "progress": progress,
         "kernel_candidates": kernel_candidates,
+        "collision_summary": collision_index.summary() if collision_index else None,
+        "collision_records": collision_index.collision_records if collision_index else [],
         "candidates": selected_records,
     }
     output = Path(args.output)
@@ -233,6 +396,11 @@ def main() -> None:
                 "actual_depth": actual_depth,
                 "candidates": len(selected_records),
                 "author_projlen_one_candidates": len(kernel_candidates),
+                "verified_kernel_quotient_collisions": (
+                    collision_index.verified_kernel_quotients
+                    if collision_index is not None
+                    else None
+                ),
                 "halt_reason": halt_reason,
                 "elapsed_seconds": payload["metadata"]["elapsed_seconds"],
             }
