@@ -61,11 +61,33 @@ def setup_author_imports(author_repo: Path):
     if str(author_repo) not in sys.path:
         sys.path.insert(0, str(author_repo))
 
-    import peyl  # type: ignore
     from peyl import polymat  # type: ignore
-    from peyl.braidsearch import evaluate_braids  # type: ignore
+    from peyl.braid import GNF  # type: ignore
+    from peyl.jonesrep import JonesCellRep  # type: ignore
 
-    return peyl, polymat, evaluate_braids
+    class PeylNamespace:
+        pass
+
+    PeylNamespace.JonesSummand = JonesCellRep
+    PeylNamespace.GNF = GNF
+
+    def evaluate_braids(rep, braids):
+        indices_by_length: dict[int, list[int]] = {}
+        index_location = []
+        for index, braid in enumerate(braids):
+            length = braid.canonical_length()
+            bucket = indices_by_length.setdefault(length, [])
+            index_location.append((length, len(bucket)))
+            bucket.append(index)
+        images_by_length = {
+            length: rep.polymat_evaluate_braids_of_same_length(
+                [braids[index] for index in indices]
+            )
+            for length, indices in indices_by_length.items()
+        }
+        return [images_by_length[length][local_index] for length, local_index in index_location]
+
+    return PeylNamespace, polymat, evaluate_braids
 
 
 def scalar_identity_metrics(polymat_module, image: np.ndarray) -> dict:
