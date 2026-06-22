@@ -128,11 +128,17 @@ def degeneracy_features(factors: Sequence[int]) -> dict:
     if not factors:
         return {
             "dominant_fraction": 0.0,
+            "top_two_fraction": 0.0,
             "max_run_fraction": 0.0,
+            "max_run_length": 0,
+            "unique_fraction": 0.0,
+            "repeated_bigram_fraction": 0.0,
             "period_at_most_2": False,
         }
     counts = Counter(factors)
-    dominant_fraction = max(counts.values()) / len(factors)
+    ordered_counts = sorted(counts.values(), reverse=True)
+    dominant_fraction = ordered_counts[0] / len(factors)
+    top_two_fraction = sum(ordered_counts[:2]) / len(factors)
     max_run = 1
     run = 1
     for left, right in zip(factors, factors[1:]):
@@ -147,9 +153,17 @@ def degeneracy_features(factors: Sequence[int]) -> dict:
             all(factors[i] == factors[i % period] for i in range(len(factors)))
             for period in (1, 2)
         )
+    bigrams = Counter(zip(factors, factors[1:]))
+    repeated_bigram_fraction = (
+        max(bigrams.values()) / max(1, len(factors) - 1) if bigrams else 0.0
+    )
     return {
         "dominant_fraction": float(dominant_fraction),
+        "top_two_fraction": float(top_two_fraction),
         "max_run_fraction": float(max_run / len(factors)),
+        "max_run_length": int(max_run),
+        "unique_fraction": float(len(counts) / len(factors)),
+        "repeated_bigram_fraction": float(repeated_bigram_fraction),
         "period_at_most_2": bool(period_at_most_2),
     }
 
@@ -166,8 +180,12 @@ def score_metrics(
     penalty = 0.0
     if len(factors) < min_meaningful_length:
         penalty += (min_meaningful_length - len(factors)) * 5.0
-    penalty += max(0.0, degeneracy["dominant_fraction"] - 0.60) * 80.0
-    penalty += max(0.0, degeneracy["max_run_fraction"] - 0.35) * 80.0
+    penalty += max(0.0, degeneracy["dominant_fraction"] - 0.45) * 180.0
+    penalty += max(0.0, degeneracy["top_two_fraction"] - 0.70) * 180.0
+    penalty += max(0.0, degeneracy["max_run_fraction"] - 0.25) * 160.0
+    penalty += max(0.0, degeneracy["max_run_length"] - 3) * 18.0
+    penalty += max(0.0, 0.35 - degeneracy["unique_fraction"]) * 160.0
+    penalty += max(0.0, degeneracy["repeated_bigram_fraction"] - 0.20) * 120.0
     if degeneracy["period_at_most_2"]:
         penalty += 40.0
     if metrics.get("scalar_identity"):

@@ -324,6 +324,19 @@ class SearchEngine:
             roots.append((power, self.automaton.sample_uniform(length, self.rng)))
         return [self.evaluate_word(power, factors) for power, factors in roots]
 
+    @staticmethod
+    def unique_ranked(items: Sequence[EvaluatedWord], limit: int) -> list[EvaluatedWord]:
+        unique: dict[tuple[int, tuple[int, ...]], EvaluatedWord] = {}
+        for item in items:
+            key = (item.power % 2, item.factors)
+            previous = unique.get(key)
+            if previous is None or (item.score, len(item.factors)) < (
+                previous.score,
+                len(previous.factors),
+            ):
+                unique[key] = item
+        return sorted(unique.values(), key=lambda item: (item.score, len(item.factors)))[:limit]
+
     def run(self) -> dict:
         start_time = time.time()
         output_dir = Path(self.args.output_dir)
@@ -336,9 +349,7 @@ class SearchEngine:
         replay_path.write_text("", encoding="utf-8")
 
         frontier = self.initial_roots()
-        best: list[EvaluatedWord] = sorted(frontier, key=lambda item: (item.score, len(item.factors)))[
-            : self.args.keep_best
-        ]
+        best: list[EvaluatedWord] = self.unique_ranked(frontier, self.args.keep_best)
         kernel_hits: list[EvaluatedWord] = []
 
         for iteration in range(1, self.args.iterations + 1):
@@ -394,13 +405,9 @@ class SearchEngine:
             append_jsonl(candidates_path, unique_rows)
             append_jsonl(replay_path, replay_rows)
 
-            best = sorted(best + iteration_candidates, key=lambda item: (item.score, len(item.factors)))[
-                : self.args.keep_best
-            ]
+            best = self.unique_ranked(best + iteration_candidates, self.args.keep_best)
             eligible = [item for item in best + iteration_candidates if len(item.factors) < self.args.max_length]
-            frontier = sorted(eligible, key=lambda item: (item.score, len(item.factors)))[
-                : self.args.frontier_size
-            ]
+            frontier = self.unique_ranked(eligible, self.args.frontier_size)
             row = {
                 "iteration": iteration,
                 "frontier_size": len(frontier),
