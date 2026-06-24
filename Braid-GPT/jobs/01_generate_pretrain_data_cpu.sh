@@ -10,7 +10,8 @@
 set -euo pipefail
 
 REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-$(pwd)}}"
-PROJECT_ROOT="$REPO_ROOT/Braid GPT"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PROJECT_ROOT="${PROJECT_ROOT:-$SCRIPT_DIR}"
 PYTHON_PATH="${PYTHON_PATH:-/home/as4843/braids-torch/bin/python}"
 P="${P:-7}"
 SEED="${SEED:-1}"

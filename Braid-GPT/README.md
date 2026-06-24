@@ -51,7 +51,7 @@ PYTHON_PATH=/home/as4843/braids-torch/bin/python \
 P=7 SEED=1 SEQUENCE_COUNT=1000000 MIN_LENGTH=8 MAX_LENGTH=96 \
 OUTPUT_DIR="$OUTDIR" \
 sbatch --output="$OUTDIR/output.out" --error="$OUTDIR/output.err" \
-  "Braid GPT/jobs/01_generate_pretrain_data_cpu.sh"
+  "Braid-GPT/jobs/01_generate_pretrain_data_cpu.sh"
 ```
 
 ### 2. Pretrain Braid GPT
@@ -63,7 +63,7 @@ mkdir -p "$OUTDIR"
 PYTHON_PATH=/home/as4843/braids-torch-cu130/bin/python \
 P=7 SEED=1 EPOCHS=20 BATCH_SIZE=256 OUTPUT_DIR="$OUTDIR" \
 sbatch --output="$OUTDIR/output.out" --error="$OUTDIR/output.err" \
-  "Braid GPT/jobs/02_pretrain_gpt_gpu.sh"
+  "Braid-GPT/jobs/02_pretrain_gpt_gpu.sh"
 ```
 
 ### 3. Generate Exact Policy Data
@@ -76,7 +76,7 @@ PYTHON_PATH=/home/as4843/braids-torch/bin/python \
 P=7 SEED=1 STATE_COUNT=100000 MIN_LENGTH=12 MAX_LENGTH=72 \
 LOOKAHEAD=2 ROLLOUTS_PER_ACTION=4 OUTPUT_DIR="$OUTDIR" \
 sbatch --output="$OUTDIR/output.out" --error="$OUTDIR/output.err" \
-  "Braid GPT/jobs/03_generate_policy_data_cpu.sh"
+  "Braid-GPT/jobs/03_generate_policy_data_cpu.sh"
 ```
 
 ### 4. Fine-Tune on Exact Policy Labels
@@ -88,7 +88,7 @@ mkdir -p "$OUTDIR"
 PYTHON_PATH=/home/as4843/braids-torch-cu130/bin/python \
 P=7 SEED=1 EPOCHS=20 BATCH_SIZE=128 OUTPUT_DIR="$OUTDIR" \
 sbatch --output="$OUTDIR/output.out" --error="$OUTDIR/output.err" \
-  "Braid GPT/jobs/04_finetune_gpt_gpu.sh"
+  "Braid-GPT/jobs/04_finetune_gpt_gpu.sh"
 ```
 
 ### 5. Generate/Search with Exact Verification
@@ -101,7 +101,7 @@ PYTHON_PATH=/home/as4843/braids-torch-cu130/bin/python \
 P=7 SEED=1 STEPS=96 BEAM_SIZE=512 ACTIONS_PER_STATE=4 RANDOM_ROOTS=128 \
 OUTPUT_DIR="$OUTDIR" \
 sbatch --output="$OUTDIR/output.out" --error="$OUTDIR/output.err" \
-  "Braid GPT/jobs/05_generate_search_gpu.sh"
+  "Braid-GPT/jobs/05_generate_search_gpu.sh"
 ```
 
 ## Scaling Notes
