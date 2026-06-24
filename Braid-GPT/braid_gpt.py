@@ -34,6 +34,46 @@ FACTOR_VOCAB_SIZE = 24
 IGNORE_INDEX = -100
 
 
+def has_peyl_package(path: Path) -> bool:
+    return (path / "peyl" / "braid.py").exists() and (path / "peyl" / "jonesrep.py").exists()
+
+
+def candidate_author_repos(requested: Path) -> list[Path]:
+    return [
+        requested,
+        DEFAULT_AUTHOR_REPO,
+        REPO_ROOT / "hybrid_of_reservoir_crispr_mcts_suffix" / "third_party" / "braids_project",
+        REPO_ROOT / "CRISPR-Transformer-v3-wide-edit" / "third_party" / "braids_project",
+        REPO_ROOT / "CRISPR-Transformer-v2" / "third_party" / "braids_project",
+        REPO_ROOT / "CRISPR-Transformer" / "third_party" / "braids_project",
+        REPO_ROOT / "annealed_reservoir_search" / "third_party" / "braids_project",
+        REPO_ROOT.parent / "braids-project",
+        REPO_ROOT.parent / "burau-experiments",
+        REPO_ROOT.parent / "burau-experiments" / "beta",
+        Path.home() / "braids-project",
+        Path.home() / "burau-experiments",
+        Path.home() / "burau-experiments" / "beta",
+    ]
+
+
+def resolve_author_repo(author_repo: Path) -> Path:
+    tried: list[Path] = []
+    seen: set[Path] = set()
+    for candidate in candidate_author_repos(author_repo.expanduser()):
+        candidate = candidate.expanduser()
+        if candidate in seen:
+            continue
+        seen.add(candidate)
+        tried.append(candidate)
+        if has_peyl_package(candidate):
+            return candidate
+    tried_text = "\n  ".join(str(path) for path in tried)
+    raise FileNotFoundError(
+        "Could not find a peyl package with braid.py and jonesrep.py. Tried:\n"
+        f"  {tried_text}"
+    )
+
+
 def identity_perm(n: int) -> tuple[int, ...]:
     return tuple(range(n))
 
@@ -144,8 +184,7 @@ class GNFAutomaton:
 
 
 def setup_author_imports(author_repo: Path):
-    if not (author_repo / "peyl" / "braid.py").exists():
-        raise FileNotFoundError(f"vendored peyl package is missing at {author_repo}")
+    author_repo = resolve_author_repo(author_repo)
     if str(author_repo) not in sys.path:
         sys.path.insert(0, str(author_repo))
 
