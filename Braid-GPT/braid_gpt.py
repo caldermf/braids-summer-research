@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import argparse
 import gzip
+from functools import lru_cache
+from itertools import permutations
 import json
 import math
 import random
@@ -24,22 +26,376 @@ if str(REPO_ROOT) not in sys.path:
 if str(STRUCTURAL_ROOT) not in sys.path:
     sys.path.insert(0, str(STRUCTURAL_ROOT))
 
-from crispr_transformer.gnf import GNFAutomaton  # noqa: E402
-from exact_transformer_policy.policy_experiment import (  # noqa: E402
-    ExactEvaluator,
-    EvaluatedWord,
-    degeneracy_features,
-    normalized_context_features,
-    parse_seed_word,
-    score_metrics,
-)
-
 
 PAD_TOKEN = 0
 BOS_TOKEN = 25
 TOKEN_VOCAB_SIZE = 26
 FACTOR_VOCAB_SIZE = 24
 IGNORE_INDEX = -100
+
+
+def identity_perm(n: int) -> tuple[int, ...]:
+    return tuple(range(n))
+
+
+def delta_perm(n: int) -> tuple[int, ...]:
+    return tuple(range(n - 1, -1, -1))
+
+
+def right_descent_set(perm: Sequence[int]) -> set[int]:
+    return {index for index in range(len(perm) - 1) if perm[index] > perm[index + 1]}
+
+
+def left_descent_set(perm: Sequence[int]) -> set[int]:
+    inverse = [0] * len(perm)
+    for position, value in enumerate(perm):
+        inverse[value] = position
+    return {index for index in range(len(perm) - 1) if inverse[index] > inverse[index + 1]}
+
+
+class GNFAutomaton:
+    """Self-contained legal-transition graph for left Garside normal forms."""
+
+    def __init__(self, n: int = 4):
+        self.n = n
+        all_perms = list(permutations(range(n)))
+        self.perm_to_id = {perm: index for index, perm in enumerate(all_perms)}
+        self.id_to_perm = {index: perm for index, perm in enumerate(all_perms)}
+        self.factor_ids = tuple(range(len(all_perms)))
+        self.identity_id = self.perm_to_id[identity_perm(n)]
+        self.delta_id = self.perm_to_id[delta_perm(n)]
+        self.first_ids = tuple(
+            factor_id
+            for factor_id in self.factor_ids
+            if factor_id != self.identity_id and (n == 2 or factor_id != self.delta_id)
+        )
+        self.successors = {
+            factor_id: tuple(
+                candidate
+                for candidate in self.factor_ids
+                if candidate != self.identity_id
+                and (n == 2 or candidate != self.delta_id)
+                and right_descent_set(self.id_to_perm[factor_id]).issuperset(
+                    left_descent_set(self.id_to_perm[candidate])
+                )
+            )
+            for factor_id in self.factor_ids
+        }
+
+    def is_legal(self, factor_ids: Sequence[int]) -> bool:
+        if not factor_ids or factor_ids[0] not in self.first_ids:
+            return False
+        return all(
+            right in self.successors[left]
+            for left, right in zip(factor_ids, factor_ids[1:])
+        )
+
+    @lru_cache(maxsize=None)
+    def can_finish(self, current: int, right: int | None, remaining: int) -> bool:
+        if remaining < 0:
+            return False
+        if remaining == 0:
+            return right is None or right in self.successors[current]
+        return any(
+            self.can_finish(next_factor, right, remaining - 1)
+            for next_factor in self.successors[current]
+        )
+
+    def viable_next(
+        self,
+        left: int | None,
+        right: int | None,
+        remaining_after_choice: int,
+    ) -> tuple[int, ...]:
+        candidates = self.first_ids if left is None else self.successors[left]
+        return tuple(
+            candidate
+            for candidate in candidates
+            if self.can_finish(candidate, right, remaining_after_choice)
+        )
+
+    def sample_uniform(self, length: int, rng: random.Random) -> tuple[int, ...]:
+        if length <= 0:
+            raise ValueError("length must be positive")
+        factors = [rng.choice(self.first_ids)]
+        while len(factors) < length:
+            factors.append(rng.choice(self.successors[factors[-1]]))
+        return tuple(factors)
+
+    def sample_bridge(
+        self,
+        left: int | None,
+        right: int | None,
+        length: int,
+        rng: random.Random,
+    ) -> tuple[int, ...]:
+        if length <= 0:
+            raise ValueError("bridge length must be positive")
+        block = []
+        current = left
+        for offset in range(length):
+            remaining = length - offset - 1
+            viable = self.viable_next(current, right, remaining)
+            if not viable:
+                raise ValueError("no legal GNF bridge for the requested boundaries")
+            current = rng.choice(viable)
+            block.append(current)
+        return tuple(block)
+
+
+def setup_author_imports(author_repo: Path):
+    if not (author_repo / "peyl" / "braid.py").exists():
+        raise FileNotFoundError(f"vendored peyl package is missing at {author_repo}")
+    if str(author_repo) not in sys.path:
+        sys.path.insert(0, str(author_repo))
+
+    from peyl import polymat  # type: ignore
+    from peyl.braid import GNF  # type: ignore
+    from peyl.jonesrep import JonesCellRep  # type: ignore
+
+    class PeylNamespace:
+        pass
+
+    PeylNamespace.JonesSummand = JonesCellRep
+    PeylNamespace.GNF = GNF
+
+    def evaluate_braids(rep, braids):
+        indices_by_length: dict[int, list[int]] = {}
+        index_location = []
+        for index, braid in enumerate(braids):
+            length = braid.canonical_length()
+            bucket = indices_by_length.setdefault(length, [])
+            index_location.append((length, len(bucket)))
+            bucket.append(index)
+        images_by_length = {
+            length: rep.polymat_evaluate_braids_of_same_length(
+                [braids[index] for index in indices]
+            )
+            for length, indices in indices_by_length.items()
+        }
+        return [images_by_length[length][local_index] for length, local_index in index_location]
+
+    return PeylNamespace, polymat, evaluate_braids
+
+
+def scalar_identity_metrics(polymat_module, image: np.ndarray) -> dict:
+    projected = polymat_module.projectivise(image)
+    width = int(projected.shape[-1])
+    matrix_count = int(np.count_nonzero(projected))
+    dim = int(projected.shape[0])
+    diagonal = np.stack([projected[i, i, :] for i in range(dim)])
+    scalar_poly = diagonal[0]
+    diagonal_mismatch_terms = int(np.count_nonzero(diagonal - scalar_poly[None, :]))
+    off_diagonal_terms = 0
+    for row in range(dim):
+        for column in range(dim):
+            if row != column:
+                off_diagonal_terms += int(np.count_nonzero(projected[row, column, :]))
+    scalar_nonzero_degrees = int(np.count_nonzero(scalar_poly))
+    scalar_extra_degrees = max(0, scalar_nonzero_degrees - 1)
+    scalar_zero_penalty = 1 if scalar_nonzero_degrees == 0 else 0
+    identity_defect = (
+        off_diagonal_terms
+        + diagonal_mismatch_terms
+        + scalar_extra_degrees
+        + scalar_zero_penalty
+    )
+    return {
+        "projective_width": width,
+        "scalar_identity": identity_defect == 0,
+        "identity_defect": int(identity_defect),
+        "off_diagonal_terms": int(off_diagonal_terms),
+        "diagonal_mismatch_terms": int(diagonal_mismatch_terms),
+        "scalar_nonzero_degrees": int(scalar_nonzero_degrees),
+        "scalar_extra_degrees": int(scalar_extra_degrees),
+        "nonzero_terms": matrix_count,
+    }
+
+
+def degeneracy_features(factors: Sequence[int]) -> dict:
+    if not factors:
+        return {
+            "dominant_fraction": 0.0,
+            "top_two_fraction": 0.0,
+            "max_run_fraction": 0.0,
+            "max_run_length": 0,
+            "unique_fraction": 0.0,
+            "repeated_bigram_fraction": 0.0,
+            "period_at_most_2": False,
+        }
+    counts = Counter(factors)
+    ordered_counts = sorted(counts.values(), reverse=True)
+    dominant_fraction = ordered_counts[0] / len(factors)
+    top_two_fraction = sum(ordered_counts[:2]) / len(factors)
+    max_run = 1
+    run = 1
+    for left, right in zip(factors, factors[1:]):
+        if left == right:
+            run += 1
+            max_run = max(max_run, run)
+        else:
+            run = 1
+    period_at_most_2 = False
+    if len(factors) >= 4:
+        period_at_most_2 = any(
+            all(factors[index] == factors[index % period] for index in range(len(factors)))
+            for period in (1, 2)
+        )
+    bigrams = Counter(zip(factors, factors[1:]))
+    repeated_bigram_fraction = (
+        max(bigrams.values()) / max(1, len(factors) - 1) if bigrams else 0.0
+    )
+    return {
+        "dominant_fraction": float(dominant_fraction),
+        "top_two_fraction": float(top_two_fraction),
+        "max_run_fraction": float(max_run / len(factors)),
+        "max_run_length": int(max_run),
+        "unique_fraction": float(len(counts) / len(factors)),
+        "repeated_bigram_fraction": float(repeated_bigram_fraction),
+        "period_at_most_2": bool(period_at_most_2),
+    }
+
+
+def score_metrics(
+    metrics: dict,
+    factors: Sequence[int],
+    *,
+    width_weight: float,
+    min_meaningful_length: int,
+    degeneracy_weight: float,
+) -> float:
+    degeneracy = degeneracy_features(factors)
+    penalty = 0.0
+    if len(factors) < min_meaningful_length:
+        penalty += (min_meaningful_length - len(factors)) * 5.0
+    penalty += max(0.0, degeneracy["dominant_fraction"] - 0.45) * 180.0
+    penalty += max(0.0, degeneracy["top_two_fraction"] - 0.70) * 180.0
+    penalty += max(0.0, degeneracy["max_run_fraction"] - 0.25) * 160.0
+    penalty += max(0.0, degeneracy["max_run_length"] - 3) * 18.0
+    penalty += max(0.0, 0.35 - degeneracy["unique_fraction"]) * 160.0
+    penalty += max(0.0, degeneracy["repeated_bigram_fraction"] - 0.20) * 120.0
+    if degeneracy["period_at_most_2"]:
+        penalty += 40.0
+    if metrics.get("scalar_identity"):
+        penalty -= 10_000.0
+    return (
+        float(metrics["identity_defect"])
+        + width_weight * float(metrics["projective_width"])
+        + degeneracy_weight * penalty
+    )
+
+
+def normalized_context_features(
+    *,
+    power: int,
+    factors: Sequence[int],
+    metrics: dict,
+    score: float,
+) -> np.ndarray:
+    degeneracy = degeneracy_features(factors)
+    return np.array(
+        [
+            float(power % 2),
+            min(len(factors), 256) / 256.0,
+            math.log1p(max(0.0, float(metrics["identity_defect"]))) / 8.0,
+            min(float(metrics["projective_width"]), 512.0) / 512.0,
+            min(float(metrics["off_diagonal_terms"]), 512.0) / 512.0,
+            min(float(metrics["diagonal_mismatch_terms"]), 256.0) / 256.0,
+            min(float(metrics["scalar_nonzero_degrees"]), 256.0) / 256.0,
+            max(-4.0, min(4.0, float(score) / 256.0)),
+            float(degeneracy["dominant_fraction"]),
+            float(degeneracy["max_run_fraction"]),
+            1.0 if degeneracy["period_at_most_2"] else 0.0,
+        ],
+        dtype=np.float32,
+    )
+
+
+def parse_seed_word(value: str) -> tuple[int, tuple[int, ...]]:
+    if ":" not in value:
+        raise ValueError("seed words must have form POWER:f1,f2,...")
+    power_text, factors_text = value.split(":", 1)
+    factors = tuple(int(part.strip()) for part in factors_text.split(",") if part.strip())
+    return int(power_text), factors
+
+
+@dataclass(frozen=True)
+class EvaluatedWord:
+    power: int
+    factors: tuple[int, ...]
+    metrics: dict
+    score: float
+    tensor: np.ndarray
+
+
+class ExactEvaluator:
+    def __init__(
+        self,
+        *,
+        author_repo: Path,
+        p: int,
+        n: int,
+        r: int,
+        max_degree: int,
+        width_weight: float,
+        min_meaningful_length: int,
+        degeneracy_weight: float,
+    ) -> None:
+        peyl, polymat_module, evaluate_braids = setup_author_imports(author_repo)
+        self.peyl = peyl
+        self.polymat = polymat_module
+        self.evaluate_braids = evaluate_braids
+        self.rep = peyl.JonesSummand(n=n, r=r, p=p)
+        self.p = int(p)
+        self.n = int(n)
+        self.r = int(r)
+        self.dim = int(self.rep.dimension())
+        self.max_degree = int(max_degree)
+        self.width_weight = float(width_weight)
+        self.min_meaningful_length = int(min_meaningful_length)
+        self.degeneracy_weight = float(degeneracy_weight)
+
+    def image_to_tensor(self, image: np.ndarray) -> np.ndarray:
+        projected = self.polymat.projectivise(image) % self.p
+        width = min(projected.shape[-1], self.max_degree)
+        tensor = np.zeros((self.max_degree, self.dim, self.dim), dtype=np.uint8)
+        tensor[:width, :, :] = np.transpose(projected[:, :, :width], (2, 0, 1)).astype(
+            np.uint8,
+            copy=False,
+        )
+        return tensor
+
+    def evaluate_batch(
+        self, words: Sequence[tuple[int, Sequence[int]]], *, batch_size: int
+    ) -> list[EvaluatedWord]:
+        output: list[EvaluatedWord] = []
+        for start in range(0, len(words), batch_size):
+            chunk = words[start : start + batch_size]
+            braids = [
+                self.peyl.GNF(n=self.n, power=int(power), factors=tuple(factors))
+                for power, factors in chunk
+            ]
+            images = self.evaluate_braids(self.rep, braids)
+            for (power, factors), image in zip(chunk, images):
+                factors_tuple = tuple(int(value) for value in factors)
+                metrics = scalar_identity_metrics(self.polymat, image)
+                score = score_metrics(
+                    metrics,
+                    factors_tuple,
+                    width_weight=self.width_weight,
+                    min_meaningful_length=self.min_meaningful_length,
+                    degeneracy_weight=self.degeneracy_weight,
+                )
+                output.append(
+                    EvaluatedWord(
+                        power=int(power),
+                        factors=factors_tuple,
+                        metrics=metrics,
+                        score=score,
+                        tensor=self.image_to_tensor(image),
+                    )
+                )
+        return output
 
 
 def write_json(path: Path, payload: dict) -> None:
