@@ -41,6 +41,22 @@ Run from:
 cd /nfs/roberts/project/pi_com36/as4843/braids-summer-research
 ```
 
+### One-Command Pipeline
+
+This submits all five stages with Slurm dependencies:
+
+```bash
+P=7 SEED=1 "Braid-GPT/jobs/00_submit_full_pipeline.sh"
+```
+
+You can override scale knobs on the same command:
+
+```bash
+P=7 SEED=1 SEQUENCE_COUNT=1000000 STATE_COUNT=100000 \
+PRETRAIN_EPOCHS=20 FINETUNE_EPOCHS=20 \
+"Braid-GPT/jobs/00_submit_full_pipeline.sh"
+```
+
 ### 1. Generate Big Pretraining Data
 
 ```bash
