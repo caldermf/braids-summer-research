@@ -4,7 +4,7 @@
 #SBATCH --gpus=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=96G
-#SBATCH --time=2-00:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --output=slurm_logs/braid_gpt_finetune_%j.out
 #SBATCH --error=slurm_logs/braid_gpt_finetune_%j.err
 

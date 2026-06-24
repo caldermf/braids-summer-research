@@ -3,7 +3,7 @@
 #SBATCH --partition=scavenge
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=128G
-#SBATCH --time=2-00:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --output=slurm_logs/braid_gpt_policy_data_%j.out
 #SBATCH --error=slurm_logs/braid_gpt_policy_data_%j.err
 
