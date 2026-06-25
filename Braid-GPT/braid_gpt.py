@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import gzip
+import importlib
 from functools import lru_cache
 from itertools import permutations
 import json
@@ -10,6 +11,7 @@ import math
 import random
 import sys
 import time
+import types
 from collections import Counter
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -185,18 +187,29 @@ class GNFAutomaton:
 
 def setup_author_imports(author_repo: Path):
     author_repo = resolve_author_repo(author_repo)
-    if str(author_repo) not in sys.path:
-        sys.path.insert(0, str(author_repo))
+    peyl_path = author_repo / "peyl"
 
-    from peyl import polymat  # type: ignore
-    from peyl.braid import GNF  # type: ignore
-    from peyl.jonesrep import JonesCellRep  # type: ignore
+    # Some vendored peyl copies import braidsearch from peyl/__init__.py, which
+    # pulls in pandas. Bouchet's GPU env has a broken pandas build, so we create
+    # a minimal package object and import only the exact submodules we need.
+    for module_name in list(sys.modules):
+        if module_name == "peyl" or module_name.startswith("peyl."):
+            del sys.modules[module_name]
+    peyl_package = types.ModuleType("peyl")
+    peyl_package.__file__ = str(peyl_path / "__init__.py")
+    peyl_package.__path__ = [str(peyl_path)]
+    peyl_package.__package__ = "peyl"
+    sys.modules["peyl"] = peyl_package
+
+    polymat = importlib.import_module("peyl.polymat")
+    braid_module = importlib.import_module("peyl.braid")
+    jonesrep_module = importlib.import_module("peyl.jonesrep")
 
     class PeylNamespace:
         pass
 
-    PeylNamespace.JonesSummand = JonesCellRep
-    PeylNamespace.GNF = GNF
+    PeylNamespace.JonesSummand = jonesrep_module.JonesCellRep
+    PeylNamespace.GNF = braid_module.GNF
 
     def evaluate_braids(rep, braids):
         indices_by_length: dict[int, list[int]] = {}
@@ -548,7 +561,14 @@ def build_braid_gpt(torch, nn, config: BraidGPTConfig):
                 batch_first=True,
                 norm_first=True,
             )
-            self.encoder = nn.TransformerEncoder(layer, num_layers=cfg.num_layers)
+            try:
+                self.encoder = nn.TransformerEncoder(
+                    layer,
+                    num_layers=cfg.num_layers,
+                    enable_nested_tensor=False,
+                )
+            except TypeError:
+                self.encoder = nn.TransformerEncoder(layer, num_layers=cfg.num_layers)
             self.final_norm = nn.LayerNorm(cfg.d_model)
             self.policy_head = nn.Linear(cfg.d_model, cfg.factor_vocab_size)
             self.value_head = nn.Sequential(
@@ -558,7 +578,7 @@ def build_braid_gpt(torch, nn, config: BraidGPTConfig):
             )
 
         def causal_mask(self, length: int, device):
-            mask = torch.full((length, length), float("-inf"), device=device)
+            mask = torch.ones((length, length), dtype=torch.bool, device=device)
             return torch.triu(mask, diagonal=1)
 
         def forward(self, tokens, context):
