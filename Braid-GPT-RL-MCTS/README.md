@@ -4,7 +4,12 @@ Policy-guided MCTS on top of a trained Braid-GPT checkpoint.
 
 The transformer supplies legal next-factor priors. The MCTS controller expands
 candidate braids, evaluates them exactly with the Burau/Jones machinery, and
-backs up a shaped value based mainly on exact identity defect plus `projlen`.
+backs up a shaped value based on a hybrid of exact defect, `projlen`, and
+length-normalized defect/`projlen`.
+
+The length-normalized part is deliberately paired with a tail-period penalty:
+we want larger braids with good defect density, not artificial suffix loops such
+as repeating one or two factors forever.
 
 Default seed motif:
 
@@ -21,4 +26,3 @@ Outputs:
 
 All new outputs use `projlen`; old `projective_width` metrics are only accepted
 as legacy input aliases.
-

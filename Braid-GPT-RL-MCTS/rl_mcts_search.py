@@ -57,6 +57,24 @@ def clean_metrics(metrics: dict) -> dict:
     return output
 
 
+def tail_period_features(factors: Sequence[int], max_period: int) -> dict:
+    best = {"period": 0, "suffix_length": 0, "repeats": 0.0}
+    n = len(factors)
+    for period in range(1, min(max_period, n // 2) + 1):
+        for suffix_length in range(n, 2 * period - 1, -1):
+            suffix = factors[-suffix_length:]
+            if all(suffix[index] == suffix[index - period] for index in range(period, suffix_length)):
+                repeats = suffix_length / period
+                if suffix_length > best["suffix_length"]:
+                    best = {
+                        "period": period,
+                        "suffix_length": suffix_length,
+                        "repeats": float(repeats),
+                    }
+                break
+    return best
+
+
 @dataclass(frozen=True)
 class SearchState:
     power: int
@@ -198,29 +216,73 @@ class PolicyGuidedMCTS:
         return actions
 
     def mcts_cost(self, state: SearchState) -> float:
+        return float(self.cost_components(state)["mcts_cost"])
+
+    def cost_components(self, state: SearchState) -> dict:
         metrics = state.metrics
         if not metrics:
-            return 10_000.0
-        cost = (
-            self.args.identity_weight * float(metrics["identity_defect"])
-            + self.args.projlen_weight * metric_projlen(metrics)
+            return {
+                "mcts_cost": 10_000.0,
+                "absolute_cost": 10_000.0,
+                "density_cost": 10_000.0,
+                "degeneracy_penalty": 0.0,
+                "length_floor_penalty": 0.0,
+                "defect_per_factor": 10_000.0,
+                "projlen_per_factor": 10_000.0,
+            }
+        length = max(1, len(state.factors))
+        identity_defect = float(metrics["identity_defect"])
+        projlen = metric_projlen(metrics)
+        absolute_cost = self.args.identity_weight * identity_defect + self.args.projlen_weight * projlen
+        density_scale = (
+            max(1.0, self.args.density_reference_length) / float(length)
+        ) ** self.args.length_density_power
+        density_cost = density_scale * (
+            self.args.identity_density_weight * identity_defect
+            + self.args.projlen_density_weight * projlen
         )
+        density_mix = max(0.0, min(1.0, self.args.density_mix))
+        cost = (1.0 - density_mix) * absolute_cost + density_mix * density_cost
+        degeneracy_penalty = 0.0
         if self.args.degeneracy_weight:
             deg = self.bgpt.degeneracy_features(state.factors)
-            penalty = 0.0
-            penalty += max(0.0, deg["dominant_fraction"] - 0.45) * 80.0
-            penalty += max(0.0, deg["top_two_fraction"] - 0.70) * 80.0
-            penalty += max(0.0, deg["max_run_fraction"] - 0.25) * 80.0
-            penalty += max(0.0, 0.35 - deg["unique_fraction"]) * 80.0
-            penalty += max(0.0, deg["repeated_bigram_fraction"] - 0.20) * 60.0
+            degeneracy_penalty += max(0.0, deg["dominant_fraction"] - 0.45) * 80.0
+            degeneracy_penalty += max(0.0, deg["top_two_fraction"] - 0.70) * 80.0
+            degeneracy_penalty += max(0.0, deg["max_run_fraction"] - 0.25) * 80.0
+            degeneracy_penalty += max(0.0, 0.35 - deg["unique_fraction"]) * 80.0
+            degeneracy_penalty += max(0.0, deg["repeated_bigram_fraction"] - 0.20) * 60.0
             if deg["period_at_most_2"]:
-                penalty += 40.0
-            cost += self.args.degeneracy_weight * penalty
+                degeneracy_penalty += 40.0
+            cost += self.args.degeneracy_weight * degeneracy_penalty
+        tail_period = tail_period_features(state.factors, self.args.tail_repeat_max_period)
+        tail_repeat_penalty = self.args.tail_repeat_weight * max(
+            0.0,
+            tail_period["repeats"] - self.args.tail_repeat_allowed_repeats,
+        )
+        cost += tail_repeat_penalty
+        length_floor_penalty = 0.0
         if self.args.length_floor_weight and len(state.factors) < self.args.min_meaningful_length:
-            cost += self.args.length_floor_weight * (self.args.min_meaningful_length - len(state.factors))
+            length_floor_penalty = self.args.length_floor_weight * (
+                self.args.min_meaningful_length - len(state.factors)
+            )
+            cost += length_floor_penalty
         if metrics.get("scalar_identity"):
             cost -= self.args.kernel_bonus
-        return float(cost)
+        return {
+            "mcts_cost": float(cost),
+            "absolute_cost": float(absolute_cost),
+            "density_cost": float(density_cost),
+            "density_mix": float(density_mix),
+            "degeneracy_penalty": float(degeneracy_penalty),
+            "tail_repeat_penalty": float(tail_repeat_penalty),
+            "tail_period": tail_period,
+            "length_floor_penalty": float(length_floor_penalty),
+            "identity_defect": identity_defect,
+            "projlen": projlen,
+            "length": int(length),
+            "defect_per_factor": float(identity_defect / length),
+            "projlen_per_factor": float(projlen / length),
+        }
 
     def state_value(self, state: SearchState) -> float:
         return -self.mcts_cost(state) / max(self.args.value_scale, 1e-6)
@@ -238,7 +300,18 @@ class PolicyGuidedMCTS:
         metrics = state.metrics
         return (
             0 if metrics.get("scalar_identity") else 1,
+            self.mcts_cost(state),
             int(metrics.get("identity_defect", 10**9)),
+            metric_projlen(metrics),
+            -len(state.factors),
+        )
+
+    def defect_rank_key(self, state: SearchState) -> tuple:
+        metrics = state.metrics
+        return (
+            0 if metrics.get("scalar_identity") else 1,
+            int(metrics.get("identity_defect", 10**9)),
+            metric_projlen(metrics),
             self.mcts_cost(state),
             len(state.factors),
         )
@@ -283,6 +356,7 @@ class PolicyGuidedMCTS:
                     "metrics": node.state.metrics,
                     "score": node.state.score,
                     "mcts_cost": self.mcts_cost(node.state),
+                    "cost_components": self.cost_components(node.state),
                 }
                 for node in nodes
             ],
@@ -379,6 +453,8 @@ class PolicyGuidedMCTS:
             "best_identity_defect": best_metrics.get("identity_defect"),
             "best_projlen": best_metrics.get("projlen"),
             "best_mcts_cost": self.mcts_cost(best) if best else None,
+            "best_defect_per_factor": self.cost_components(best)["defect_per_factor"] if best else None,
+            "best_projlen_per_factor": self.cost_components(best)["projlen_per_factor"] if best else None,
             "best_length": len(best.factors) if best else None,
             "kernel_hits": len(self.kernel_hits),
         }
@@ -403,6 +479,7 @@ class PolicyGuidedMCTS:
                     "metrics": node.state.metrics,
                     "score": node.state.score,
                     "mcts_cost": self.mcts_cost(node.state),
+                    "cost_components": self.cost_components(node.state),
                     "actions": [
                         {
                             "action": edge.action,
@@ -413,6 +490,7 @@ class PolicyGuidedMCTS:
                             "child_identity_defect": edge.child.state.metrics.get("identity_defect"),
                             "child_projlen": edge.child.state.metrics.get("projlen"),
                             "child_mcts_cost": self.mcts_cost(edge.child.state),
+                            "child_cost_components": self.cost_components(edge.child.state),
                         }
                         for edge in sorted(
                             node.children.values(),
@@ -459,6 +537,7 @@ class PolicyGuidedMCTS:
 
         self.write_policy_targets()
         best_states = self.best_states(self.args.keep_best)
+        best_by_defect = sorted(self.best.values(), key=self.defect_rank_key)[: self.args.keep_best]
         summary = {
             "format": "braid-gpt-rl-mcts-summary-v1",
             "checkpoint": str(self.args.checkpoint),
@@ -476,10 +555,19 @@ class PolicyGuidedMCTS:
                 "puct_c": self.args.puct_c,
                 "identity_weight": self.args.identity_weight,
                 "projlen_weight": self.args.projlen_weight,
+                "identity_density_weight": self.args.identity_density_weight,
+                "projlen_density_weight": self.args.projlen_density_weight,
+                "density_mix": self.args.density_mix,
+                "density_reference_length": self.args.density_reference_length,
+                "length_density_power": self.args.length_density_power,
                 "degeneracy_weight": self.args.degeneracy_weight,
+                "tail_repeat_weight": self.args.tail_repeat_weight,
+                "tail_repeat_allowed_repeats": self.args.tail_repeat_allowed_repeats,
+                "tail_repeat_max_period": self.args.tail_repeat_max_period,
             },
             "kernel_hits": [self.state_record(state) for state in self.kernel_hits[: self.args.keep_best]],
             "best": [self.state_record(state) for state in best_states],
+            "best_by_identity_defect": [self.state_record(state) for state in best_by_defect],
         }
         write_json(self.output_dir / "summary.json", summary)
 
@@ -491,6 +579,7 @@ class PolicyGuidedMCTS:
             "metrics": state.metrics,
             "score": state.score,
             "mcts_cost": self.mcts_cost(state),
+            "cost_components": self.cost_components(state),
         }
 
 
@@ -517,7 +606,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--matrix-max-degree", type=int, default=256)
     parser.add_argument("--identity-weight", type=float, default=1.0)
     parser.add_argument("--projlen-weight", type=float, default=0.05)
+    parser.add_argument("--identity-density-weight", type=float, default=1.0)
+    parser.add_argument("--projlen-density-weight", type=float, default=0.10)
+    parser.add_argument("--density-mix", type=float, default=0.60)
+    parser.add_argument("--density-reference-length", type=float, default=15.0)
+    parser.add_argument("--length-density-power", type=float, default=1.0)
     parser.add_argument("--degeneracy-weight", type=float, default=0.4)
+    parser.add_argument("--tail-repeat-weight", type=float, default=8.0)
+    parser.add_argument("--tail-repeat-allowed-repeats", type=float, default=2.25)
+    parser.add_argument("--tail-repeat-max-period", type=int, default=4)
     parser.add_argument("--min-meaningful-length", type=int, default=15)
     parser.add_argument("--length-floor-weight", type=float, default=0.0)
     parser.add_argument("--kernel-bonus", type=float, default=100000.0)
