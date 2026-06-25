@@ -136,10 +136,12 @@ class PolicyGuidedMCTS:
     def state_context(self, state: SearchState) -> np.ndarray:
         if not state.factors:
             return self.bgpt.empty_context(state.power)
+        metrics = dict(state.metrics)
+        metrics.setdefault("projective_width", metrics.get("projlen", 0))
         return self.bgpt.normalized_context_features(
             power=state.power,
             factors=state.factors,
-            metrics=state.metrics,
+            metrics=metrics,
             score=state.score,
         )
 
@@ -534,4 +536,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

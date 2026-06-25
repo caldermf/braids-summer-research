@@ -253,7 +253,7 @@ def scalar_identity_metrics(polymat_module, image: np.ndarray) -> dict:
         + scalar_zero_penalty
     )
     return {
-        "projective_width": width,
+        "projlen": width,
         "scalar_identity": identity_defect == 0,
         "identity_defect": int(identity_defect),
         "off_diagonal_terms": int(off_diagonal_terms),
@@ -262,6 +262,10 @@ def scalar_identity_metrics(polymat_module, image: np.ndarray) -> dict:
         "scalar_extra_degrees": int(scalar_extra_degrees),
         "nonzero_terms": matrix_count,
     }
+
+
+def get_projlen(metrics: dict) -> float:
+    return float(metrics.get("projlen", metrics.get("projective_width", 0.0)))
 
 
 def degeneracy_features(factors: Sequence[int]) -> dict:
@@ -332,7 +336,7 @@ def score_metrics(
         penalty -= 10_000.0
     return (
         float(metrics["identity_defect"])
-        + width_weight * float(metrics["projective_width"])
+        + width_weight * get_projlen(metrics)
         + degeneracy_weight * penalty
     )
 
@@ -350,7 +354,7 @@ def normalized_context_features(
             float(power % 2),
             min(len(factors), 256) / 256.0,
             math.log1p(max(0.0, float(metrics["identity_defect"]))) / 8.0,
-            min(float(metrics["projective_width"]), 512.0) / 512.0,
+            min(get_projlen(metrics), 512.0) / 512.0,
             min(float(metrics["off_diagonal_terms"]), 512.0) / 512.0,
             min(float(metrics["diagonal_mismatch_terms"]), 256.0) / 256.0,
             min(float(metrics["scalar_nonzero_degrees"]), 256.0) / 256.0,
@@ -959,7 +963,7 @@ def generate_policy_data(args: argparse.Namespace) -> None:
         "max_factors": args.max_factors,
         "lookahead": args.lookahead,
         "rollouts_per_action": args.rollouts_per_action,
-        "width_weight": args.width_weight,
+        "projlen_weight": args.width_weight,
         "min_meaningful_length": args.min_meaningful_length,
         "degeneracy_weight": args.degeneracy_weight,
         "target_temperature": args.target_temperature,
@@ -1312,7 +1316,7 @@ def build_parser() -> argparse.ArgumentParser:
     poldata.add_argument("--lookahead", type=int, default=2)
     poldata.add_argument("--rollouts-per-action", type=int, default=4)
     poldata.add_argument("--matrix-max-degree", type=int, default=256)
-    poldata.add_argument("--width-weight", type=float, default=0.15)
+    poldata.add_argument("--projlen-weight", "--width-weight", dest="width_weight", type=float, default=0.15)
     poldata.add_argument("--min-meaningful-length", type=int, default=15)
     poldata.add_argument("--degeneracy-weight", type=float, default=1.0)
     poldata.add_argument("--target-temperature", type=float, default=8.0)
@@ -1364,7 +1368,7 @@ def build_parser() -> argparse.ArgumentParser:
     search.add_argument("--temperature", type=float, default=1.0)
     search.add_argument("--eval-batch-size", type=int, default=500)
     search.add_argument("--matrix-max-degree", type=int, default=256)
-    search.add_argument("--width-weight", type=float, default=0.15)
+    search.add_argument("--projlen-weight", "--width-weight", dest="width_weight", type=float, default=0.15)
     search.add_argument("--min-meaningful-length", type=int, default=15)
     search.add_argument("--degeneracy-weight", type=float, default=1.0)
     search.add_argument("--seed", type=int, default=1)
