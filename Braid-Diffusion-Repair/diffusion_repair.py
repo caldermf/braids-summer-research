@@ -199,6 +199,11 @@ def load_clean_kernels(
     augment_repeats: int,
     augment_rotations_per_kernel: int,
 ) -> list[CleanKernel]:
+    if not kernel_sources:
+        raise RuntimeError(
+            "No --kernel-source paths were provided; pass at least one kernel_hits.json/jsonl path "
+            "or set KERNEL_SOURCES in the Slurm job environment"
+        )
     seen: set[tuple[int, tuple[int, ...]]] = set()
     raw_kernels: list[CleanKernel] = []
     for power, factors, source in load_kernel_rows(kernel_sources):
@@ -216,7 +221,11 @@ def load_clean_kernels(
         if max_kernels and len(raw_kernels) >= max_kernels:
             break
     if not raw_kernels:
-        raise RuntimeError("No clean kernel candidates were loaded from --kernel-source paths")
+        raise RuntimeError(
+            "No clean kernel candidates were loaded from --kernel-source paths. "
+            f"sources={list(kernel_sources)}, min_length={min_length}, max_length={max_length}. "
+            "Check that these files exist on Bouchet, are nonempty, and contain factor_ids/final_factors/powered_factors."
+        )
     if not verify:
         return raw_kernels
     verified: list[CleanKernel] = []
@@ -1196,6 +1205,54 @@ def unique_ranked(states: Sequence[RepairState], limit: int) -> list[RepairState
     )[:limit]
 
 
+def rank_key(state: RepairState) -> tuple[float, int, int]:
+    return (
+        state.objective,
+        state.metrics.get("identity_defect", 10**9),
+        state.metrics.get("projlen", 10**9),
+    )
+
+
+def unique_ranked_by_length(
+    states: Sequence[RepairState],
+    *,
+    per_length_limit: int,
+    global_limit: int,
+) -> list[RepairState]:
+    if per_length_limit <= 0:
+        return unique_ranked(states, global_limit)
+
+    unique: dict[tuple[int, tuple[int, ...]], RepairState] = {}
+    for state in states:
+        key = (state.power % 2, state.factors)
+        previous = unique.get(key)
+        if previous is None or rank_key(state) < rank_key(previous):
+            unique[key] = state
+
+    by_length: dict[int, list[RepairState]] = {}
+    for state in unique.values():
+        by_length.setdefault(len(state.factors), []).append(state)
+    for bucket in by_length.values():
+        bucket.sort(key=rank_key)
+
+    selected: list[RepairState] = []
+    for offset in range(per_length_limit):
+        for length in sorted(by_length):
+            bucket = by_length[length]
+            if offset < len(bucket):
+                selected.append(bucket[offset])
+                if global_limit and len(selected) >= global_limit:
+                    return sorted(selected, key=rank_key)
+    return sorted(selected, key=rank_key)[:global_limit]
+
+
+def length_counts(states: Sequence[RepairState]) -> dict[str, int]:
+    counts: dict[int, int] = {}
+    for state in states:
+        counts[len(state.factors)] = counts.get(len(state.factors), 0) + 1
+    return {str(length): counts[length] for length in sorted(counts)}
+
+
 def parse_seed_word(value: str) -> tuple[int, tuple[int, ...]]:
     if ":" not in value:
         raise ValueError("seed words must have form POWER:f1,f2,...")
@@ -1398,8 +1455,19 @@ def search(args: argparse.Namespace) -> None:
 
     start_pairs = evaluated_states(start_words)
     matrix_by_key = {(state.power % 2, state.factors): matrix for state, matrix in start_pairs}
-    frontier = unique_ranked([state for state, _ in start_pairs], args.beam_size)
-    best = unique_ranked(frontier, args.keep_best)
+    bucket_kwargs = {
+        "per_length_limit": args.per_length_keep if args.bucket_by_length else 0,
+    }
+    frontier = unique_ranked_by_length(
+        [state for state, _ in start_pairs],
+        global_limit=args.beam_size,
+        **bucket_kwargs,
+    )
+    best = unique_ranked_by_length(
+        frontier,
+        global_limit=args.keep_best,
+        **bucket_kwargs,
+    )
     seen = {(state.power % 2, state.factors) for state in frontier}
     kernel_hits: list[RepairState] = [state for state in frontier if state.metrics.get("scalar_identity") and len(state.factors) > 0]
     start_time = time.time()
@@ -1479,8 +1547,16 @@ def search(args: argparse.Namespace) -> None:
             )
         append_jsonl(candidates_path, candidate_rows)
         kernel_hits.extend(state for state in child_states if state.metrics.get("scalar_identity") and len(state.factors) > 0)
-        best = unique_ranked(best + child_states, args.keep_best)
-        frontier = unique_ranked(child_states + best, args.beam_size)
+        best = unique_ranked_by_length(
+            best + child_states,
+            global_limit=args.keep_best,
+            **bucket_kwargs,
+        )
+        frontier = unique_ranked_by_length(
+            child_states + best,
+            global_limit=args.beam_size,
+            **bucket_kwargs,
+        )
         row = {
             "phase": "diffusion_repair_search",
             "step": step,
@@ -1493,6 +1569,9 @@ def search(args: argparse.Namespace) -> None:
             "kernel_hits": len(kernel_hits),
             "elapsed_seconds": round(time.time() - start_time, 2),
         }
+        if args.bucket_by_length:
+            row["frontier_length_counts"] = length_counts(frontier)
+            row["best_length_counts"] = length_counts(best)
         append_jsonl(progress_path, [row])
         print(json.dumps(row, sort_keys=True), flush=True)
         if kernel_hits and args.stop_at_kernel:
@@ -1526,6 +1605,8 @@ def search(args: argparse.Namespace) -> None:
             "bridge_samples_per_edit": args.bridge_samples_per_edit,
             "accept_only_improvements": args.accept_only_improvements,
             "inference_noise_level": args.inference_noise_level,
+            "bucket_by_length": args.bucket_by_length,
+            "per_length_keep": args.per_length_keep,
         },
         "objective": {
             "identity_weight": args.identity_weight,
@@ -1651,6 +1732,8 @@ def build_parser() -> argparse.ArgumentParser:
     search_parser.add_argument("--eval-batch-size", type=int, default=500)
     search_parser.add_argument("--accept-only-improvements", action="store_true")
     search_parser.add_argument("--stop-at-kernel", action="store_true")
+    search_parser.add_argument("--bucket-by-length", action="store_true")
+    search_parser.add_argument("--per-length-keep", type=int, default=128)
     search_parser.add_argument("--seed", type=int, default=1)
     add_objective_args(search_parser)
     search_parser.set_defaults(func=search)
