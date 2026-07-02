@@ -32,6 +32,8 @@ KERNEL_SOURCES="${KERNEL_SOURCES:-}"
 augment_repeats_default=2
 AUGMENT_REPEATS="${AUGMENT_REPEATS:-$augment_repeats_default}"
 AUGMENT_ROTATIONS_PER_KERNEL="${AUGMENT_ROTATIONS_PER_KERNEL:-8}"
+NO_VERIFY_CLEAN_KERNELS="${NO_VERIFY_CLEAN_KERNELS:-0}"
+KEEP_DEGENERATE_KERNELS="${KEEP_DEGENERATE_KERNELS:-0}"
 OUTPUT_DIR="${OUTPUT_DIR:-$REPO_ROOT/results/braid_diffusion_repair/p${P}_data_seed${SEED}}"
 
 IDENTITY_WEIGHT="${IDENTITY_WEIGHT:-1.0}"
@@ -53,6 +55,12 @@ if [[ -n "$KERNEL_SOURCES" ]]; then
       EXTRA_ARGS+=(--kernel-source "$SOURCE")
     fi
   done
+fi
+if [[ "$NO_VERIFY_CLEAN_KERNELS" == "1" ]]; then
+  EXTRA_ARGS+=(--no-verify-clean-kernels)
+fi
+if [[ "$KEEP_DEGENERATE_KERNELS" == "1" ]]; then
+  EXTRA_ARGS+=(--keep-degenerate-kernels)
 fi
 
 "$PYTHON_PATH" "$PROJECT_ROOT/diffusion_repair.py" data \
