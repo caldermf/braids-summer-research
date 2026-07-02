@@ -1372,6 +1372,7 @@ def search(args: argparse.Namespace) -> None:
     device = resolve_device(torch, args.device)
     model, config, checkpoint = load_checkpoint(torch, nn, Path(args.checkpoint), device)
     automaton = bgpt.GNFAutomaton(args.n)
+    model_p = args.model_p if args.model_p > 0 else args.p
     evaluator = mgpt.MatrixEvaluator(
         bgpt=bgpt,
         author_repo=Path(args.author_repo),
@@ -1491,7 +1492,7 @@ def search(args: argparse.Namespace) -> None:
             tokens = np.stack([mgpt.encode_prefix(state.factors, config.max_factors)[0] for state in batch_states])
             matrices = np.stack([matrix_by_key[(state.power % 2, state.factors)] for state in batch_states])
             widths = np.array([state.matrix_width for state in batch_states], dtype=np.int64)
-            p_values = np.full((len(batch_states),), args.p, dtype=np.int64)
+            p_values = np.full((len(batch_states),), model_p, dtype=np.int64)
             noise_values = np.full((len(batch_states),), args.inference_noise_level, dtype=np.int64)
             with torch.no_grad():
                 position_logits, width_logits, factor_logits = model(
@@ -1610,6 +1611,8 @@ def search(args: argparse.Namespace) -> None:
             "inference_noise_level": args.inference_noise_level,
             "bucket_by_length": args.bucket_by_length,
             "per_length_keep": args.per_length_keep,
+            "evaluator_p": args.p,
+            "model_p": model_p,
         },
         "objective": {
             "identity_weight": args.identity_weight,
@@ -1707,6 +1710,7 @@ def build_parser() -> argparse.ArgumentParser:
     search_parser.add_argument("--output-dir", required=True)
     search_parser.add_argument("--kernel-source", action="append", default=[])
     search_parser.add_argument("--p", type=int, default=5)
+    search_parser.add_argument("--model-p", type=int, default=0)
     search_parser.add_argument("--n", type=int, default=4)
     search_parser.add_argument("--r", type=int, default=1)
     search_parser.add_argument("--device", default="auto")

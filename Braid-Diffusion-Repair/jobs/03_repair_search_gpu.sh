@@ -18,6 +18,7 @@ PYTHON_PATH="${PYTHON_PATH:-/home/as4843/braids-torch-cu130/bin/python}"
 AUTHOR_REPO="${AUTHOR_REPO:-$REPO_ROOT/hybrid_of_reservoir_crispr_mcts_suffix/third_party/braids_project}"
 
 P="${P:-5}"
+MODEL_P="${MODEL_P:-0}"
 N="${N:-4}"
 R="${R:-1}"
 SEED="${SEED:-1}"
@@ -94,6 +95,7 @@ fi
   --checkpoint "$CHECKPOINT" \
   --output-dir "$OUTPUT_DIR" \
   --p "$P" \
+  --model-p "$MODEL_P" \
   --n "$N" \
   --r "$R" \
   --start-mode "$START_MODE" \
