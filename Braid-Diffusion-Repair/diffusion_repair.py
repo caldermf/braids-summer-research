@@ -1483,48 +1483,50 @@ def search(args: argparse.Namespace) -> None:
         ]
         for state, matrix in evaluated_states(missing):
             matrix_by_key[(state.power % 2, state.factors)] = matrix
-        tokens = np.stack([mgpt.encode_prefix(state.factors, config.max_factors)[0] for state in expandable])
-        matrices = np.stack([matrix_by_key[(state.power % 2, state.factors)] for state in expandable])
-        widths = np.array([state.matrix_width for state in expandable], dtype=np.int64)
-        p_values = np.full((len(expandable),), args.p, dtype=np.int64)
-        noise_values = np.full((len(expandable),), args.inference_noise_level, dtype=np.int64)
-        with torch.no_grad():
-            position_logits, width_logits, factor_logits = model(
-                torch.tensor(tokens, dtype=torch.long, device=device),
-                torch.tensor(matrices, dtype=torch.uint8, device=device),
-                torch.tensor(widths, dtype=torch.long, device=device),
-                torch.tensor(p_values, dtype=torch.long, device=device),
-                torch.tensor(noise_values, dtype=torch.long, device=device),
-            )
-        position_np = position_logits.detach().cpu().numpy()
-        width_np = width_logits.detach().cpu().numpy()
-        factor_np = factor_logits.detach().cpu().numpy()
-
         child_words: list[tuple[int, tuple[int, ...]]] = []
         child_meta: dict[tuple[int, tuple[int, ...]], dict] = {}
         parent_by_child: dict[tuple[int, tuple[int, ...]], RepairState] = {}
-        for index, state in enumerate(expandable):
-            proposals = propose_edits_for_state(
-                automaton=automaton,
-                rng=rng,
-                state=state,
-                position_logits=position_np[index],
-                width_logits=width_np[index],
-                factor_logits=factor_np[index],
-                positions_per_state=args.positions_per_state,
-                widths_per_position=args.widths_per_position,
-                factor_choices_per_slot=args.factor_choices_per_slot,
-                edits_per_state=args.edits_per_state,
-                bridge_samples_per_edit=args.bridge_samples_per_edit,
-            )
-            for child_factors, _, meta in proposals:
-                key = (state.power % 2, child_factors)
-                if key in seen:
-                    continue
-                seen.add(key)
-                child_words.append((state.power, child_factors))
-                child_meta[key] = meta
-                parent_by_child[key] = state
+        for batch_start in range(0, len(expandable), args.policy_batch_size):
+            batch_states = expandable[batch_start : batch_start + args.policy_batch_size]
+            tokens = np.stack([mgpt.encode_prefix(state.factors, config.max_factors)[0] for state in batch_states])
+            matrices = np.stack([matrix_by_key[(state.power % 2, state.factors)] for state in batch_states])
+            widths = np.array([state.matrix_width for state in batch_states], dtype=np.int64)
+            p_values = np.full((len(batch_states),), args.p, dtype=np.int64)
+            noise_values = np.full((len(batch_states),), args.inference_noise_level, dtype=np.int64)
+            with torch.no_grad():
+                position_logits, width_logits, factor_logits = model(
+                    torch.tensor(tokens, dtype=torch.long, device=device),
+                    torch.tensor(matrices, dtype=torch.uint8, device=device),
+                    torch.tensor(widths, dtype=torch.long, device=device),
+                    torch.tensor(p_values, dtype=torch.long, device=device),
+                    torch.tensor(noise_values, dtype=torch.long, device=device),
+                )
+            position_np = position_logits.detach().cpu().numpy()
+            width_np = width_logits.detach().cpu().numpy()
+            factor_np = factor_logits.detach().cpu().numpy()
+
+            for index, state in enumerate(batch_states):
+                proposals = propose_edits_for_state(
+                    automaton=automaton,
+                    rng=rng,
+                    state=state,
+                    position_logits=position_np[index],
+                    width_logits=width_np[index],
+                    factor_logits=factor_np[index],
+                    positions_per_state=args.positions_per_state,
+                    widths_per_position=args.widths_per_position,
+                    factor_choices_per_slot=args.factor_choices_per_slot,
+                    edits_per_state=args.edits_per_state,
+                    bridge_samples_per_edit=args.bridge_samples_per_edit,
+                )
+                for child_factors, _, meta in proposals:
+                    key = (state.power % 2, child_factors)
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    child_words.append((state.power, child_factors))
+                    child_meta[key] = meta
+                    parent_by_child[key] = state
         child_pairs = evaluated_states(child_words)
         child_states: list[RepairState] = []
         candidate_rows: list[dict] = []
@@ -1603,6 +1605,7 @@ def search(args: argparse.Namespace) -> None:
             "factor_choices_per_slot": args.factor_choices_per_slot,
             "edits_per_state": args.edits_per_state,
             "bridge_samples_per_edit": args.bridge_samples_per_edit,
+            "policy_batch_size": args.policy_batch_size,
             "accept_only_improvements": args.accept_only_improvements,
             "inference_noise_level": args.inference_noise_level,
             "bucket_by_length": args.bucket_by_length,
@@ -1730,6 +1733,7 @@ def build_parser() -> argparse.ArgumentParser:
     search_parser.add_argument("--bridge-samples-per-edit", type=int, default=1)
     search_parser.add_argument("--inference-noise-level", type=int, default=4)
     search_parser.add_argument("--eval-batch-size", type=int, default=500)
+    search_parser.add_argument("--policy-batch-size", type=int, default=512)
     search_parser.add_argument("--accept-only-improvements", action="store_true")
     search_parser.add_argument("--stop-at-kernel", action="store_true")
     search_parser.add_argument("--bucket-by-length", action="store_true")
