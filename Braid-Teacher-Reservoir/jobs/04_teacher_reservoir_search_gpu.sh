@@ -28,6 +28,8 @@ SEED_SOURCES="${SEED_SOURCES:-}"
 
 ROOT_MIN_LENGTH="${ROOT_MIN_LENGTH:-50}"
 ROOT_MAX_LENGTH="${ROOT_MAX_LENGTH:-160}"
+SEARCH_MIN_LENGTH="${SEARCH_MIN_LENGTH:-$ROOT_MIN_LENGTH}"
+SEARCH_MAX_LENGTH="${SEARCH_MAX_LENGTH:-$ROOT_MAX_LENGTH}"
 SEED_ROOTS="${SEED_ROOTS:-1000}"
 RANDOM_ROOTS="${RANDOM_ROOTS:-512}"
 STEPS="${STEPS:-80}"
@@ -88,6 +90,8 @@ fi
   --r "$R" \
   --root-min-length "$ROOT_MIN_LENGTH" \
   --root-max-length "$ROOT_MAX_LENGTH" \
+  --search-min-length "$SEARCH_MIN_LENGTH" \
+  --search-max-length "$SEARCH_MAX_LENGTH" \
   --seed-roots "$SEED_ROOTS" \
   --random-roots "$RANDOM_ROOTS" \
   --steps "$STEPS" \

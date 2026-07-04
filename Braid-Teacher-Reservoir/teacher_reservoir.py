@@ -1248,6 +1248,8 @@ def search(args: argparse.Namespace) -> None:
     candidates_path = output_dir / "candidates.jsonl"
     progress_path.write_text("", encoding="utf-8")
     candidates_path.write_text("", encoding="utf-8")
+    search_min_length = args.search_min_length if args.search_min_length > 0 else args.root_min_length
+    search_max_length = args.search_max_length if args.search_max_length > 0 else args.root_max_length
 
     roots: list[tuple[int, tuple[int, ...]]] = []
     seed_candidates = load_seed_candidates(
@@ -1336,6 +1338,8 @@ def search(args: argparse.Namespace) -> None:
                     max_factors=config.max_factors,
                 )
                 for child_factors, model_score, meta in proposals:
+                    if len(child_factors) < search_min_length or len(child_factors) > search_max_length:
+                        continue
                     key = (state.power % 2, child_factors)
                     if key in seen:
                         continue
@@ -1439,6 +1443,8 @@ def search(args: argparse.Namespace) -> None:
             "edits_per_state": args.edits_per_state,
             "random_bridge_per_position": args.random_bridge_per_position,
             "accept_only_improvements": args.accept_only_improvements,
+            "search_min_length": search_min_length,
+            "search_max_length": search_max_length,
             "evaluator_p": args.p,
             "model_p": args.model_p if args.model_p > 0 else args.p,
         },
@@ -1549,6 +1555,8 @@ def build_parser() -> argparse.ArgumentParser:
     search_parser.add_argument("--device", default="auto")
     search_parser.add_argument("--root-min-length", type=int, default=50)
     search_parser.add_argument("--root-max-length", type=int, default=160)
+    search_parser.add_argument("--search-min-length", type=int, default=0)
+    search_parser.add_argument("--search-max-length", type=int, default=0)
     search_parser.add_argument("--seed-roots", type=int, default=1000)
     search_parser.add_argument("--random-roots", type=int, default=512)
     search_parser.add_argument("--steps", type=int, default=80)
