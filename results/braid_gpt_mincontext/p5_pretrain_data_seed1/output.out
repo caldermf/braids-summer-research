@@ -1,0 +1,11 @@
+{"elapsed_seconds": 1.26, "generated": 50000, "phase": "mincontext_pretrain_data"}
+{"elapsed_seconds": 2.51, "generated": 100000, "phase": "mincontext_pretrain_data"}
+{"elapsed_seconds": 3.75, "generated": 150000, "phase": "mincontext_pretrain_data"}
+{"elapsed_seconds": 5.0, "generated": 200000, "phase": "mincontext_pretrain_data"}
+{"elapsed_seconds": 6.25, "generated": 250000, "phase": "mincontext_pretrain_data"}
+{"elapsed_seconds": 7.49, "generated": 300000, "phase": "mincontext_pretrain_data"}
+{"elapsed_seconds": 8.73, "generated": 350000, "phase": "mincontext_pretrain_data"}
+{"elapsed_seconds": 9.97, "generated": 400000, "phase": "mincontext_pretrain_data"}
+{"elapsed_seconds": 11.21, "generated": 450000, "phase": "mincontext_pretrain_data"}
+{"elapsed_seconds": 12.46, "generated": 500000, "phase": "mincontext_pretrain_data"}
+{"context": "log1p(projlen / max(1, Garside length)); zero during grammar pretraining", "elapsed_seconds": 19.39, "format": "braid-gpt-mincontext-pretrain-dataset-v1", "max_factors": 96, "max_length": 96, "min_length": 8, "n": 4, "p": 5, "phase": "done", "seed": 1, "sequence_count": 500000}

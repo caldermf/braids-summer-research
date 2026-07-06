@@ -1,0 +1,4 @@
+{"left_attempts": 200001, "left_sequences": 200000, "loaded_seed_words": 0, "p": 7, "phase": "setup", "power_parities": [0, 1], "right_attempts": 200000, "right_sequences": 200000, "t_values": [2, 3, 4, 5, 6], "usable_split_seeds": 0}
+{"left_capped_records": 0, "left_index_keys": 399410, "left_records": 400000, "left_singular": 0, "max_bucket_size": 2, "mean_bucket_size": 1.0014771788387873, "phase": "left_index"}
+{"elapsed_seconds": 169.3, "exact_kernels": 0, "finite_matches": 52, "phase": "right_scan", "right_scanned": 105477, "right_total": 200000}
+{"boundary_rejected": 457, "exact_kernels": 0, "finite_matches": 114, "matches_by_source": {"finite_match": 114}, "phase": "done", "right_singular": 0}

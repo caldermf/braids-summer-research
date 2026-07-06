@@ -1,0 +1,481 @@
+{"attempts": 500, "elapsed_seconds": 0.36, "examples": 500, "noise_histogram": {"1": 151, "2": 97, "3": 106, "4": 65, "5": 50, "6": 31}, "phase": "corrupt_examples"}
+{"attempts": 1000, "elapsed_seconds": 0.39, "examples": 1000, "noise_histogram": {"1": 315, "2": 186, "3": 207, "4": 138, "5": 97, "6": 57}, "phase": "corrupt_examples"}
+{"attempts": 1500, "elapsed_seconds": 0.42, "examples": 1500, "noise_histogram": {"1": 470, "2": 279, "3": 317, "4": 207, "5": 147, "6": 80}, "phase": "corrupt_examples"}
+{"attempts": 2000, "elapsed_seconds": 0.44, "examples": 2000, "noise_histogram": {"1": 633, "2": 363, "3": 424, "4": 288, "5": 194, "6": 98}, "phase": "corrupt_examples"}
+{"attempts": 2500, "elapsed_seconds": 0.47, "examples": 2500, "noise_histogram": {"1": 789, "2": 479, "3": 523, "4": 357, "5": 238, "6": 114}, "phase": "corrupt_examples"}
+{"attempts": 3000, "elapsed_seconds": 0.5, "examples": 3000, "noise_histogram": {"1": 925, "2": 565, "3": 629, "4": 450, "5": 288, "6": 143}, "phase": "corrupt_examples"}
+{"attempts": 3500, "elapsed_seconds": 0.53, "examples": 3500, "noise_histogram": {"1": 1084, "2": 663, "3": 725, "4": 520, "5": 337, "6": 171}, "phase": "corrupt_examples"}
+{"attempts": 4000, "elapsed_seconds": 0.56, "examples": 4000, "noise_histogram": {"1": 1243, "2": 766, "3": 805, "4": 588, "5": 394, "6": 204}, "phase": "corrupt_examples"}
+{"attempts": 4500, "elapsed_seconds": 0.6, "examples": 4500, "noise_histogram": {"1": 1405, "2": 860, "3": 917, "4": 652, "5": 437, "6": 229}, "phase": "corrupt_examples"}
+{"attempts": 5000, "elapsed_seconds": 0.63, "examples": 5000, "noise_histogram": {"1": 1547, "2": 949, "3": 1024, "4": 731, "5": 491, "6": 258}, "phase": "corrupt_examples"}
+{"attempts": 5500, "elapsed_seconds": 0.66, "examples": 5500, "noise_histogram": {"1": 1695, "2": 1055, "3": 1120, "4": 808, "5": 544, "6": 278}, "phase": "corrupt_examples"}
+{"attempts": 6000, "elapsed_seconds": 0.69, "examples": 6000, "noise_histogram": {"1": 1847, "2": 1160, "3": 1225, "4": 883, "5": 589, "6": 296}, "phase": "corrupt_examples"}
+{"attempts": 6500, "elapsed_seconds": 0.72, "examples": 6500, "noise_histogram": {"1": 1995, "2": 1238, "3": 1353, "4": 956, "5": 635, "6": 323}, "phase": "corrupt_examples"}
+{"attempts": 7000, "elapsed_seconds": 0.75, "examples": 7000, "noise_histogram": {"1": 2147, "2": 1339, "3": 1442, "4": 1040, "5": 682, "6": 350}, "phase": "corrupt_examples"}
+{"attempts": 7500, "elapsed_seconds": 0.78, "examples": 7500, "noise_histogram": {"1": 2305, "2": 1444, "3": 1535, "4": 1103, "5": 733, "6": 380}, "phase": "corrupt_examples"}
+{"attempts": 8000, "elapsed_seconds": 0.81, "examples": 8000, "noise_histogram": {"1": 2454, "2": 1544, "3": 1643, "4": 1172, "5": 780, "6": 407}, "phase": "corrupt_examples"}
+{"attempts": 8500, "elapsed_seconds": 0.84, "examples": 8500, "noise_histogram": {"1": 2599, "2": 1634, "3": 1741, "4": 1256, "5": 839, "6": 431}, "phase": "corrupt_examples"}
+{"attempts": 9000, "elapsed_seconds": 0.87, "examples": 9000, "noise_histogram": {"1": 2761, "2": 1727, "3": 1845, "4": 1318, "5": 884, "6": 465}, "phase": "corrupt_examples"}
+{"attempts": 9500, "elapsed_seconds": 0.9, "examples": 9500, "noise_histogram": {"1": 2900, "2": 1817, "3": 1955, "4": 1389, "5": 945, "6": 494}, "phase": "corrupt_examples"}
+{"attempts": 10000, "elapsed_seconds": 0.93, "examples": 10000, "noise_histogram": {"1": 3039, "2": 1912, "3": 2078, "4": 1465, "5": 993, "6": 513}, "phase": "corrupt_examples"}
+{"attempts": 10500, "elapsed_seconds": 0.96, "examples": 10500, "noise_histogram": {"1": 3183, "2": 2023, "3": 2185, "4": 1536, "5": 1038, "6": 535}, "phase": "corrupt_examples"}
+{"attempts": 11000, "elapsed_seconds": 0.99, "examples": 11000, "noise_histogram": {"1": 3326, "2": 2114, "3": 2289, "4": 1603, "5": 1101, "6": 567}, "phase": "corrupt_examples"}
+{"attempts": 11500, "elapsed_seconds": 1.03, "examples": 11500, "noise_histogram": {"1": 3456, "2": 2223, "3": 2397, "4": 1685, "5": 1149, "6": 590}, "phase": "corrupt_examples"}
+{"attempts": 12000, "elapsed_seconds": 1.06, "examples": 12000, "noise_histogram": {"1": 3601, "2": 2338, "3": 2478, "4": 1755, "5": 1213, "6": 615}, "phase": "corrupt_examples"}
+{"attempts": 12500, "elapsed_seconds": 1.09, "examples": 12500, "noise_histogram": {"1": 3745, "2": 2454, "3": 2574, "4": 1823, "5": 1266, "6": 638}, "phase": "corrupt_examples"}
+{"attempts": 13000, "elapsed_seconds": 1.11, "examples": 13000, "noise_histogram": {"1": 3892, "2": 2555, "3": 2684, "4": 1893, "5": 1321, "6": 655}, "phase": "corrupt_examples"}
+{"attempts": 13500, "elapsed_seconds": 1.14, "examples": 13500, "noise_histogram": {"1": 4054, "2": 2657, "3": 2779, "4": 1969, "5": 1365, "6": 676}, "phase": "corrupt_examples"}
+{"attempts": 14000, "elapsed_seconds": 1.17, "examples": 14000, "noise_histogram": {"1": 4196, "2": 2765, "3": 2882, "4": 2043, "5": 1408, "6": 706}, "phase": "corrupt_examples"}
+{"attempts": 14500, "elapsed_seconds": 1.2, "examples": 14500, "noise_histogram": {"1": 4328, "2": 2883, "3": 2987, "4": 2125, "5": 1450, "6": 727}, "phase": "corrupt_examples"}
+{"attempts": 15000, "elapsed_seconds": 1.23, "examples": 15000, "noise_histogram": {"1": 4471, "2": 2983, "3": 3082, "4": 2207, "5": 1508, "6": 749}, "phase": "corrupt_examples"}
+{"attempts": 15500, "elapsed_seconds": 1.26, "examples": 15500, "noise_histogram": {"1": 4623, "2": 3088, "3": 3179, "4": 2269, "5": 1568, "6": 773}, "phase": "corrupt_examples"}
+{"attempts": 16000, "elapsed_seconds": 1.29, "examples": 16000, "noise_histogram": {"1": 4772, "2": 3180, "3": 3289, "4": 2333, "5": 1629, "6": 797}, "phase": "corrupt_examples"}
+{"attempts": 16500, "elapsed_seconds": 1.32, "examples": 16500, "noise_histogram": {"1": 4926, "2": 3294, "3": 3392, "4": 2400, "5": 1669, "6": 819}, "phase": "corrupt_examples"}
+{"attempts": 17000, "elapsed_seconds": 1.35, "examples": 17000, "noise_histogram": {"1": 5065, "2": 3390, "3": 3501, "4": 2479, "5": 1723, "6": 842}, "phase": "corrupt_examples"}
+{"attempts": 17500, "elapsed_seconds": 1.39, "examples": 17500, "noise_histogram": {"1": 5203, "2": 3496, "3": 3599, "4": 2556, "5": 1775, "6": 871}, "phase": "corrupt_examples"}
+{"attempts": 18000, "elapsed_seconds": 1.42, "examples": 18000, "noise_histogram": {"1": 5355, "2": 3606, "3": 3688, "4": 2639, "5": 1816, "6": 896}, "phase": "corrupt_examples"}
+{"attempts": 18500, "elapsed_seconds": 1.45, "examples": 18500, "noise_histogram": {"1": 5512, "2": 3705, "3": 3789, "4": 2713, "5": 1864, "6": 917}, "phase": "corrupt_examples"}
+{"attempts": 19000, "elapsed_seconds": 1.48, "examples": 19000, "noise_histogram": {"1": 5669, "2": 3807, "3": 3887, "4": 2793, "5": 1901, "6": 943}, "phase": "corrupt_examples"}
+{"attempts": 19500, "elapsed_seconds": 1.51, "examples": 19500, "noise_histogram": {"1": 5828, "2": 3895, "3": 3981, "4": 2865, "5": 1964, "6": 967}, "phase": "corrupt_examples"}
+{"attempts": 20000, "elapsed_seconds": 1.54, "examples": 20000, "noise_histogram": {"1": 5984, "2": 3990, "3": 4075, "4": 2955, "5": 2006, "6": 990}, "phase": "corrupt_examples"}
+{"attempts": 20500, "elapsed_seconds": 1.58, "examples": 20500, "noise_histogram": {"1": 6140, "2": 4106, "3": 4168, "4": 3020, "5": 2056, "6": 1010}, "phase": "corrupt_examples"}
+{"attempts": 21000, "elapsed_seconds": 1.6, "examples": 21000, "noise_histogram": {"1": 6288, "2": 4202, "3": 4269, "4": 3108, "5": 2097, "6": 1036}, "phase": "corrupt_examples"}
+{"attempts": 21500, "elapsed_seconds": 1.63, "examples": 21500, "noise_histogram": {"1": 6441, "2": 4301, "3": 4360, "4": 3183, "5": 2156, "6": 1059}, "phase": "corrupt_examples"}
+{"attempts": 22000, "elapsed_seconds": 1.66, "examples": 22000, "noise_histogram": {"1": 6603, "2": 4408, "3": 4465, "4": 3257, "5": 2191, "6": 1076}, "phase": "corrupt_examples"}
+{"attempts": 22500, "elapsed_seconds": 1.7, "examples": 22500, "noise_histogram": {"1": 6759, "2": 4508, "3": 4571, "4": 3314, "5": 2242, "6": 1106}, "phase": "corrupt_examples"}
+{"attempts": 23000, "elapsed_seconds": 1.72, "examples": 23000, "noise_histogram": {"1": 6913, "2": 4613, "3": 4679, "4": 3384, "5": 2283, "6": 1128}, "phase": "corrupt_examples"}
+{"attempts": 23500, "elapsed_seconds": 1.75, "examples": 23500, "noise_histogram": {"1": 7063, "2": 4713, "3": 4778, "4": 3454, "5": 2334, "6": 1158}, "phase": "corrupt_examples"}
+{"attempts": 24000, "elapsed_seconds": 1.78, "examples": 24000, "noise_histogram": {"1": 7218, "2": 4816, "3": 4874, "4": 3530, "5": 2380, "6": 1182}, "phase": "corrupt_examples"}
+{"attempts": 24500, "elapsed_seconds": 1.81, "examples": 24500, "noise_histogram": {"1": 7375, "2": 4913, "3": 4969, "4": 3600, "5": 2434, "6": 1209}, "phase": "corrupt_examples"}
+{"attempts": 25000, "elapsed_seconds": 1.85, "examples": 25000, "noise_histogram": {"1": 7532, "2": 5002, "3": 5078, "4": 3666, "5": 2491, "6": 1231}, "phase": "corrupt_examples"}
+{"attempts": 25500, "elapsed_seconds": 1.88, "examples": 25500, "noise_histogram": {"1": 7667, "2": 5103, "3": 5180, "4": 3752, "5": 2535, "6": 1263}, "phase": "corrupt_examples"}
+{"attempts": 26000, "elapsed_seconds": 1.91, "examples": 26000, "noise_histogram": {"1": 7830, "2": 5202, "3": 5268, "4": 3839, "5": 2571, "6": 1290}, "phase": "corrupt_examples"}
+{"attempts": 26500, "elapsed_seconds": 1.94, "examples": 26500, "noise_histogram": {"1": 7976, "2": 5290, "3": 5364, "4": 3928, "5": 2627, "6": 1315}, "phase": "corrupt_examples"}
+{"attempts": 27000, "elapsed_seconds": 1.97, "examples": 27000, "noise_histogram": {"1": 8117, "2": 5391, "3": 5470, "4": 3997, "5": 2685, "6": 1340}, "phase": "corrupt_examples"}
+{"attempts": 27500, "elapsed_seconds": 2.01, "examples": 27500, "noise_histogram": {"1": 8256, "2": 5493, "3": 5587, "4": 4062, "5": 2727, "6": 1375}, "phase": "corrupt_examples"}
+{"attempts": 28000, "elapsed_seconds": 2.04, "examples": 28000, "noise_histogram": {"1": 8410, "2": 5610, "3": 5686, "4": 4120, "5": 2775, "6": 1399}, "phase": "corrupt_examples"}
+{"attempts": 28500, "elapsed_seconds": 2.07, "examples": 28500, "noise_histogram": {"1": 8547, "2": 5716, "3": 5777, "4": 4207, "5": 2831, "6": 1422}, "phase": "corrupt_examples"}
+{"attempts": 29000, "elapsed_seconds": 2.1, "examples": 29000, "noise_histogram": {"1": 8704, "2": 5807, "3": 5866, "4": 4293, "5": 2881, "6": 1449}, "phase": "corrupt_examples"}
+{"attempts": 29500, "elapsed_seconds": 2.13, "examples": 29500, "noise_histogram": {"1": 8855, "2": 5902, "3": 5983, "4": 4367, "5": 2924, "6": 1469}, "phase": "corrupt_examples"}
+{"attempts": 30000, "elapsed_seconds": 2.16, "examples": 30000, "noise_histogram": {"1": 8991, "2": 6012, "3": 6075, "4": 4452, "5": 2980, "6": 1490}, "phase": "corrupt_examples"}
+{"attempts": 30500, "elapsed_seconds": 2.19, "examples": 30500, "noise_histogram": {"1": 9142, "2": 6097, "3": 6187, "4": 4528, "5": 3037, "6": 1509}, "phase": "corrupt_examples"}
+{"attempts": 31000, "elapsed_seconds": 2.21, "examples": 31000, "noise_histogram": {"1": 9302, "2": 6169, "3": 6288, "4": 4622, "5": 3084, "6": 1535}, "phase": "corrupt_examples"}
+{"attempts": 31500, "elapsed_seconds": 2.25, "examples": 31500, "noise_histogram": {"1": 9437, "2": 6268, "3": 6403, "4": 4689, "5": 3140, "6": 1563}, "phase": "corrupt_examples"}
+{"attempts": 32000, "elapsed_seconds": 2.28, "examples": 32000, "noise_histogram": {"1": 9586, "2": 6368, "3": 6493, "4": 4768, "5": 3187, "6": 1598}, "phase": "corrupt_examples"}
+{"attempts": 32500, "elapsed_seconds": 2.31, "examples": 32500, "noise_histogram": {"1": 9743, "2": 6468, "3": 6594, "4": 4835, "5": 3237, "6": 1623}, "phase": "corrupt_examples"}
+{"attempts": 33000, "elapsed_seconds": 2.34, "examples": 33000, "noise_histogram": {"1": 9877, "2": 6583, "3": 6693, "4": 4900, "5": 3297, "6": 1650}, "phase": "corrupt_examples"}
+{"attempts": 33500, "elapsed_seconds": 2.37, "examples": 33500, "noise_histogram": {"1": 10030, "2": 6702, "3": 6784, "4": 4968, "5": 3343, "6": 1673}, "phase": "corrupt_examples"}
+{"attempts": 34000, "elapsed_seconds": 2.4, "examples": 34000, "noise_histogram": {"1": 10172, "2": 6791, "3": 6893, "4": 5052, "5": 3395, "6": 1697}, "phase": "corrupt_examples"}
+{"attempts": 34500, "elapsed_seconds": 2.44, "examples": 34500, "noise_histogram": {"1": 10312, "2": 6900, "3": 6994, "4": 5128, "5": 3448, "6": 1718}, "phase": "corrupt_examples"}
+{"attempts": 35000, "elapsed_seconds": 2.47, "examples": 35000, "noise_histogram": {"1": 10469, "2": 6992, "3": 7087, "4": 5206, "5": 3496, "6": 1750}, "phase": "corrupt_examples"}
+{"attempts": 35500, "elapsed_seconds": 2.51, "examples": 35500, "noise_histogram": {"1": 10630, "2": 7102, "3": 7167, "4": 5286, "5": 3540, "6": 1775}, "phase": "corrupt_examples"}
+{"attempts": 36000, "elapsed_seconds": 2.54, "examples": 36000, "noise_histogram": {"1": 10779, "2": 7207, "3": 7265, "4": 5365, "5": 3576, "6": 1808}, "phase": "corrupt_examples"}
+{"attempts": 36500, "elapsed_seconds": 2.57, "examples": 36500, "noise_histogram": {"1": 10920, "2": 7313, "3": 7381, "4": 5436, "5": 3622, "6": 1828}, "phase": "corrupt_examples"}
+{"attempts": 37000, "elapsed_seconds": 2.61, "examples": 37000, "noise_histogram": {"1": 11066, "2": 7412, "3": 7488, "4": 5498, "5": 3674, "6": 1862}, "phase": "corrupt_examples"}
+{"attempts": 37500, "elapsed_seconds": 2.64, "examples": 37500, "noise_histogram": {"1": 11184, "2": 7520, "3": 7603, "4": 5570, "5": 3730, "6": 1893}, "phase": "corrupt_examples"}
+{"attempts": 38000, "elapsed_seconds": 2.68, "examples": 38000, "noise_histogram": {"1": 11332, "2": 7618, "3": 7712, "4": 5645, "5": 3776, "6": 1917}, "phase": "corrupt_examples"}
+{"attempts": 38500, "elapsed_seconds": 2.71, "examples": 38500, "noise_histogram": {"1": 11490, "2": 7709, "3": 7792, "4": 5732, "5": 3826, "6": 1951}, "phase": "corrupt_examples"}
+{"attempts": 39000, "elapsed_seconds": 2.74, "examples": 39000, "noise_histogram": {"1": 11654, "2": 7815, "3": 7879, "4": 5798, "5": 3879, "6": 1975}, "phase": "corrupt_examples"}
+{"attempts": 39500, "elapsed_seconds": 2.77, "examples": 39500, "noise_histogram": {"1": 11828, "2": 7906, "3": 7977, "4": 5861, "5": 3926, "6": 2002}, "phase": "corrupt_examples"}
+{"attempts": 40000, "elapsed_seconds": 2.81, "examples": 40000, "noise_histogram": {"1": 11973, "2": 8014, "3": 8089, "4": 5921, "5": 3974, "6": 2029}, "phase": "corrupt_examples"}
+{"attempts": 40500, "elapsed_seconds": 2.84, "examples": 40500, "noise_histogram": {"1": 12134, "2": 8119, "3": 8177, "4": 5992, "5": 4026, "6": 2052}, "phase": "corrupt_examples"}
+{"attempts": 41000, "elapsed_seconds": 2.87, "examples": 41000, "noise_histogram": {"1": 12287, "2": 8220, "3": 8281, "4": 6055, "5": 4082, "6": 2075}, "phase": "corrupt_examples"}
+{"attempts": 41500, "elapsed_seconds": 2.9, "examples": 41500, "noise_histogram": {"1": 12460, "2": 8316, "3": 8377, "4": 6141, "5": 4117, "6": 2089}, "phase": "corrupt_examples"}
+{"attempts": 42000, "elapsed_seconds": 2.94, "examples": 42000, "noise_histogram": {"1": 12598, "2": 8406, "3": 8482, "4": 6225, "5": 4177, "6": 2112}, "phase": "corrupt_examples"}
+{"attempts": 42500, "elapsed_seconds": 2.97, "examples": 42500, "noise_histogram": {"1": 12756, "2": 8521, "3": 8576, "4": 6294, "5": 4227, "6": 2126}, "phase": "corrupt_examples"}
+{"attempts": 43000, "elapsed_seconds": 3.0, "examples": 43000, "noise_histogram": {"1": 12907, "2": 8618, "3": 8679, "4": 6370, "5": 4277, "6": 2149}, "phase": "corrupt_examples"}
+{"attempts": 43500, "elapsed_seconds": 3.04, "examples": 43500, "noise_histogram": {"1": 13040, "2": 8737, "3": 8772, "4": 6447, "5": 4330, "6": 2174}, "phase": "corrupt_examples"}
+{"attempts": 44000, "elapsed_seconds": 3.08, "examples": 44000, "noise_histogram": {"1": 13190, "2": 8851, "3": 8852, "4": 6523, "5": 4386, "6": 2198}, "phase": "corrupt_examples"}
+{"attempts": 44500, "elapsed_seconds": 3.11, "examples": 44500, "noise_histogram": {"1": 13340, "2": 8941, "3": 8963, "4": 6596, "5": 4435, "6": 2225}, "phase": "corrupt_examples"}
+{"attempts": 45000, "elapsed_seconds": 3.14, "examples": 45000, "noise_histogram": {"1": 13494, "2": 9047, "3": 9071, "4": 6663, "5": 4480, "6": 2245}, "phase": "corrupt_examples"}
+{"attempts": 45500, "elapsed_seconds": 3.18, "examples": 45500, "noise_histogram": {"1": 13635, "2": 9147, "3": 9172, "4": 6751, "5": 4524, "6": 2271}, "phase": "corrupt_examples"}
+{"attempts": 46000, "elapsed_seconds": 3.21, "examples": 46000, "noise_histogram": {"1": 13779, "2": 9234, "3": 9273, "4": 6836, "5": 4575, "6": 2303}, "phase": "corrupt_examples"}
+{"attempts": 46500, "elapsed_seconds": 3.24, "examples": 46500, "noise_histogram": {"1": 13906, "2": 9328, "3": 9390, "4": 6928, "5": 4619, "6": 2329}, "phase": "corrupt_examples"}
+{"attempts": 47000, "elapsed_seconds": 3.27, "examples": 47000, "noise_histogram": {"1": 14054, "2": 9439, "3": 9478, "4": 7000, "5": 4664, "6": 2365}, "phase": "corrupt_examples"}
+{"attempts": 47500, "elapsed_seconds": 3.31, "examples": 47500, "noise_histogram": {"1": 14209, "2": 9537, "3": 9576, "4": 7061, "5": 4725, "6": 2392}, "phase": "corrupt_examples"}
+{"attempts": 48000, "elapsed_seconds": 3.34, "examples": 48000, "noise_histogram": {"1": 14367, "2": 9625, "3": 9693, "4": 7132, "5": 4770, "6": 2413}, "phase": "corrupt_examples"}
+{"attempts": 48500, "elapsed_seconds": 3.37, "examples": 48500, "noise_histogram": {"1": 14514, "2": 9730, "3": 9797, "4": 7204, "5": 4808, "6": 2447}, "phase": "corrupt_examples"}
+{"attempts": 49000, "elapsed_seconds": 3.4, "examples": 49000, "noise_histogram": {"1": 14668, "2": 9819, "3": 9909, "4": 7284, "5": 4848, "6": 2472}, "phase": "corrupt_examples"}
+{"attempts": 49500, "elapsed_seconds": 3.43, "examples": 49500, "noise_histogram": {"1": 14843, "2": 9915, "3": 10000, "4": 7343, "5": 4898, "6": 2501}, "phase": "corrupt_examples"}
+{"attempts": 50000, "elapsed_seconds": 3.46, "examples": 50000, "noise_histogram": {"1": 15001, "2": 10019, "3": 10101, "4": 7403, "5": 4950, "6": 2526}, "phase": "corrupt_examples"}
+{"attempts": 50500, "elapsed_seconds": 3.49, "examples": 50500, "noise_histogram": {"1": 15140, "2": 10127, "3": 10202, "4": 7471, "5": 5004, "6": 2556}, "phase": "corrupt_examples"}
+{"attempts": 51000, "elapsed_seconds": 3.52, "examples": 51000, "noise_histogram": {"1": 15293, "2": 10224, "3": 10314, "4": 7538, "5": 5051, "6": 2580}, "phase": "corrupt_examples"}
+{"attempts": 51500, "elapsed_seconds": 3.56, "examples": 51500, "noise_histogram": {"1": 15444, "2": 10321, "3": 10416, "4": 7619, "5": 5097, "6": 2603}, "phase": "corrupt_examples"}
+{"attempts": 52000, "elapsed_seconds": 3.59, "examples": 52000, "noise_histogram": {"1": 15572, "2": 10437, "3": 10532, "4": 7683, "5": 5151, "6": 2625}, "phase": "corrupt_examples"}
+{"attempts": 52500, "elapsed_seconds": 3.62, "examples": 52500, "noise_histogram": {"1": 15719, "2": 10556, "3": 10634, "4": 7742, "5": 5198, "6": 2651}, "phase": "corrupt_examples"}
+{"attempts": 53000, "elapsed_seconds": 3.65, "examples": 53000, "noise_histogram": {"1": 15878, "2": 10647, "3": 10731, "4": 7811, "5": 5250, "6": 2683}, "phase": "corrupt_examples"}
+{"attempts": 53500, "elapsed_seconds": 3.69, "examples": 53500, "noise_histogram": {"1": 16019, "2": 10750, "3": 10837, "4": 7872, "5": 5298, "6": 2724}, "phase": "corrupt_examples"}
+{"attempts": 54000, "elapsed_seconds": 3.72, "examples": 54000, "noise_histogram": {"1": 16180, "2": 10834, "3": 10939, "4": 7956, "5": 5347, "6": 2744}, "phase": "corrupt_examples"}
+{"attempts": 54500, "elapsed_seconds": 3.76, "examples": 54500, "noise_histogram": {"1": 16332, "2": 10941, "3": 11029, "4": 8046, "5": 5383, "6": 2769}, "phase": "corrupt_examples"}
+{"attempts": 55000, "elapsed_seconds": 3.79, "examples": 55000, "noise_histogram": {"1": 16473, "2": 11033, "3": 11129, "4": 8132, "5": 5440, "6": 2793}, "phase": "corrupt_examples"}
+{"attempts": 55500, "elapsed_seconds": 3.82, "examples": 55500, "noise_histogram": {"1": 16634, "2": 11118, "3": 11236, "4": 8209, "5": 5484, "6": 2819}, "phase": "corrupt_examples"}
+{"attempts": 56000, "elapsed_seconds": 3.85, "examples": 56000, "noise_histogram": {"1": 16775, "2": 11210, "3": 11348, "4": 8282, "5": 5538, "6": 2847}, "phase": "corrupt_examples"}
+{"attempts": 56500, "elapsed_seconds": 3.88, "examples": 56500, "noise_histogram": {"1": 16925, "2": 11314, "3": 11447, "4": 8352, "5": 5590, "6": 2872}, "phase": "corrupt_examples"}
+{"attempts": 57000, "elapsed_seconds": 3.92, "examples": 57000, "noise_histogram": {"1": 17080, "2": 11425, "3": 11544, "4": 8422, "5": 5639, "6": 2890}, "phase": "corrupt_examples"}
+{"attempts": 57500, "elapsed_seconds": 3.95, "examples": 57500, "noise_histogram": {"1": 17223, "2": 11532, "3": 11642, "4": 8500, "5": 5683, "6": 2920}, "phase": "corrupt_examples"}
+{"attempts": 58000, "elapsed_seconds": 3.98, "examples": 58000, "noise_histogram": {"1": 17355, "2": 11623, "3": 11760, "4": 8584, "5": 5742, "6": 2936}, "phase": "corrupt_examples"}
+{"attempts": 58500, "elapsed_seconds": 4.02, "examples": 58500, "noise_histogram": {"1": 17509, "2": 11727, "3": 11848, "4": 8655, "5": 5796, "6": 2965}, "phase": "corrupt_examples"}
+{"attempts": 59000, "elapsed_seconds": 4.05, "examples": 59000, "noise_histogram": {"1": 17659, "2": 11813, "3": 11952, "4": 8734, "5": 5853, "6": 2989}, "phase": "corrupt_examples"}
+{"attempts": 59500, "elapsed_seconds": 4.08, "examples": 59500, "noise_histogram": {"1": 17834, "2": 11893, "3": 12047, "4": 8806, "5": 5897, "6": 3023}, "phase": "corrupt_examples"}
+{"attempts": 60000, "elapsed_seconds": 4.12, "examples": 60000, "noise_histogram": {"1": 17993, "2": 11995, "3": 12137, "4": 8888, "5": 5948, "6": 3039}, "phase": "corrupt_examples"}
+{"attempts": 60500, "elapsed_seconds": 4.15, "examples": 60500, "noise_histogram": {"1": 18146, "2": 12097, "3": 12224, "4": 8957, "5": 6008, "6": 3068}, "phase": "corrupt_examples"}
+{"attempts": 61000, "elapsed_seconds": 4.18, "examples": 61000, "noise_histogram": {"1": 18289, "2": 12184, "3": 12328, "4": 9036, "5": 6070, "6": 3093}, "phase": "corrupt_examples"}
+{"attempts": 61500, "elapsed_seconds": 4.21, "examples": 61500, "noise_histogram": {"1": 18443, "2": 12290, "3": 12420, "4": 9106, "5": 6120, "6": 3121}, "phase": "corrupt_examples"}
+{"attempts": 62000, "elapsed_seconds": 4.24, "examples": 62000, "noise_histogram": {"1": 18606, "2": 12373, "3": 12517, "4": 9185, "5": 6166, "6": 3153}, "phase": "corrupt_examples"}
+{"attempts": 62500, "elapsed_seconds": 4.27, "examples": 62500, "noise_histogram": {"1": 18763, "2": 12468, "3": 12627, "4": 9267, "5": 6197, "6": 3178}, "phase": "corrupt_examples"}
+{"attempts": 63000, "elapsed_seconds": 4.31, "examples": 63000, "noise_histogram": {"1": 18915, "2": 12568, "3": 12741, "4": 9340, "5": 6234, "6": 3202}, "phase": "corrupt_examples"}
+{"attempts": 63500, "elapsed_seconds": 4.36, "examples": 63500, "noise_histogram": {"1": 19052, "2": 12675, "3": 12846, "4": 9417, "5": 6279, "6": 3231}, "phase": "corrupt_examples"}
+{"attempts": 64000, "elapsed_seconds": 4.39, "examples": 64000, "noise_histogram": {"1": 19199, "2": 12780, "3": 12949, "4": 9490, "5": 6329, "6": 3253}, "phase": "corrupt_examples"}
+{"attempts": 64500, "elapsed_seconds": 4.42, "examples": 64500, "noise_histogram": {"1": 19352, "2": 12876, "3": 13055, "4": 9573, "5": 6365, "6": 3279}, "phase": "corrupt_examples"}
+{"attempts": 65000, "elapsed_seconds": 4.45, "examples": 65000, "noise_histogram": {"1": 19506, "2": 12973, "3": 13143, "4": 9647, "5": 6423, "6": 3308}, "phase": "corrupt_examples"}
+{"attempts": 65500, "elapsed_seconds": 4.49, "examples": 65500, "noise_histogram": {"1": 19667, "2": 13073, "3": 13238, "4": 9723, "5": 6467, "6": 3332}, "phase": "corrupt_examples"}
+{"attempts": 66000, "elapsed_seconds": 4.52, "examples": 66000, "noise_histogram": {"1": 19814, "2": 13166, "3": 13329, "4": 9812, "5": 6525, "6": 3354}, "phase": "corrupt_examples"}
+{"attempts": 66500, "elapsed_seconds": 4.56, "examples": 66500, "noise_histogram": {"1": 19950, "2": 13279, "3": 13430, "4": 9890, "5": 6569, "6": 3382}, "phase": "corrupt_examples"}
+{"attempts": 67000, "elapsed_seconds": 4.59, "examples": 67000, "noise_histogram": {"1": 20094, "2": 13366, "3": 13528, "4": 9978, "5": 6626, "6": 3408}, "phase": "corrupt_examples"}
+{"attempts": 67500, "elapsed_seconds": 4.62, "examples": 67500, "noise_histogram": {"1": 20249, "2": 13462, "3": 13625, "4": 10050, "5": 6678, "6": 3436}, "phase": "corrupt_examples"}
+{"attempts": 68000, "elapsed_seconds": 4.66, "examples": 68000, "noise_histogram": {"1": 20387, "2": 13574, "3": 13716, "4": 10133, "5": 6724, "6": 3466}, "phase": "corrupt_examples"}
+{"attempts": 68500, "elapsed_seconds": 4.69, "examples": 68500, "noise_histogram": {"1": 20554, "2": 13674, "3": 13812, "4": 10208, "5": 6766, "6": 3486}, "phase": "corrupt_examples"}
+{"attempts": 69000, "elapsed_seconds": 4.72, "examples": 69000, "noise_histogram": {"1": 20694, "2": 13776, "3": 13917, "4": 10293, "5": 6821, "6": 3499}, "phase": "corrupt_examples"}
+{"attempts": 69500, "elapsed_seconds": 4.75, "examples": 69500, "noise_histogram": {"1": 20847, "2": 13883, "3": 14020, "4": 10354, "5": 6869, "6": 3527}, "phase": "corrupt_examples"}
+{"attempts": 70000, "elapsed_seconds": 4.79, "examples": 70000, "noise_histogram": {"1": 20988, "2": 13983, "3": 14123, "4": 10434, "5": 6918, "6": 3554}, "phase": "corrupt_examples"}
+{"attempts": 70500, "elapsed_seconds": 4.82, "examples": 70500, "noise_histogram": {"1": 21134, "2": 14078, "3": 14232, "4": 10505, "5": 6972, "6": 3579}, "phase": "corrupt_examples"}
+{"attempts": 71000, "elapsed_seconds": 4.85, "examples": 71000, "noise_histogram": {"1": 21280, "2": 14178, "3": 14335, "4": 10576, "5": 7027, "6": 3604}, "phase": "corrupt_examples"}
+{"attempts": 71500, "elapsed_seconds": 4.88, "examples": 71500, "noise_histogram": {"1": 21426, "2": 14290, "3": 14438, "4": 10657, "5": 7059, "6": 3630}, "phase": "corrupt_examples"}
+{"attempts": 72000, "elapsed_seconds": 4.92, "examples": 72000, "noise_histogram": {"1": 21569, "2": 14387, "3": 14543, "4": 10737, "5": 7113, "6": 3651}, "phase": "corrupt_examples"}
+{"attempts": 72500, "elapsed_seconds": 4.95, "examples": 72500, "noise_histogram": {"1": 21725, "2": 14486, "3": 14639, "4": 10815, "5": 7157, "6": 3678}, "phase": "corrupt_examples"}
+{"attempts": 73000, "elapsed_seconds": 4.98, "examples": 73000, "noise_histogram": {"1": 21855, "2": 14579, "3": 14747, "4": 10895, "5": 7216, "6": 3708}, "phase": "corrupt_examples"}
+{"attempts": 73500, "elapsed_seconds": 5.02, "examples": 73500, "noise_histogram": {"1": 22011, "2": 14668, "3": 14843, "4": 10973, "5": 7266, "6": 3739}, "phase": "corrupt_examples"}
+{"attempts": 74000, "elapsed_seconds": 5.05, "examples": 74000, "noise_histogram": {"1": 22147, "2": 14777, "3": 14946, "4": 11052, "5": 7314, "6": 3764}, "phase": "corrupt_examples"}
+{"attempts": 74500, "elapsed_seconds": 5.08, "examples": 74500, "noise_histogram": {"1": 22298, "2": 14885, "3": 15043, "4": 11120, "5": 7367, "6": 3787}, "phase": "corrupt_examples"}
+{"attempts": 75000, "elapsed_seconds": 5.11, "examples": 75000, "noise_histogram": {"1": 22462, "2": 14994, "3": 15128, "4": 11195, "5": 7411, "6": 3810}, "phase": "corrupt_examples"}
+{"attempts": 75500, "elapsed_seconds": 5.15, "examples": 75500, "noise_histogram": {"1": 22610, "2": 15098, "3": 15241, "4": 11268, "5": 7455, "6": 3828}, "phase": "corrupt_examples"}
+{"attempts": 76000, "elapsed_seconds": 5.18, "examples": 76000, "noise_histogram": {"1": 22763, "2": 15206, "3": 15332, "4": 11353, "5": 7491, "6": 3855}, "phase": "corrupt_examples"}
+{"attempts": 76500, "elapsed_seconds": 5.22, "examples": 76500, "noise_histogram": {"1": 22910, "2": 15305, "3": 15434, "4": 11434, "5": 7533, "6": 3884}, "phase": "corrupt_examples"}
+{"attempts": 77000, "elapsed_seconds": 5.25, "examples": 77000, "noise_histogram": {"1": 23065, "2": 15401, "3": 15538, "4": 11513, "5": 7578, "6": 3905}, "phase": "corrupt_examples"}
+{"attempts": 77500, "elapsed_seconds": 5.28, "examples": 77500, "noise_histogram": {"1": 23217, "2": 15495, "3": 15643, "4": 11593, "5": 7627, "6": 3925}, "phase": "corrupt_examples"}
+{"attempts": 78000, "elapsed_seconds": 5.32, "examples": 78000, "noise_histogram": {"1": 23361, "2": 15603, "3": 15735, "4": 11672, "5": 7668, "6": 3961}, "phase": "corrupt_examples"}
+{"attempts": 78500, "elapsed_seconds": 5.35, "examples": 78500, "noise_histogram": {"1": 23504, "2": 15696, "3": 15840, "4": 11769, "5": 7710, "6": 3981}, "phase": "corrupt_examples"}
+{"attempts": 79000, "elapsed_seconds": 5.38, "examples": 79000, "noise_histogram": {"1": 23642, "2": 15797, "3": 15943, "4": 11848, "5": 7766, "6": 4004}, "phase": "corrupt_examples"}
+{"attempts": 79500, "elapsed_seconds": 5.42, "examples": 79500, "noise_histogram": {"1": 23760, "2": 15903, "3": 16045, "4": 11921, "5": 7835, "6": 4036}, "phase": "corrupt_examples"}
+{"attempts": 80000, "elapsed_seconds": 5.45, "examples": 80000, "noise_histogram": {"1": 23893, "2": 15999, "3": 16151, "4": 12002, "5": 7898, "6": 4057}, "phase": "corrupt_examples"}
+{"attempts": 80500, "elapsed_seconds": 5.49, "examples": 80500, "noise_histogram": {"1": 24032, "2": 16093, "3": 16248, "4": 12094, "5": 7951, "6": 4082}, "phase": "corrupt_examples"}
+{"attempts": 81000, "elapsed_seconds": 5.52, "examples": 81000, "noise_histogram": {"1": 24174, "2": 16198, "3": 16350, "4": 12168, "5": 7996, "6": 4114}, "phase": "corrupt_examples"}
+{"attempts": 81500, "elapsed_seconds": 5.55, "examples": 81500, "noise_histogram": {"1": 24327, "2": 16307, "3": 16455, "4": 12237, "5": 8031, "6": 4143}, "phase": "corrupt_examples"}
+{"attempts": 82000, "elapsed_seconds": 5.59, "examples": 82000, "noise_histogram": {"1": 24464, "2": 16403, "3": 16565, "4": 12323, "5": 8080, "6": 4165}, "phase": "corrupt_examples"}
+{"attempts": 82500, "elapsed_seconds": 5.62, "examples": 82500, "noise_histogram": {"1": 24620, "2": 16514, "3": 16661, "4": 12396, "5": 8118, "6": 4191}, "phase": "corrupt_examples"}
+{"attempts": 83000, "elapsed_seconds": 5.68, "examples": 83000, "noise_histogram": {"1": 24765, "2": 16626, "3": 16754, "4": 12470, "5": 8163, "6": 4222}, "phase": "corrupt_examples"}
+{"attempts": 83500, "elapsed_seconds": 5.71, "examples": 83500, "noise_histogram": {"1": 24915, "2": 16721, "3": 16858, "4": 12540, "5": 8222, "6": 4244}, "phase": "corrupt_examples"}
+{"attempts": 84000, "elapsed_seconds": 5.74, "examples": 84000, "noise_histogram": {"1": 25069, "2": 16818, "3": 16968, "4": 12610, "5": 8271, "6": 4264}, "phase": "corrupt_examples"}
+{"attempts": 84500, "elapsed_seconds": 5.78, "examples": 84500, "noise_histogram": {"1": 25220, "2": 16916, "3": 17074, "4": 12688, "5": 8316, "6": 4286}, "phase": "corrupt_examples"}
+{"attempts": 85000, "elapsed_seconds": 5.82, "examples": 85000, "noise_histogram": {"1": 25369, "2": 17028, "3": 17180, "4": 12745, "5": 8365, "6": 4313}, "phase": "corrupt_examples"}
+{"attempts": 85500, "elapsed_seconds": 5.85, "examples": 85500, "noise_histogram": {"1": 25519, "2": 17130, "3": 17272, "4": 12828, "5": 8419, "6": 4332}, "phase": "corrupt_examples"}
+{"attempts": 86000, "elapsed_seconds": 5.89, "examples": 86000, "noise_histogram": {"1": 25666, "2": 17224, "3": 17376, "4": 12900, "5": 8468, "6": 4366}, "phase": "corrupt_examples"}
+{"attempts": 86500, "elapsed_seconds": 5.93, "examples": 86500, "noise_histogram": {"1": 25827, "2": 17311, "3": 17462, "4": 12985, "5": 8524, "6": 4391}, "phase": "corrupt_examples"}
+{"attempts": 87000, "elapsed_seconds": 5.96, "examples": 87000, "noise_histogram": {"1": 25996, "2": 17403, "3": 17554, "4": 13047, "5": 8573, "6": 4427}, "phase": "corrupt_examples"}
+{"attempts": 87500, "elapsed_seconds": 6.0, "examples": 87500, "noise_histogram": {"1": 26147, "2": 17507, "3": 17662, "4": 13110, "5": 8625, "6": 4449}, "phase": "corrupt_examples"}
+{"attempts": 88000, "elapsed_seconds": 6.04, "examples": 88000, "noise_histogram": {"1": 26293, "2": 17611, "3": 17755, "4": 13174, "5": 8686, "6": 4481}, "phase": "corrupt_examples"}
+{"attempts": 88500, "elapsed_seconds": 6.07, "examples": 88500, "noise_histogram": {"1": 26446, "2": 17702, "3": 17856, "4": 13240, "5": 8745, "6": 4511}, "phase": "corrupt_examples"}
+{"attempts": 89000, "elapsed_seconds": 6.1, "examples": 89000, "noise_histogram": {"1": 26594, "2": 17786, "3": 17956, "4": 13325, "5": 8798, "6": 4541}, "phase": "corrupt_examples"}
+{"attempts": 89500, "elapsed_seconds": 6.14, "examples": 89500, "noise_histogram": {"1": 26727, "2": 17893, "3": 18070, "4": 13393, "5": 8858, "6": 4559}, "phase": "corrupt_examples"}
+{"attempts": 90000, "elapsed_seconds": 6.17, "examples": 90000, "noise_histogram": {"1": 26876, "2": 17997, "3": 18176, "4": 13475, "5": 8897, "6": 4579}, "phase": "corrupt_examples"}
+{"attempts": 90500, "elapsed_seconds": 6.21, "examples": 90500, "noise_histogram": {"1": 27028, "2": 18097, "3": 18273, "4": 13556, "5": 8943, "6": 4603}, "phase": "corrupt_examples"}
+{"attempts": 91000, "elapsed_seconds": 6.24, "examples": 91000, "noise_histogram": {"1": 27164, "2": 18202, "3": 18362, "4": 13642, "5": 9000, "6": 4630}, "phase": "corrupt_examples"}
+{"attempts": 91500, "elapsed_seconds": 6.28, "examples": 91500, "noise_histogram": {"1": 27299, "2": 18303, "3": 18476, "4": 13719, "5": 9050, "6": 4653}, "phase": "corrupt_examples"}
+{"attempts": 92000, "elapsed_seconds": 6.31, "examples": 92000, "noise_histogram": {"1": 27445, "2": 18413, "3": 18571, "4": 13798, "5": 9092, "6": 4681}, "phase": "corrupt_examples"}
+{"attempts": 92500, "elapsed_seconds": 6.35, "examples": 92500, "noise_histogram": {"1": 27589, "2": 18509, "3": 18690, "4": 13872, "5": 9137, "6": 4703}, "phase": "corrupt_examples"}
+{"attempts": 93000, "elapsed_seconds": 6.38, "examples": 93000, "noise_histogram": {"1": 27741, "2": 18604, "3": 18787, "4": 13955, "5": 9185, "6": 4728}, "phase": "corrupt_examples"}
+{"attempts": 93500, "elapsed_seconds": 6.42, "examples": 93500, "noise_histogram": {"1": 27904, "2": 18686, "3": 18903, "4": 14023, "5": 9233, "6": 4751}, "phase": "corrupt_examples"}
+{"attempts": 94000, "elapsed_seconds": 6.46, "examples": 94000, "noise_histogram": {"1": 28049, "2": 18785, "3": 18994, "4": 14111, "5": 9289, "6": 4772}, "phase": "corrupt_examples"}
+{"attempts": 94500, "elapsed_seconds": 6.49, "examples": 94500, "noise_histogram": {"1": 28200, "2": 18886, "3": 19091, "4": 14190, "5": 9341, "6": 4792}, "phase": "corrupt_examples"}
+{"attempts": 95000, "elapsed_seconds": 6.53, "examples": 95000, "noise_histogram": {"1": 28369, "2": 18969, "3": 19173, "4": 14267, "5": 9394, "6": 4828}, "phase": "corrupt_examples"}
+{"attempts": 95500, "elapsed_seconds": 6.57, "examples": 95500, "noise_histogram": {"1": 28509, "2": 19072, "3": 19278, "4": 14337, "5": 9445, "6": 4859}, "phase": "corrupt_examples"}
+{"attempts": 96000, "elapsed_seconds": 6.6, "examples": 96000, "noise_histogram": {"1": 28669, "2": 19172, "3": 19375, "4": 14417, "5": 9487, "6": 4880}, "phase": "corrupt_examples"}
+{"attempts": 96500, "elapsed_seconds": 6.64, "examples": 96500, "noise_histogram": {"1": 28809, "2": 19288, "3": 19461, "4": 14495, "5": 9539, "6": 4908}, "phase": "corrupt_examples"}
+{"attempts": 97000, "elapsed_seconds": 6.67, "examples": 97000, "noise_histogram": {"1": 28974, "2": 19376, "3": 19562, "4": 14560, "5": 9593, "6": 4935}, "phase": "corrupt_examples"}
+{"attempts": 97500, "elapsed_seconds": 6.71, "examples": 97500, "noise_histogram": {"1": 29132, "2": 19463, "3": 19666, "4": 14631, "5": 9640, "6": 4968}, "phase": "corrupt_examples"}
+{"attempts": 98000, "elapsed_seconds": 6.74, "examples": 98000, "noise_histogram": {"1": 29285, "2": 19566, "3": 19756, "4": 14706, "5": 9697, "6": 4990}, "phase": "corrupt_examples"}
+{"attempts": 98500, "elapsed_seconds": 6.78, "examples": 98500, "noise_histogram": {"1": 29440, "2": 19647, "3": 19863, "4": 14785, "5": 9749, "6": 5016}, "phase": "corrupt_examples"}
+{"attempts": 99000, "elapsed_seconds": 6.81, "examples": 99000, "noise_histogram": {"1": 29596, "2": 19754, "3": 19969, "4": 14837, "5": 9798, "6": 5046}, "phase": "corrupt_examples"}
+{"attempts": 99500, "elapsed_seconds": 6.85, "examples": 99500, "noise_histogram": {"1": 29754, "2": 19849, "3": 20064, "4": 14912, "5": 9848, "6": 5073}, "phase": "corrupt_examples"}
+{"attempts": 100000, "elapsed_seconds": 6.88, "examples": 100000, "noise_histogram": {"1": 29913, "2": 19958, "3": 20170, "4": 14982, "5": 9890, "6": 5087}, "phase": "corrupt_examples"}
+{"attempts": 100500, "elapsed_seconds": 6.92, "examples": 100500, "noise_histogram": {"1": 30041, "2": 20081, "3": 20268, "4": 15055, "5": 9939, "6": 5116}, "phase": "corrupt_examples"}
+{"attempts": 101000, "elapsed_seconds": 6.95, "examples": 101000, "noise_histogram": {"1": 30195, "2": 20187, "3": 20371, "4": 15122, "5": 9987, "6": 5138}, "phase": "corrupt_examples"}
+{"attempts": 101500, "elapsed_seconds": 6.99, "examples": 101500, "noise_histogram": {"1": 30350, "2": 20280, "3": 20457, "4": 15215, "5": 10041, "6": 5157}, "phase": "corrupt_examples"}
+{"attempts": 102000, "elapsed_seconds": 7.02, "examples": 102000, "noise_histogram": {"1": 30508, "2": 20383, "3": 20549, "4": 15285, "5": 10091, "6": 5184}, "phase": "corrupt_examples"}
+{"attempts": 102500, "elapsed_seconds": 7.05, "examples": 102500, "noise_histogram": {"1": 30659, "2": 20492, "3": 20646, "4": 15357, "5": 10142, "6": 5204}, "phase": "corrupt_examples"}
+{"attempts": 103000, "elapsed_seconds": 7.09, "examples": 103000, "noise_histogram": {"1": 30811, "2": 20585, "3": 20745, "4": 15445, "5": 10186, "6": 5228}, "phase": "corrupt_examples"}
+{"attempts": 103500, "elapsed_seconds": 7.13, "examples": 103500, "noise_histogram": {"1": 30955, "2": 20688, "3": 20846, "4": 15527, "5": 10231, "6": 5253}, "phase": "corrupt_examples"}
+{"attempts": 104000, "elapsed_seconds": 7.16, "examples": 104000, "noise_histogram": {"1": 31115, "2": 20791, "3": 20938, "4": 15587, "5": 10289, "6": 5280}, "phase": "corrupt_examples"}
+{"attempts": 104500, "elapsed_seconds": 7.2, "examples": 104500, "noise_histogram": {"1": 31259, "2": 20902, "3": 21040, "4": 15654, "5": 10339, "6": 5306}, "phase": "corrupt_examples"}
+{"attempts": 105000, "elapsed_seconds": 7.24, "examples": 105000, "noise_histogram": {"1": 31418, "2": 20997, "3": 21146, "4": 15712, "5": 10396, "6": 5331}, "phase": "corrupt_examples"}
+{"attempts": 105500, "elapsed_seconds": 7.28, "examples": 105500, "noise_histogram": {"1": 31582, "2": 21089, "3": 21255, "4": 15786, "5": 10438, "6": 5350}, "phase": "corrupt_examples"}
+{"attempts": 106000, "elapsed_seconds": 7.31, "examples": 106000, "noise_histogram": {"1": 31725, "2": 21177, "3": 21363, "4": 15856, "5": 10500, "6": 5379}, "phase": "corrupt_examples"}
+{"attempts": 106500, "elapsed_seconds": 7.35, "examples": 106500, "noise_histogram": {"1": 31858, "2": 21278, "3": 21466, "4": 15937, "5": 10554, "6": 5407}, "phase": "corrupt_examples"}
+{"attempts": 107000, "elapsed_seconds": 7.39, "examples": 107000, "noise_histogram": {"1": 31996, "2": 21397, "3": 21573, "4": 15995, "5": 10600, "6": 5439}, "phase": "corrupt_examples"}
+{"attempts": 107500, "elapsed_seconds": 7.43, "examples": 107500, "noise_histogram": {"1": 32141, "2": 21496, "3": 21691, "4": 16056, "5": 10650, "6": 5466}, "phase": "corrupt_examples"}
+{"attempts": 108000, "elapsed_seconds": 7.46, "examples": 108000, "noise_histogram": {"1": 32272, "2": 21616, "3": 21806, "4": 16128, "5": 10697, "6": 5481}, "phase": "corrupt_examples"}
+{"attempts": 108500, "elapsed_seconds": 7.52, "examples": 108500, "noise_histogram": {"1": 32427, "2": 21720, "3": 21904, "4": 16196, "5": 10743, "6": 5510}, "phase": "corrupt_examples"}
+{"attempts": 109000, "elapsed_seconds": 7.55, "examples": 109000, "noise_histogram": {"1": 32566, "2": 21824, "3": 22002, "4": 16277, "5": 10798, "6": 5533}, "phase": "corrupt_examples"}
+{"attempts": 109500, "elapsed_seconds": 7.58, "examples": 109500, "noise_histogram": {"1": 32706, "2": 21922, "3": 22110, "4": 16349, "5": 10855, "6": 5558}, "phase": "corrupt_examples"}
+{"attempts": 110000, "elapsed_seconds": 7.62, "examples": 110000, "noise_histogram": {"1": 32864, "2": 22012, "3": 22217, "4": 16425, "5": 10905, "6": 5577}, "phase": "corrupt_examples"}
+{"attempts": 110500, "elapsed_seconds": 7.65, "examples": 110500, "noise_histogram": {"1": 33027, "2": 22112, "3": 22310, "4": 16501, "5": 10949, "6": 5601}, "phase": "corrupt_examples"}
+{"attempts": 111000, "elapsed_seconds": 7.69, "examples": 111000, "noise_histogram": {"1": 33174, "2": 22212, "3": 22412, "4": 16582, "5": 10993, "6": 5627}, "phase": "corrupt_examples"}
+{"attempts": 111500, "elapsed_seconds": 7.72, "examples": 111500, "noise_histogram": {"1": 33321, "2": 22321, "3": 22505, "4": 16661, "5": 11043, "6": 5649}, "phase": "corrupt_examples"}
+{"attempts": 112000, "elapsed_seconds": 7.76, "examples": 112000, "noise_histogram": {"1": 33477, "2": 22430, "3": 22600, "4": 16730, "5": 11089, "6": 5674}, "phase": "corrupt_examples"}
+{"attempts": 112500, "elapsed_seconds": 7.8, "examples": 112500, "noise_histogram": {"1": 33632, "2": 22526, "3": 22719, "4": 16793, "5": 11133, "6": 5697}, "phase": "corrupt_examples"}
+{"attempts": 113000, "elapsed_seconds": 7.83, "examples": 113000, "noise_histogram": {"1": 33786, "2": 22640, "3": 22808, "4": 16867, "5": 11182, "6": 5717}, "phase": "corrupt_examples"}
+{"attempts": 113500, "elapsed_seconds": 7.87, "examples": 113500, "noise_histogram": {"1": 33940, "2": 22743, "3": 22896, "4": 16937, "5": 11249, "6": 5735}, "phase": "corrupt_examples"}
+{"attempts": 114000, "elapsed_seconds": 7.9, "examples": 114000, "noise_histogram": {"1": 34105, "2": 22841, "3": 22999, "4": 17008, "5": 11290, "6": 5757}, "phase": "corrupt_examples"}
+{"attempts": 114500, "elapsed_seconds": 7.94, "examples": 114500, "noise_histogram": {"1": 34265, "2": 22937, "3": 23092, "4": 17091, "5": 11333, "6": 5782}, "phase": "corrupt_examples"}
+{"attempts": 115000, "elapsed_seconds": 7.97, "examples": 115000, "noise_histogram": {"1": 34418, "2": 23036, "3": 23188, "4": 17172, "5": 11376, "6": 5810}, "phase": "corrupt_examples"}
+{"attempts": 115500, "elapsed_seconds": 8.01, "examples": 115500, "noise_histogram": {"1": 34568, "2": 23138, "3": 23279, "4": 17250, "5": 11425, "6": 5840}, "phase": "corrupt_examples"}
+{"attempts": 116000, "elapsed_seconds": 8.05, "examples": 116000, "noise_histogram": {"1": 34700, "2": 23260, "3": 23381, "4": 17316, "5": 11479, "6": 5864}, "phase": "corrupt_examples"}
+{"attempts": 116500, "elapsed_seconds": 8.09, "examples": 116500, "noise_histogram": {"1": 34850, "2": 23356, "3": 23472, "4": 17397, "5": 11533, "6": 5892}, "phase": "corrupt_examples"}
+{"attempts": 117000, "elapsed_seconds": 8.13, "examples": 117000, "noise_histogram": {"1": 34987, "2": 23443, "3": 23578, "4": 17486, "5": 11588, "6": 5918}, "phase": "corrupt_examples"}
+{"attempts": 117500, "elapsed_seconds": 8.17, "examples": 117500, "noise_histogram": {"1": 35126, "2": 23544, "3": 23686, "4": 17566, "5": 11632, "6": 5946}, "phase": "corrupt_examples"}
+{"attempts": 118000, "elapsed_seconds": 8.21, "examples": 118000, "noise_histogram": {"1": 35271, "2": 23646, "3": 23791, "4": 17643, "5": 11677, "6": 5972}, "phase": "corrupt_examples"}
+{"attempts": 118500, "elapsed_seconds": 8.24, "examples": 118500, "noise_histogram": {"1": 35410, "2": 23747, "3": 23894, "4": 17722, "5": 11723, "6": 6004}, "phase": "corrupt_examples"}
+{"attempts": 119000, "elapsed_seconds": 8.27, "examples": 119000, "noise_histogram": {"1": 35557, "2": 23847, "3": 23999, "4": 17807, "5": 11768, "6": 6022}, "phase": "corrupt_examples"}
+{"attempts": 119500, "elapsed_seconds": 8.31, "examples": 119500, "noise_histogram": {"1": 35700, "2": 23946, "3": 24100, "4": 17889, "5": 11816, "6": 6049}, "phase": "corrupt_examples"}
+{"attempts": 120000, "elapsed_seconds": 8.35, "examples": 120000, "noise_histogram": {"1": 35836, "2": 24046, "3": 24207, "4": 17957, "5": 11870, "6": 6084}, "phase": "corrupt_examples"}
+{"elapsed_seconds": 8.59, "evaluated": 500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 8.83, "evaluated": 1000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 9.03, "evaluated": 1500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 9.27, "evaluated": 2000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 9.49, "evaluated": 2500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 9.71, "evaluated": 3000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 9.93, "evaluated": 3500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 10.16, "evaluated": 4000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 10.38, "evaluated": 4500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 10.61, "evaluated": 5000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 10.84, "evaluated": 5500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 11.05, "evaluated": 6000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 11.28, "evaluated": 6500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 11.51, "evaluated": 7000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 11.73, "evaluated": 7500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 11.95, "evaluated": 8000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 12.18, "evaluated": 8500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 12.41, "evaluated": 9000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 12.62, "evaluated": 9500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 12.84, "evaluated": 10000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 13.07, "evaluated": 10500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 13.29, "evaluated": 11000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 13.52, "evaluated": 11500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 13.74, "evaluated": 12000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 13.96, "evaluated": 12500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 14.19, "evaluated": 13000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 14.41, "evaluated": 13500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 14.64, "evaluated": 14000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 14.87, "evaluated": 14500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 15.09, "evaluated": 15000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 15.31, "evaluated": 15500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 15.54, "evaluated": 16000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 15.76, "evaluated": 16500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 15.98, "evaluated": 17000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 16.21, "evaluated": 17500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 16.43, "evaluated": 18000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 16.65, "evaluated": 18500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 16.88, "evaluated": 19000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 17.1, "evaluated": 19500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 17.32, "evaluated": 20000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 17.56, "evaluated": 20500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 17.78, "evaluated": 21000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 18.0, "evaluated": 21500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 18.22, "evaluated": 22000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 18.45, "evaluated": 22500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 18.67, "evaluated": 23000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 18.91, "evaluated": 23500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 19.13, "evaluated": 24000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 19.35, "evaluated": 24500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 19.57, "evaluated": 25000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 19.8, "evaluated": 25500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 20.03, "evaluated": 26000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 20.28, "evaluated": 26500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 20.51, "evaluated": 27000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 20.73, "evaluated": 27500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 20.96, "evaluated": 28000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 21.19, "evaluated": 28500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 21.41, "evaluated": 29000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 21.64, "evaluated": 29500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 21.86, "evaluated": 30000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 22.09, "evaluated": 30500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 22.31, "evaluated": 31000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 22.54, "evaluated": 31500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 22.77, "evaluated": 32000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 23.0, "evaluated": 32500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 23.23, "evaluated": 33000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 23.46, "evaluated": 33500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 23.69, "evaluated": 34000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 23.92, "evaluated": 34500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 24.14, "evaluated": 35000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 24.37, "evaluated": 35500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 24.6, "evaluated": 36000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 24.83, "evaluated": 36500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 25.05, "evaluated": 37000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 25.28, "evaluated": 37500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 25.51, "evaluated": 38000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 25.73, "evaluated": 38500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 25.95, "evaluated": 39000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 26.17, "evaluated": 39500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 26.4, "evaluated": 40000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 26.63, "evaluated": 40500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 26.86, "evaluated": 41000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 27.08, "evaluated": 41500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 27.3, "evaluated": 42000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 27.52, "evaluated": 42500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 27.75, "evaluated": 43000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 27.98, "evaluated": 43500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 28.21, "evaluated": 44000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 28.43, "evaluated": 44500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 28.65, "evaluated": 45000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 28.89, "evaluated": 45500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 29.11, "evaluated": 46000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 29.34, "evaluated": 46500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 29.57, "evaluated": 47000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 29.8, "evaluated": 47500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 30.02, "evaluated": 48000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 30.24, "evaluated": 48500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 30.47, "evaluated": 49000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 30.69, "evaluated": 49500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 30.92, "evaluated": 50000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 31.14, "evaluated": 50500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 31.37, "evaluated": 51000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 31.61, "evaluated": 51500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 31.83, "evaluated": 52000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 32.07, "evaluated": 52500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 32.3, "evaluated": 53000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 32.52, "evaluated": 53500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 32.75, "evaluated": 54000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 32.98, "evaluated": 54500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 33.21, "evaluated": 55000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 33.44, "evaluated": 55500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 33.66, "evaluated": 56000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 33.89, "evaluated": 56500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 34.11, "evaluated": 57000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 34.32, "evaluated": 57500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 34.54, "evaluated": 58000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 34.77, "evaluated": 58500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 34.99, "evaluated": 59000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 35.21, "evaluated": 59500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 35.42, "evaluated": 60000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 35.64, "evaluated": 60500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 35.86, "evaluated": 61000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 36.08, "evaluated": 61500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 36.31, "evaluated": 62000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 36.53, "evaluated": 62500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 36.75, "evaluated": 63000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 36.98, "evaluated": 63500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 37.2, "evaluated": 64000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 37.42, "evaluated": 64500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 37.65, "evaluated": 65000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 37.88, "evaluated": 65500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 38.1, "evaluated": 66000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 38.33, "evaluated": 66500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 38.55, "evaluated": 67000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 38.78, "evaluated": 67500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 39.0, "evaluated": 68000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 39.22, "evaluated": 68500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 39.44, "evaluated": 69000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 39.67, "evaluated": 69500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 39.9, "evaluated": 70000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 40.12, "evaluated": 70500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 40.35, "evaluated": 71000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 40.58, "evaluated": 71500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 40.8, "evaluated": 72000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 41.04, "evaluated": 72500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 41.27, "evaluated": 73000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 41.51, "evaluated": 73500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 41.74, "evaluated": 74000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 41.96, "evaluated": 74500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 42.18, "evaluated": 75000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 42.4, "evaluated": 75500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 42.63, "evaluated": 76000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 42.85, "evaluated": 76500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 43.07, "evaluated": 77000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 43.33, "evaluated": 77500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 43.55, "evaluated": 78000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 43.78, "evaluated": 78500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 44.0, "evaluated": 79000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 44.22, "evaluated": 79500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 44.45, "evaluated": 80000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 44.67, "evaluated": 80500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 44.9, "evaluated": 81000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 45.13, "evaluated": 81500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 45.36, "evaluated": 82000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 45.58, "evaluated": 82500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 45.8, "evaluated": 83000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 46.03, "evaluated": 83500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 46.24, "evaluated": 84000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 46.47, "evaluated": 84500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 46.69, "evaluated": 85000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 46.92, "evaluated": 85500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 47.14, "evaluated": 86000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 47.37, "evaluated": 86500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 47.6, "evaluated": 87000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 47.83, "evaluated": 87500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 48.06, "evaluated": 88000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 48.29, "evaluated": 88500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 48.53, "evaluated": 89000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 48.76, "evaluated": 89500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 48.99, "evaluated": 90000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 49.22, "evaluated": 90500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 49.45, "evaluated": 91000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 49.68, "evaluated": 91500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 49.91, "evaluated": 92000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 50.13, "evaluated": 92500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 50.36, "evaluated": 93000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 50.59, "evaluated": 93500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 50.81, "evaluated": 94000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 51.03, "evaluated": 94500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 51.26, "evaluated": 95000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 51.48, "evaluated": 95500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 51.71, "evaluated": 96000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 51.94, "evaluated": 96500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 52.17, "evaluated": 97000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 52.39, "evaluated": 97500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 52.62, "evaluated": 98000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 52.85, "evaluated": 98500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 53.08, "evaluated": 99000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 53.31, "evaluated": 99500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 53.52, "evaluated": 100000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 53.75, "evaluated": 100500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 53.99, "evaluated": 101000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 54.21, "evaluated": 101500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 54.44, "evaluated": 102000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 54.67, "evaluated": 102500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 54.9, "evaluated": 103000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 55.13, "evaluated": 103500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 55.37, "evaluated": 104000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 55.6, "evaluated": 104500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 55.82, "evaluated": 105000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 56.05, "evaluated": 105500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 56.27, "evaluated": 106000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 56.5, "evaluated": 106500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 56.74, "evaluated": 107000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 56.96, "evaluated": 107500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 57.18, "evaluated": 108000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 57.4, "evaluated": 108500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 57.63, "evaluated": 109000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 57.86, "evaluated": 109500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 58.09, "evaluated": 110000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 58.32, "evaluated": 110500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 58.55, "evaluated": 111000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 58.78, "evaluated": 111500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 59.01, "evaluated": 112000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 59.23, "evaluated": 112500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 59.46, "evaluated": 113000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 59.68, "evaluated": 113500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 59.91, "evaluated": 114000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 60.15, "evaluated": 114500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 60.38, "evaluated": 115000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 60.61, "evaluated": 115500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 60.84, "evaluated": 116000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 61.07, "evaluated": 116500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 61.29, "evaluated": 117000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 61.52, "evaluated": 117500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 61.74, "evaluated": 118000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 61.97, "evaluated": 118500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 62.2, "evaluated": 119000, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 62.43, "evaluated": 119500, "phase": "evaluate_corruptions", "total": 120000}
+{"elapsed_seconds": 62.66, "evaluated": 120000, "phase": "evaluate_corruptions", "total": 120000}
+{"augment_repeats": 2, "augment_rotations_per_kernel": 8, "clean_kernel_count": 483, "elapsed_seconds": 69.48, "example_count": 120000, "format": "braid-diffusion-repair-dataset-v1", "hamming_max": 26, "hamming_median": 2.0, "kernel_sources": ["/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/paper_exact_search/kernel_bank/p3_paper_kernels.jsonl"], "matrix_channels": ["projectivized_raw", "residual_to_scalar"], "matrix_dim": 3, "matrix_max_degree": 256, "max_factors": 160, "max_kernel_length": 160, "max_repair_window": 4, "min_kernel_length": 8, "n": 4, "noise_histogram": {"1": 35836, "2": 24046, "3": 24207, "4": 17957, "5": 11870, "6": 6084}, "noise_level_weights": {"1": 3.0, "2": 2.0, "3": 2.0, "4": 1.5, "5": 1.0, "6": 0.5}, "objective": {"degeneracy_weight": 1.0, "identity_density_weight": 8.0, "identity_weight": 1.0, "kernel_bonus": 10000.0, "min_score_length": 45, "projlen_density_weight": 4.0, "projlen_weight": 0.25}, "p": 3, "phase": "done", "r": 1, "seed": 1, "target_width_histogram": {"1": 61212, "2": 19541, "3": 19790, "4": 19457}}

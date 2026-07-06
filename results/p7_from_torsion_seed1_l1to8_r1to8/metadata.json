@@ -1,0 +1,55 @@
+{
+  "both_random_pairs_per_core": 2000,
+  "candidate_limit": 100,
+  "candidate_path": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/projective_torsion_search/p7_seed1/exact_candidates.jsonl",
+  "format": "boundary-completion-search-v1",
+  "left_lengths": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "left_pool_size": 11168,
+  "left_samples_per_length": 2000,
+  "max_core_identity_defect": 200,
+  "max_core_length": 220,
+  "max_core_projlen": 200,
+  "max_exact_checks": 1000,
+  "max_final_length": 260,
+  "max_finite_survivors": 5000,
+  "min_core_length": 15,
+  "min_final_length": 20,
+  "modes": [
+    "right",
+    "left",
+    "both"
+  ],
+  "n": 4,
+  "p": 7,
+  "r": 1,
+  "right_lengths": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "right_pool_size": 11168,
+  "right_samples_per_length": 2000,
+  "seed": 1,
+  "selected_cores": 100,
+  "t_values": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ]
+}

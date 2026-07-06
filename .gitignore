@@ -9,6 +9,8 @@ results*/
 !results/**/*.out
 new_MCTS/
 prefix_mcts_tests/
+__pycache__/
+*.py[cod]
 *.jsonl
 iterations.jsonl
 results/**/iterations.json

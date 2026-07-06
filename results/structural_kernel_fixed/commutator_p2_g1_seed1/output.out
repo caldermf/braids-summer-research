@@ -1,0 +1,832 @@
+Python executable: /home/as4843/braids-torch-cu130/bin/python
+sys.executable: /home/as4843/braids-torch-cu130/bin/python
+PyTorch: 2.11.0+cu130
+Bundled CUDA: 13.0
+============================================================
+COMMUTATOR SEARCH: [σ_1, g^{-1}] for p=2
+============================================================
+Device: cuda
+Bucket size: 20000
+Max length: 40
+Bootstrap length: 5
+Prime: 2
+Generator: σ_1
+Degree window: [-160, 160] (321 coeffs, centered)
+Use best: 30000
+Expansion chunk size: 50000
+Matmul chunk size: 8000
+
+Loading tables from /nfs/roberts/project/pi_com36/as4843/braids-summer-research/structural-kernel-experiments/third_party/commutator_search/precomputed_tables/tables_B4_r1_p2.pt...
+Degree window: [-160, 160] (321 coefficients, centered)
+
+Precomputing twisted matrices T_b = M_σ · M_b^{-1} · M_σ^{-1}...
+  σ_1 = permutation (1, 0, 2, 3), index 6
+  M_σ degree shift: 0, M_σ^-1 degree shift: -2
+
+Avoidance condition for σ_1:
+  Centralizer generators (0-indexed): {0, 2}
+  Allowed first factors: 5 / 23 non-identity simples
+    #2: perm=(0, 2, 1, 3), left_descent={1}
+    #3: perm=(0, 2, 3, 1), left_descent={1}
+    #12: perm=(2, 0, 1, 3), left_descent={1}
+    #13: perm=(2, 0, 3, 1), left_descent={1}
+    #16: perm=(2, 3, 0, 1), left_descent={1}
+
+✓ Identity matrix verified (at degree 0, index 160)
+  Precomputing FFTs...
+    D=321, out_D=641, fft_size=1024
+    Total FFT cache: 1.8 MB
+Initializing with 5 allowed first factors (avoidance condition)
+  Generator: σ_1
+  Allowed first factor indices: [2, 3, 12, 13, 16]
+  Initial projlen distribution:
+    projlen=5: 2 braids
+    projlen=6: 1 braids
+    projlen=7: 1 braids
+    projlen=9: 1 braids
+  Total initialized: 5
+
+============================================================
+Level 2 - BOOTSTRAP
+============================================================
+  Starting braids: 5
+  Candidates to generate: 27
+  Pruned 3 identity matrices from expansion (dead ends)
+  Filtered 3 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 3 braids
+    projlen=6: 3 braids
+    projlen=7: 2 braids
+    projlen=9: 5 braids
+    projlen=10: 4 braids
+    projlen=11: 3 braids
+    projlen=13: 3 braids
+    projlen=15: 1 braids
+  Braids kept: 24 (in 8 buckets, 0.00 GB)
+  ⚡ Timing: matmul=0.01s, sampling=0.00s, total=0.11s
+
+============================================================
+Level 3 - BOOTSTRAP
+============================================================
+  Starting braids: 24
+  Candidates to generate: 134
+  Projlen distribution:
+    projlen=5: 2 braids
+    projlen=6: 4 braids
+    projlen=7: 5 braids
+    projlen=9: 12 braids
+    projlen=10: 7 braids
+    projlen=11: 12 braids
+    projlen=13: 33 braids
+    projlen=14: 15 braids
+    projlen=15: 15 braids
+    projlen=17: 21 braids
+  Braids kept: 134 (in 13 buckets, 0.00 GB)
+  ⚡ Timing: matmul=0.01s, sampling=0.00s, total=0.06s
+
+============================================================
+Level 4 - BOOTSTRAP
+============================================================
+  Starting braids: 134
+  Candidates to generate: 736
+  Pruned 1 identity matrices from expansion (dead ends)
+  Filtered 1 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 5 braids
+    projlen=6: 8 braids
+    projlen=7: 5 braids
+    projlen=9: 16 braids
+    projlen=10: 12 braids
+    projlen=11: 19 braids
+    projlen=13: 73 braids
+    projlen=14: 34 braids
+    projlen=15: 54 braids
+    projlen=17: 163 braids
+  Braids kept: 735 (in 17 buckets, 0.00 GB)
+  ⚡ Timing: matmul=0.01s, sampling=0.00s, total=0.07s
+
+============================================================
+Level 5 - BOOTSTRAP
+============================================================
+  Starting braids: 735
+  Candidates to generate: 4017
+  Projlen distribution:
+    projlen=5: 13 braids
+    projlen=6: 17 braids
+    projlen=7: 15 braids
+    projlen=9: 32 braids
+    projlen=10: 21 braids
+    projlen=11: 31 braids
+    projlen=13: 161 braids
+    projlen=14: 48 braids
+    projlen=15: 93 braids
+    projlen=17: 393 braids
+  Braids kept: 4017 (in 22 buckets, 0.02 GB)
+  ⚡ Timing: matmul=0.01s, sampling=0.00s, total=0.09s
+
+============================================================
+Level 6 - SAMPLING
+============================================================
+  Starting braids: 4017
+  Candidates to generate: 21913
+  Pruned 14 identity matrices from expansion (dead ends)
+  Filtered 14 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 44 braids
+    projlen=6: 51 braids
+    projlen=7: 34 braids
+    projlen=9: 79 braids
+    projlen=10: 63 braids
+    projlen=11: 107 braids
+    projlen=13: 368 braids
+    projlen=14: 159 braids
+    projlen=15: 220 braids
+    projlen=17: 880 braids
+  Braids kept: 21899 (in 26 buckets, 0.13 GB)
+  ⚡ Timing: matmul=0.06s, sampling=0.00s, total=0.19s
+
+============================================================
+Level 7 - SAMPLING
+============================================================
+  Starting braids: 21899
+  Candidates to generate: 119389
+  Processing in 3 chunks...
+  Pruned 29 identity matrices from expansion (dead ends)
+  Filtered 29 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 139 braids
+    projlen=6: 174 braids
+    projlen=7: 140 braids
+    projlen=9: 327 braids
+    projlen=10: 222 braids
+    projlen=11: 302 braids
+    projlen=13: 997 braids
+    projlen=14: 389 braids
+    projlen=15: 636 braids
+    projlen=17: 2488 braids
+  Braids kept: 119360 (in 31 buckets, 0.71 GB)
+  ⚡ Timing: matmul=0.20s, sampling=0.02s, total=0.80s
+
+============================================================
+Level 8 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 167790
+  Processing in 4 chunks...
+  Pruned 162 identity matrices from expansion (dead ends)
+  Filtered 162 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 468 braids
+    projlen=6: 539 braids
+    projlen=7: 459 braids
+    projlen=9: 996 braids
+    projlen=10: 684 braids
+    projlen=11: 1086 braids
+    projlen=13: 3233 braids
+    projlen=14: 1375 braids
+    projlen=15: 2074 braids
+    projlen=17: 7137 braids
+  Braids kept: 149089 (in 23 buckets, 0.89 GB)
+  ⚡ Timing: matmul=0.09s, sampling=0.03s, total=1.12s
+
+============================================================
+Level 9 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 170338
+  Processing in 4 chunks...
+  Pruned 334 identity matrices from expansion (dead ends)
+  Filtered 334 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 1617 braids
+    projlen=6: 1922 braids
+    projlen=7: 1396 braids
+    projlen=9: 3177 braids
+    projlen=10: 2145 braids
+    projlen=11: 3145 braids
+    projlen=13: 10352 braids
+    projlen=14: 4454 braids
+    projlen=15: 6721 braids
+    projlen=17: 21938 braids
+  Braids kept: 155533 (in 20 buckets, 0.92 GB)
+  ⚡ Timing: matmul=0.10s, sampling=0.02s, total=1.13s
+
+============================================================
+Level 10 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 171170
+  Processing in 4 chunks...
+  Pruned 1453 identity matrices from expansion (dead ends)
+  Filtered 1453 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 5587 braids
+    projlen=6: 6449 braids
+    projlen=7: 4382 braids
+    projlen=9: 9989 braids
+    projlen=10: 6994 braids
+    projlen=11: 9595 braids
+    projlen=13: 28073 braids
+    projlen=14: 9622 braids
+    projlen=15: 15108 braids
+    projlen=17: 35265 braids
+  Braids kept: 146379 (in 16 buckets, 0.87 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.02s, total=1.13s
+
+============================================================
+Level 11 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 167842
+  Processing in 4 chunks...
+  Pruned 3824 identity matrices from expansion (dead ends)
+  Filtered 3824 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 17509 braids
+    projlen=6: 18788 braids
+    projlen=7: 12325 braids
+    projlen=9: 23621 braids
+    projlen=10: 12658 braids
+    projlen=11: 18175 braids
+    projlen=13: 29675 braids
+    projlen=14: 10348 braids
+    projlen=15: 10127 braids
+    projlen=17: 10171 braids
+  Braids kept: 150722 (in 11 buckets, 0.90 GB)
+  ⚡ Timing: matmul=0.10s, sampling=0.02s, total=1.11s
+
+============================================================
+Level 12 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 158028
+  Processing in 4 chunks...
+  Pruned 9882 identity matrices from expansion (dead ends)
+  Filtered 9882 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 39416 braids
+    projlen=6: 38345 braids
+    projlen=7: 18691 braids
+    projlen=9: 17128 braids
+    projlen=10: 12459 braids
+    projlen=11: 11362 braids
+    projlen=13: 10745 braids
+  Braids kept: 110385 (in 7 buckets, 0.66 GB)
+  ⚡ Timing: matmul=0.07s, sampling=0.02s, total=1.06s
+
+============================================================
+Level 13 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 153212
+  Processing in 4 chunks...
+  Pruned 3818 identity matrices from expansion (dead ends)
+  Filtered 3818 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37949 braids
+    projlen=6: 37605 braids
+    projlen=7: 16183 braids
+    projlen=9: 17491 braids
+    projlen=10: 13323 braids
+    projlen=11: 13311 braids
+    projlen=13: 13532 braids
+  Braids kept: 113840 (in 7 buckets, 0.68 GB)
+  ⚡ Timing: matmul=0.06s, sampling=0.02s, total=1.02s
+
+============================================================
+Level 14 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 145380
+  Processing in 3 chunks...
+  Pruned 3946 identity matrices from expansion (dead ends)
+  Filtered 3946 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 39156 braids
+    projlen=6: 36743 braids
+    projlen=7: 12349 braids
+    projlen=9: 16723 braids
+    projlen=10: 13896 braids
+    projlen=11: 11663 braids
+    projlen=13: 10904 braids
+  Braids kept: 105535 (in 7 buckets, 0.63 GB)
+  ⚡ Timing: matmul=0.14s, sampling=0.01s, total=0.94s
+
+============================================================
+Level 15 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 143884
+  Processing in 3 chunks...
+  Pruned 3241 identity matrices from expansion (dead ends)
+  Filtered 3241 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 38081 braids
+    projlen=6: 35307 braids
+    projlen=7: 12213 braids
+    projlen=9: 17151 braids
+    projlen=10: 14447 braids
+    projlen=11: 11926 braids
+    projlen=13: 11518 braids
+  Braids kept: 107255 (in 7 buckets, 0.64 GB)
+  ⚡ Timing: matmul=0.15s, sampling=0.01s, total=0.94s
+
+============================================================
+Level 16 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 138618
+  Processing in 3 chunks...
+  Pruned 3512 identity matrices from expansion (dead ends)
+  Filtered 3512 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 39078 braids
+    projlen=6: 34775 braids
+    projlen=7: 10250 braids
+    projlen=9: 16138 braids
+    projlen=10: 14280 braids
+    projlen=11: 10753 braids
+    projlen=13: 9832 braids
+  Braids kept: 101253 (in 7 buckets, 0.60 GB)
+  ⚡ Timing: matmul=0.14s, sampling=0.01s, total=0.91s
+
+============================================================
+Level 17 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 138584
+  Processing in 3 chunks...
+  Pruned 3178 identity matrices from expansion (dead ends)
+  Filtered 3178 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 38425 braids
+    projlen=6: 34129 braids
+    projlen=7: 10435 braids
+    projlen=9: 16538 braids
+    projlen=10: 14626 braids
+    projlen=11: 11081 braids
+    projlen=13: 10172 braids
+  Braids kept: 102852 (in 7 buckets, 0.61 GB)
+  ⚡ Timing: matmul=0.13s, sampling=0.01s, total=0.89s
+
+============================================================
+Level 18 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 135566
+  Processing in 3 chunks...
+  Pruned 3272 identity matrices from expansion (dead ends)
+  Filtered 3272 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 38500 braids
+    projlen=6: 33634 braids
+    projlen=7: 9560 braids
+    projlen=9: 16077 braids
+    projlen=10: 14454 braids
+    projlen=11: 10502 braids
+    projlen=13: 9567 braids
+  Braids kept: 100160 (in 7 buckets, 0.60 GB)
+  ⚡ Timing: matmul=0.13s, sampling=0.01s, total=0.90s
+
+============================================================
+Level 19 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 134816
+  Processing in 3 chunks...
+  Pruned 3203 identity matrices from expansion (dead ends)
+  Filtered 3203 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 38443 braids
+    projlen=6: 33202 braids
+    projlen=7: 9385 braids
+    projlen=9: 16135 braids
+    projlen=10: 14594 braids
+    projlen=11: 10456 braids
+    projlen=13: 9398 braids
+  Braids kept: 99968 (in 7 buckets, 0.59 GB)
+  ⚡ Timing: matmul=0.13s, sampling=0.02s, total=0.89s
+
+============================================================
+Level 20 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 133634
+  Processing in 3 chunks...
+  Pruned 3275 identity matrices from expansion (dead ends)
+  Filtered 3275 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 38256 braids
+    projlen=6: 32794 braids
+    projlen=7: 9104 braids
+    projlen=9: 16029 braids
+    projlen=10: 14701 braids
+    projlen=11: 10317 braids
+    projlen=13: 9158 braids
+  Braids kept: 99309 (in 7 buckets, 0.59 GB)
+  ⚡ Timing: matmul=0.13s, sampling=0.01s, total=0.90s
+
+============================================================
+Level 21 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 132234
+  Processing in 3 chunks...
+  Pruned 3205 identity matrices from expansion (dead ends)
+  Filtered 3205 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 38034 braids
+    projlen=6: 32405 braids
+    projlen=7: 8871 braids
+    projlen=9: 15913 braids
+    projlen=10: 14725 braids
+    projlen=11: 10180 braids
+    projlen=13: 8901 braids
+  Braids kept: 98590 (in 7 buckets, 0.59 GB)
+  ⚡ Timing: matmul=0.13s, sampling=0.01s, total=0.87s
+
+============================================================
+Level 22 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 131564
+  Processing in 3 chunks...
+  Pruned 3235 identity matrices from expansion (dead ends)
+  Filtered 3235 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37657 braids
+    projlen=6: 32085 braids
+    projlen=7: 8848 braids
+    projlen=9: 15926 braids
+    projlen=10: 14779 braids
+    projlen=11: 10205 braids
+    projlen=13: 8829 braids
+  Braids kept: 98587 (in 7 buckets, 0.59 GB)
+  ⚡ Timing: matmul=0.12s, sampling=0.01s, total=0.87s
+
+============================================================
+Level 23 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 130534
+  Processing in 3 chunks...
+  Pruned 3302 identity matrices from expansion (dead ends)
+  Filtered 3302 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37729 braids
+    projlen=6: 31818 braids
+    projlen=7: 8566 braids
+    projlen=9: 15725 braids
+    projlen=10: 14815 braids
+    projlen=11: 10039 braids
+    projlen=13: 8540 braids
+  Braids kept: 97685 (in 7 buckets, 0.58 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.86s
+
+============================================================
+Level 24 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 130692
+  Processing in 3 chunks...
+  Pruned 3229 identity matrices from expansion (dead ends)
+  Filtered 3229 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37528 braids
+    projlen=6: 31560 braids
+    projlen=7: 8738 braids
+    projlen=9: 15853 braids
+    projlen=10: 14887 braids
+    projlen=11: 10174 braids
+    projlen=13: 8723 braids
+  Braids kept: 98375 (in 7 buckets, 0.58 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.86s
+
+============================================================
+Level 25 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 130004
+  Processing in 3 chunks...
+  Pruned 3379 identity matrices from expansion (dead ends)
+  Filtered 3379 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37644 braids
+    projlen=6: 31673 braids
+    projlen=7: 8446 braids
+    projlen=9: 15659 braids
+    projlen=10: 14899 braids
+    projlen=11: 9961 braids
+    projlen=13: 8343 braids
+  Braids kept: 97308 (in 7 buckets, 0.58 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.86s
+
+============================================================
+Level 26 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 129848
+  Processing in 3 chunks...
+  Pruned 3351 identity matrices from expansion (dead ends)
+  Filtered 3351 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37355 braids
+    projlen=6: 31458 braids
+    projlen=7: 8590 braids
+    projlen=9: 15673 braids
+    projlen=10: 14882 braids
+    projlen=11: 9988 braids
+    projlen=13: 8551 braids
+  Braids kept: 97684 (in 7 buckets, 0.58 GB)
+  ⚡ Timing: matmul=0.12s, sampling=0.01s, total=0.88s
+
+============================================================
+Level 27 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 129468
+  Processing in 3 chunks...
+  Pruned 3336 identity matrices from expansion (dead ends)
+  Filtered 3336 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37806 braids
+    projlen=6: 31527 braids
+    projlen=7: 8360 braids
+    projlen=9: 15486 braids
+    projlen=10: 14645 braids
+    projlen=11: 9894 braids
+    projlen=13: 8414 braids
+  Braids kept: 96799 (in 7 buckets, 0.58 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.86s
+
+============================================================
+Level 28 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 129400
+  Processing in 3 chunks...
+  Pruned 3322 identity matrices from expansion (dead ends)
+  Filtered 3322 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37344 braids
+    projlen=6: 31157 braids
+    projlen=7: 8486 braids
+    projlen=9: 15683 braids
+    projlen=10: 14835 braids
+    projlen=11: 9972 braids
+    projlen=13: 8601 braids
+  Braids kept: 97577 (in 7 buckets, 0.58 GB)
+  ⚡ Timing: matmul=0.12s, sampling=0.01s, total=0.86s
+
+============================================================
+Level 29 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 128842
+  Processing in 3 chunks...
+  Pruned 3275 identity matrices from expansion (dead ends)
+  Filtered 3275 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37442 braids
+    projlen=6: 31197 braids
+    projlen=7: 8404 braids
+    projlen=9: 15527 braids
+    projlen=10: 14685 braids
+    projlen=11: 9946 braids
+    projlen=13: 8366 braids
+  Braids kept: 96928 (in 7 buckets, 0.58 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.86s
+
+============================================================
+Level 30 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 128648
+  Processing in 3 chunks...
+  Pruned 3369 identity matrices from expansion (dead ends)
+  Filtered 3369 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37322 braids
+    projlen=6: 31109 braids
+    projlen=7: 8261 braids
+    projlen=9: 15610 braids
+    projlen=10: 14870 braids
+    projlen=11: 9862 braids
+    projlen=13: 8245 braids
+  Braids kept: 96848 (in 7 buckets, 0.58 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.86s
+
+============================================================
+Level 31 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 128234
+  Processing in 3 chunks...
+  Pruned 3245 identity matrices from expansion (dead ends)
+  Filtered 3245 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37115 braids
+    projlen=6: 30837 braids
+    projlen=7: 8337 braids
+    projlen=9: 15605 braids
+    projlen=10: 14889 braids
+    projlen=11: 9888 braids
+    projlen=13: 8318 braids
+  Braids kept: 97037 (in 7 buckets, 0.58 GB)
+  ⚡ Timing: matmul=0.10s, sampling=0.01s, total=0.84s
+
+============================================================
+Level 32 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 127566
+  Processing in 3 chunks...
+  Pruned 3402 identity matrices from expansion (dead ends)
+  Filtered 3402 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37388 braids
+    projlen=6: 30836 braids
+    projlen=7: 8010 braids
+    projlen=9: 15432 braids
+    projlen=10: 14828 braids
+    projlen=11: 9754 braids
+    projlen=13: 7916 braids
+  Braids kept: 95940 (in 7 buckets, 0.57 GB)
+  ⚡ Timing: matmul=0.05s, sampling=0.01s, total=0.85s
+
+============================================================
+Level 33 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 127928
+  Processing in 3 chunks...
+  Pruned 3267 identity matrices from expansion (dead ends)
+  Filtered 3267 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37187 braids
+    projlen=6: 30807 braids
+    projlen=7: 8229 braids
+    projlen=9: 15551 braids
+    projlen=10: 14950 braids
+    projlen=11: 9868 braids
+    projlen=13: 8069 braids
+  Braids kept: 96667 (in 7 buckets, 0.57 GB)
+  ⚡ Timing: matmul=0.12s, sampling=0.01s, total=0.85s
+
+============================================================
+Level 34 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 126962
+  Processing in 3 chunks...
+  Pruned 3430 identity matrices from expansion (dead ends)
+  Filtered 3430 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37491 braids
+    projlen=6: 30860 braids
+    projlen=7: 7883 braids
+    projlen=9: 15215 braids
+    projlen=10: 14634 braids
+    projlen=11: 9534 braids
+    projlen=13: 7915 braids
+  Braids kept: 95181 (in 7 buckets, 0.57 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.84s
+
+============================================================
+Level 35 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 127696
+  Processing in 3 chunks...
+  Pruned 3267 identity matrices from expansion (dead ends)
+  Filtered 3267 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37149 braids
+    projlen=6: 30707 braids
+    projlen=7: 8205 braids
+    projlen=9: 15510 braids
+    projlen=10: 14750 braids
+    projlen=11: 9847 braids
+    projlen=13: 8261 braids
+  Braids kept: 96573 (in 7 buckets, 0.57 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.86s
+
+============================================================
+Level 36 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 126842
+  Processing in 3 chunks...
+  Pruned 3337 identity matrices from expansion (dead ends)
+  Filtered 3337 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37367 braids
+    projlen=6: 30755 braids
+    projlen=7: 7928 braids
+    projlen=9: 15271 braids
+    projlen=10: 14758 braids
+    projlen=11: 9617 braids
+    projlen=13: 7809 braids
+  Braids kept: 95383 (in 7 buckets, 0.57 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.86s
+
+============================================================
+Level 37 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 126762
+  Processing in 3 chunks...
+  Pruned 3298 identity matrices from expansion (dead ends)
+  Filtered 3298 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 36994 braids
+    projlen=6: 30380 braids
+    projlen=7: 8013 braids
+    projlen=9: 15470 braids
+    projlen=10: 14905 braids
+    projlen=11: 9733 braids
+    projlen=13: 7969 braids
+  Braids kept: 96090 (in 7 buckets, 0.57 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.85s
+
+============================================================
+Level 38 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 126938
+  Processing in 3 chunks...
+  Pruned 3371 identity matrices from expansion (dead ends)
+  Filtered 3371 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 36996 braids
+    projlen=6: 30523 braids
+    projlen=7: 8025 braids
+    projlen=9: 15428 braids
+    projlen=10: 14926 braids
+    projlen=11: 9709 braids
+    projlen=13: 7960 braids
+  Braids kept: 96048 (in 7 buckets, 0.57 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.85s
+
+============================================================
+Level 39 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 126460
+  Processing in 3 chunks...
+  Pruned 3328 identity matrices from expansion (dead ends)
+  Filtered 3328 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 36858 braids
+    projlen=6: 30461 braids
+    projlen=7: 7959 braids
+    projlen=9: 15350 braids
+    projlen=10: 14879 braids
+    projlen=11: 9683 braids
+    projlen=13: 7942 braids
+  Braids kept: 95813 (in 7 buckets, 0.57 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.85s
+
+============================================================
+Level 40 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 125972
+  Processing in 3 chunks...
+  Pruned 3306 identity matrices from expansion (dead ends)
+  Filtered 3306 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 37034 braids
+    projlen=6: 30402 braids
+    projlen=7: 7861 braids
+    projlen=9: 15170 braids
+    projlen=10: 14582 braids
+    projlen=11: 9577 braids
+    projlen=13: 8040 braids
+  Braids kept: 95230 (in 7 buckets, 0.57 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.84s
+
+============================================================
+SEARCH COMPLETE
+============================================================
+Generator: σ_1
+Final level: 40
+Total time: 31.35s
+Avg time per level: 0.78s
+Total kernel elements: 0
+
+============================================================
+VERIFICATION
+============================================================
+No kernel elements found.
+
+============================================================
+SUMMARY
+============================================================
+Generator: σ_1
+Prime: p=2
+Total candidates with projlen=1: 0
+Verified kernel elements: 0
+Rejected kernel candidates: 0
+Rejected exact trivial commutators: 0
+Wrote /nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/structural_kernel_fixed/commutator_p2_g1_seed1/frontier.json.gz

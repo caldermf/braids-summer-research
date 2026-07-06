@@ -1,0 +1,35 @@
+{
+  "format": "long-mutational-reservoir-search-v1",
+  "generations": 500,
+  "max_length": 220,
+  "min_length": 16,
+  "mutations_per_generation": 512,
+  "n": 4,
+  "objective": {
+    "degeneracy_weight": 0.3,
+    "identity_density_weight": 2.0,
+    "length_weight": 1.0,
+    "primary": "identity_defect",
+    "projlen_density_weight": 4.0,
+    "projlen_weight": 0.15,
+    "secondary": "projlen, projlen/length, identity_defect/length, degeneracy, length band"
+  },
+  "operator_weights": {
+    "boundary_replace": 15.0,
+    "burst": 8.0,
+    "commutator_wrap": 6.0,
+    "conjugate": 10.0,
+    "grow": 12.0,
+    "random_restart": 4.0,
+    "window_replace": 45.0
+  },
+  "p": 7,
+  "r": 1,
+  "resume_from": "",
+  "seed": 1,
+  "seed_paths": [
+    "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/projective_torsion_search/p7_seed1/exact_candidates.jsonl",
+    "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/boundary_completion_search/p7_from_torsion_seed1_l1to8_r1to8/exact_completions.jsonl"
+  ],
+  "target_length": 96
+}

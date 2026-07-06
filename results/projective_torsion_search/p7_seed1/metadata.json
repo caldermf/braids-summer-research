@@ -1,0 +1,34 @@
+{
+  "base_powers": [
+    0
+  ],
+  "exhaustive_up_to": 3,
+  "format": "projective-torsion-search-v1",
+  "max_exact_checks": 1500,
+  "max_finite_survivors": 8000,
+  "max_length": 18,
+  "max_powered_length": 220,
+  "max_projective_order": 256,
+  "min_length": 2,
+  "min_powered_length": 24,
+  "min_projective_order": 2,
+  "n": 4,
+  "order_multiples": [
+    1,
+    2,
+    3
+  ],
+  "p": 7,
+  "r": 1,
+  "reject_pure_delta_powers": true,
+  "samples_per_length": 50000,
+  "seed": 1,
+  "t_values": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "target_powered_length": 90
+}

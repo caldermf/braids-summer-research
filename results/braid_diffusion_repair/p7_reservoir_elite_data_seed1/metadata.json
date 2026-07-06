@@ -1,0 +1,58 @@
+{
+  "augment_repeats": 2,
+  "augment_rotations_per_kernel": 8,
+  "clean_kernel_count": 56400,
+  "elapsed_seconds": 4140.33,
+  "example_count": 250000,
+  "format": "braid-diffusion-repair-dataset-v1",
+  "hamming_max": 80,
+  "hamming_median": 2.0,
+  "kernel_sources": [
+    "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/paper_reservoir_p7/exported_elites/p7_elites_le160_top400_per_length_shuffled.jsonl"
+  ],
+  "matrix_channels": [
+    "projectivized_raw",
+    "residual_to_scalar"
+  ],
+  "matrix_dim": 3,
+  "matrix_max_degree": 256,
+  "max_factors": 160,
+  "max_kernel_length": 160,
+  "max_repair_window": 4,
+  "min_kernel_length": 20,
+  "n": 4,
+  "noise_histogram": {
+    "1": 55661,
+    "2": 55620,
+    "3": 55560,
+    "4": 41618,
+    "5": 27632,
+    "6": 13909
+  },
+  "noise_level_weights": {
+    "1": 2.0,
+    "2": 2.0,
+    "3": 2.0,
+    "4": 1.5,
+    "5": 1.0,
+    "6": 0.5
+  },
+  "objective": {
+    "degeneracy_weight": 1.0,
+    "identity_density_weight": 8.0,
+    "identity_weight": 1.0,
+    "kernel_bonus": 10000.0,
+    "min_score_length": 45,
+    "projlen_density_weight": 4.0,
+    "projlen_weight": 0.25
+  },
+  "p": 7,
+  "r": 1,
+  "seed": 1,
+  "target_width_histogram": {
+    "1": 114224,
+    "2": 44432,
+    "3": 45632,
+    "4": 45712
+  }
+}

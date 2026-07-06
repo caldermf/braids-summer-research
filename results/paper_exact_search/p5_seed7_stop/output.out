@@ -1,0 +1,1707 @@
+Representation: Two-rowed representation (3, 1) of B4, over F5
+Tracker initialised with bucket size 15000, random seed 7.
+Bootstrapping up to Garside length 5 (30,478 braids)...
+Bootstrapping took 2.25 seconds
+Initial buckets:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+10   (1, 3)     10       1        3       1.000000               10
+16   (1, 4)     12       1        4       1.500000               12
+9    (2, 5)     56       2        5       1.000000               56
+17   (2, 6)     76       2        6       1.250000               76
+1    (2, 7)     32       2        7       1.500000               32
+3    (3, 7)    270       3        7       1.000000              270
+12   (3, 8)    364       3        8       1.166667              364
+18   (3, 9)    288       3        9       1.333333              288
+5   (3, 10)     60       3       10       1.500000               60
+2    (4, 9)   1256       4        9       1.000000             1256
+11  (4, 10)   1672       4       10       1.125000             1672
+19  (4, 11)   1784       4       11       1.250000             1784
+4   (4, 12)    700       4       12       1.375000              700
+14  (4, 13)    116       4       13       1.500000              116
+7   (5, 10)      4       5       10       0.900000                4
+13  (5, 11)   5798       5       11       1.000000             5798
+20  (5, 12)   7672       5       12       1.100000             7672
+6   (5, 13)   9864       5       13       1.200000             9864
+15  (5, 14)   5236       5       14       1.300000             5236
+0   (5, 15)   1716       5       15       1.400000             1716
+8   (5, 16)    188       5       16       1.500000              188
+
+Proceeding on to search in 1 seconds...
+
+------- Length 5
+Selected 28574 braids of length 5:
+    bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (5, 10)      4       5       10            0.9                4
+1  (5, 11)   5798       5       11            1.0             5798
+2  (5, 12)   7672       5       12            1.1             7672
+3  (5, 13)   9864       5       13            1.2             9864
+4  (5, 14)   5236       5       14            1.3             5236
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.31 seconds.
+
+------- Length 6
+Selected 15068 braids of length 6:
+    bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (6, 12)     68       6       12       0.916667               68
+1  (6, 13)  15000       6       13       1.000000            26768
+
+Moving braids forward by 1 GNF letters...
+   Done in 3.43 seconds.
+
+------- Length 7
+Selected 15449 braids of length 7:
+    bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (7, 13)     50       7       13       0.857143               50
+1  (7, 14)    399       7       14       0.928571              399
+2  (7, 15)  15000       7       15       1.000000            59176
+
+Moving braids forward by 1 GNF letters...
+   Done in 3.66 seconds.
+
+------- Length 8
+Selected 17411 braids of length 8:
+    bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (8, 14)     52       8       14         0.8125               52
+1  (8, 15)    419       8       15         0.8750              419
+2  (8, 16)   1940       8       16         0.9375             1940
+3  (8, 17)  15000       8       17         1.0000            60100
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.23 seconds.
+
+------- Length 9
+Selected 26826 braids of length 9:
+    bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (9, 15)     53       9       15       0.777778               53
+1  (9, 16)    357       9       16       0.833333              357
+2  (9, 17)   3021       9       17       0.888889             3021
+3  (9, 18)   8395       9       18       0.944444             8395
+4  (9, 19)  15000       9       19       1.000000            63526
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.55 seconds.
+
+------- Length 10
+Selected 17617 braids of length 10:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (10, 16)     13      10       16           0.75               13
+1  (10, 17)    560      10       17           0.80              560
+2  (10, 18)   2044      10       18           0.85             2044
+3  (10, 19)  15000      10       19           0.90            16555
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.38 seconds.
+
+------- Length 11
+Selected 28765 braids of length 11:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (11, 17)     16      11       17       0.727273               16
+1  (11, 18)    164      11       18       0.772727              164
+2  (11, 19)   3590      11       19       0.818182             3590
+3  (11, 20)   9995      11       20       0.863636             9995
+4  (11, 21)  15000      11       21       0.909091            63057
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.01 seconds.
+
+------- Length 12
+Selected 16361 braids of length 12:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (12, 17)      2      12       17       0.666667                2
+1  (12, 18)     13      12       18       0.708333               13
+2  (12, 19)    215      12       19       0.750000              215
+3  (12, 20)   1131      12       20       0.791667             1131
+4  (12, 21)  15000      12       21       0.833333            18603
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.16 seconds.
+
+------- Length 13
+Selected 22551 braids of length 13:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (13, 18)      8      13       18       0.653846                8
+1  (13, 19)     13      13       19       0.692308               13
+2  (13, 20)    148      13       20       0.730769              148
+3  (13, 21)   1587      13       21       0.769231             1587
+4  (13, 22)   5795      13       22       0.807692             5795
+5  (13, 23)  15000      13       23       0.846154            61537
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.74 seconds.
+
+------- Length 14
+Selected 24894 braids of length 14:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (14, 19)     10      14       19       0.642857               10
+1  (14, 20)     62      14       20       0.678571               62
+2  (14, 21)    177      14       21       0.714286              177
+3  (14, 22)   1179      14       22       0.750000             1179
+4  (14, 23)   8466      14       23       0.785714             8466
+5  (14, 24)  15000      14       24       0.821429            24930
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.29 seconds.
+
+------- Length 15
+Selected 23324 braids of length 15:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (15, 19)      2      15       19       0.600000                2
+1  (15, 20)      9      15       20       0.633333                9
+2  (15, 21)     85      15       21       0.666667               85
+3  (15, 22)    509      15       22       0.700000              509
+4  (15, 23)   1284      15       23       0.733333             1284
+5  (15, 24)   6435      15       24       0.766667             6435
+6  (15, 25)  15000      15       25       0.800000            38754
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.06 seconds.
+
+------- Length 16
+Selected 25562 braids of length 16:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (16, 20)     12      16       20        0.59375               12
+1  (16, 21)     35      16       21        0.62500               35
+2  (16, 22)    127      16       22        0.65625              127
+3  (16, 23)    739      16       23        0.68750              739
+4  (16, 24)   3025      16       24        0.71875             3025
+5  (16, 25)   6624      16       25        0.75000             6624
+6  (16, 26)  15000      16       26        0.78125            28521
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.65 seconds.
+
+------- Length 17
+Selected 20689 braids of length 17:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (17, 20)      7      17       20       0.558824                7
+1  (17, 21)     35      17       21       0.588235               35
+2  (17, 22)    124      17       22       0.617647              124
+3  (17, 23)    358      17       23       0.647059              358
+4  (17, 24)   1007      17       24       0.676471             1007
+5  (17, 25)   4158      17       25       0.705882             4158
+6  (17, 26)  15000      17       26       0.735294            15143
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.36 seconds.
+
+------- Length 18
+Selected 24294 braids of length 18:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (18, 21)     17      18       21       0.555556               17
+1  (18, 22)     74      18       22       0.583333               74
+2  (18, 23)    324      18       23       0.611111              324
+3  (18, 24)    917      18       24       0.638889              917
+4  (18, 25)   2435      18       25       0.666667             2435
+5  (18, 26)   5527      18       26       0.694444             5527
+6  (18, 27)  15000      18       27       0.722222            18973
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.35 seconds.
+
+------- Length 19
+Selected 20595 braids of length 19:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (19, 21)      3      19       21       0.526316                3
+1  (19, 22)     47      19       22       0.552632               47
+2  (19, 23)    207      19       23       0.578947              207
+3  (19, 24)    455      19       24       0.605263              455
+4  (19, 25)   2164      19       25       0.631579             2164
+5  (19, 26)   5336      19       26       0.657895             5336
+6  (19, 27)  12383      19       27       0.684211            12383
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.41 seconds.
+
+------- Length 20
+Selected 16133 braids of length 20:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (20, 21)      2      20       21          0.500                2
+1  (20, 22)     28      20       22          0.525               28
+2  (20, 23)    109      20       23          0.550              109
+3  (20, 24)    372      20       24          0.575              372
+4  (20, 25)   1418      20       25          0.600             1418
+5  (20, 26)   2605      20       26          0.625             2605
+6  (20, 27)  11599      20       27          0.650            11599
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.29 seconds.
+
+------- Length 21
+Selected 23083 braids of length 21:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (21, 21)     12      21       21       0.476190               12
+1  (21, 22)     22      21       22       0.500000               22
+2  (21, 23)     94      21       23       0.523810               94
+3  (21, 24)    285      21       24       0.547619              285
+4  (21, 25)    910      21       25       0.571429              910
+5  (21, 26)   2485      21       26       0.595238             2485
+6  (21, 27)   7695      21       27       0.619048             7695
+7  (21, 28)  11580      21       28       0.642857            11580
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.88 seconds.
+
+------- Length 22
+Selected 21205 braids of length 22:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (22, 20)      2      22       20       0.431818                2
+1  (22, 21)      8      22       21       0.454545                8
+2  (22, 22)     17      22       22       0.477273               17
+3  (22, 23)    102      22       23       0.500000              102
+4  (22, 24)    209      22       24       0.522727              209
+5  (22, 25)    843      22       25       0.545455              843
+6  (22, 26)   1914      22       26       0.568182             1914
+7  (22, 27)   5686      22       27       0.590909             5686
+8  (22, 28)  12424      22       28       0.613636            12424
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.65 seconds.
+
+------- Length 23
+Selected 18286 braids of length 23:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (23, 20)     12      23       20       0.413043               12
+1  (23, 21)     13      23       21       0.434783               13
+2  (23, 22)     19      23       22       0.456522               19
+3  (23, 23)     85      23       23       0.478261               85
+4  (23, 24)    109      23       24       0.500000              109
+5  (23, 25)    759      23       25       0.521739              759
+6  (23, 26)   1497      23       26       0.543478             1497
+7  (23, 27)   5433      23       27       0.565217             5433
+8  (23, 28)  10359      23       28       0.586957            10359
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.04 seconds.
+
+------- Length 24
+Selected 15106 braids of length 24:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (24, 20)     10      24       20       0.395833               10
+1  (24, 21)     24      24       21       0.416667               24
+2  (24, 22)     86      24       22       0.437500               86
+3  (24, 23)     88      24       23       0.458333               88
+4  (24, 24)    192      24       24       0.479167              192
+5  (24, 25)    503      24       25       0.500000              503
+6  (24, 26)    961      24       26       0.520833              961
+7  (24, 27)   4677      24       27       0.541667             4677
+8  (24, 28)   8565      24       28       0.562500             8565
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.32 seconds.
+
+------- Length 25
+Selected 26857 braids of length 25:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (25, 19)      2      25       19           0.36                2
+1   (25, 20)      2      25       20           0.38                2
+2   (25, 21)     29      25       21           0.40               29
+3   (25, 22)     58      25       22           0.42               58
+4   (25, 23)    178      25       23           0.44              178
+5   (25, 24)    480      25       24           0.46              480
+6   (25, 25)    617      25       25           0.48              617
+7   (25, 26)   1267      25       26           0.50             1267
+8   (25, 27)   3266      25       27           0.52             3266
+9   (25, 28)   5958      25       28           0.54             5958
+10  (25, 29)  15000      25       29           0.56            23376
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.19 seconds.
+
+------- Length 26
+Selected 15727 braids of length 26:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (26, 21)     16      26       21       0.384615               16
+1  (26, 22)     26      26       22       0.403846               26
+2  (26, 23)    185      26       23       0.423077              185
+3  (26, 24)    290      26       24       0.442308              290
+4  (26, 25)   1079      26       25       0.461538             1079
+5  (26, 26)   2611      26       26       0.480769             2611
+6  (26, 27)   3990      26       27       0.500000             3990
+7  (26, 28)   7530      26       28       0.519231             7530
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.47 seconds.
+
+------- Length 27
+Selected 22294 braids of length 27:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (27, 22)      4      27       22       0.388889                4
+1  (27, 23)     94      27       23       0.407407               94
+2  (27, 24)    187      27       24       0.425926              187
+3  (27, 25)    968      27       25       0.444444              968
+4  (27, 26)   1708      27       26       0.462963             1708
+5  (27, 27)   6005      27       27       0.481481             6005
+6  (27, 28)  13328      27       28       0.500000            13328
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.83 seconds.
+
+------- Length 28
+Selected 16146 braids of length 28:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (28, 22)     10      28       22       0.375000               10
+1  (28, 23)     21      28       23       0.392857               21
+2  (28, 24)     45      28       24       0.410714               45
+3  (28, 25)    565      28       25       0.428571              565
+4  (28, 26)   1117      28       26       0.446429             1117
+5  (28, 27)   5225      28       27       0.464286             5225
+6  (28, 28)   9163      28       28       0.482143             9163
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.29 seconds.
+
+------- Length 29
+Selected 24941 braids of length 29:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (29, 21)      2      29       21       0.344828                2
+1  (29, 22)     14      29       22       0.362069               14
+2  (29, 23)     41      29       23       0.379310               41
+3  (29, 24)     87      29       24       0.396552               87
+4  (29, 25)    196      29       25       0.413793              196
+5  (29, 26)    433      29       26       0.431034              433
+6  (29, 27)   3205      29       27       0.448276             3205
+7  (29, 28)   5963      29       28       0.465517             5963
+8  (29, 29)  15000      29       29       0.482759            24015
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.49 seconds.
+
+------- Length 30
+Selected 20288 braids of length 30:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (30, 21)      1      30       21       0.333333                1
+1  (30, 22)     15      30       22       0.350000               15
+2  (30, 23)     44      30       23       0.366667               44
+3  (30, 24)    119      30       24       0.383333              119
+4  (30, 25)    270      30       25       0.400000              270
+5  (30, 26)    601      30       26       0.416667              601
+6  (30, 27)   1435      30       27       0.433333             1435
+7  (30, 28)   2803      30       28       0.450000             2803
+8  (30, 29)  15000      30       29       0.466667            15263
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.37 seconds.
+
+------- Length 31
+Selected 27699 braids of length 31:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (31, 20)      2      31       20       0.306452                2
+1   (31, 21)      1      31       21       0.322581                1
+2   (31, 22)     10      31       22       0.338710               10
+3   (31, 23)     46      31       23       0.354839               46
+4   (31, 24)    107      31       24       0.370968              107
+5   (31, 25)    302      31       25       0.387097              302
+6   (31, 26)    726      31       26       0.403226              726
+7   (31, 27)   1652      31       27       0.419355             1652
+8   (31, 28)   3729      31       28       0.435484             3729
+9   (31, 29)   7957      31       29       0.451613             7957
+10  (31, 30)  13167      31       30       0.467742            13167
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.26 seconds.
+
+------- Length 32
+Selected 16260 braids of length 32:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (32, 21)      7      32       21       0.312500                7
+1  (32, 22)      6      32       22       0.328125                6
+2  (32, 23)     41      32       23       0.343750               41
+3  (32, 24)     72      32       24       0.359375               72
+4  (32, 25)    341      32       25       0.375000              341
+5  (32, 26)    709      32       26       0.390625              709
+6  (32, 27)   1849      32       27       0.406250             1849
+7  (32, 28)   4171      32       28       0.421875             4171
+8  (32, 29)   9064      32       29       0.437500             9064
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.44 seconds.
+
+------- Length 33
+Selected 17396 braids of length 33:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (33, 21)      3      33       21       0.303030                3
+1  (33, 22)      3      33       22       0.318182                3
+2  (33, 23)     59      33       23       0.333333               59
+3  (33, 24)     67      33       24       0.348485               67
+4  (33, 25)    267      33       25       0.363636              267
+5  (33, 26)    582      33       26       0.378788              582
+6  (33, 27)   2000      33       27       0.393939             2000
+7  (33, 28)   4258      33       28       0.409091             4258
+8  (33, 29)  10157      33       29       0.424242            10157
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.69 seconds.
+
+------- Length 34
+Selected 17409 braids of length 34:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (34, 22)      2      34       22       0.308824                2
+1  (34, 23)     17      34       23       0.323529               17
+2  (34, 24)     57      34       24       0.338235               57
+3  (34, 25)    372      34       25       0.352941              372
+4  (34, 26)    635      34       26       0.367647              635
+5  (34, 27)   1665      34       27       0.382353             1665
+6  (34, 28)   3545      34       28       0.397059             3545
+7  (34, 29)  11116      34       29       0.411765            11116
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.77 seconds.
+
+------- Length 35
+Selected 16811 braids of length 35:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (35, 23)     10      35       23       0.314286               10
+1  (35, 24)     22      35       24       0.328571               22
+2  (35, 25)    141      35       25       0.342857              141
+3  (35, 26)    650      35       26       0.357143              650
+4  (35, 27)   2178      35       27       0.371429             2178
+5  (35, 28)   4134      35       28       0.385714             4134
+6  (35, 29)   9676      35       29       0.400000             9676
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.63 seconds.
+
+------- Length 36
+Selected 18032 braids of length 36:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (36, 22)      1      36       22       0.291667                1
+1  (36, 23)      8      36       23       0.305556                8
+2  (36, 24)     13      36       24       0.319444               13
+3  (36, 25)     95      36       25       0.333333               95
+4  (36, 26)    368      36       26       0.347222              368
+5  (36, 27)   1175      36       27       0.361111             1175
+6  (36, 28)   4427      36       28       0.375000             4427
+7  (36, 29)  11945      36       29       0.388889            11945
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.97 seconds.
+
+------- Length 37
+Selected 27074 braids of length 37:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (37, 23)      6      37       23       0.297297                6
+1  (37, 24)     20      37       24       0.310811               20
+2  (37, 25)     66      37       25       0.324324               66
+3  (37, 26)    241      37       26       0.337838              241
+4  (37, 27)   1008      37       27       0.351351             1008
+5  (37, 28)   2995      37       28       0.364865             2995
+6  (37, 29)   7738      37       29       0.378378             7738
+7  (37, 30)  15000      37       30       0.391892            21444
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.29 seconds.
+
+------- Length 38
+Selected 25614 braids of length 38:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (38, 23)      2      38       23       0.289474                2
+1  (38, 24)      8      38       24       0.302632                8
+2  (38, 25)     78      38       25       0.315789               78
+3  (38, 26)    226      38       26       0.328947              226
+4  (38, 27)    718      38       27       0.342105              718
+5  (38, 28)   2172      38       28       0.355263             2172
+6  (38, 29)   7410      38       29       0.368421             7410
+7  (38, 30)  15000      38       30       0.381579            16049
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.07 seconds.
+
+------- Length 39
+Selected 21083 braids of length 39:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (39, 23)      2      39       23       0.282051                2
+1  (39, 24)     14      39       24       0.294872               14
+2  (39, 25)     53      39       25       0.307692               53
+3  (39, 26)    143      39       26       0.320513              143
+4  (39, 27)    782      39       27       0.333333              782
+5  (39, 28)   1615      39       28       0.346154             1615
+6  (39, 29)   5647      39       29       0.358974             5647
+7  (39, 30)  12827      39       30       0.371795            12827
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.98 seconds.
+
+------- Length 40
+Selected 17191 braids of length 40:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (40, 24)     23      40       24         0.2875               23
+1  (40, 25)     42      40       25         0.3000               42
+2  (40, 26)    230      40       26         0.3125              230
+3  (40, 27)    531      40       27         0.3250              531
+4  (40, 28)   1201      40       28         0.3375             1201
+5  (40, 29)   5370      40       29         0.3500             5370
+6  (40, 30)   9794      40       30         0.3625             9794
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.91 seconds.
+
+------- Length 41
+Selected 28637 braids of length 41:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (41, 24)     17      41       24       0.280488               17
+1  (41, 25)     57      41       25       0.292683               57
+2  (41, 26)    200      41       26       0.304878              200
+3  (41, 27)    527      41       27       0.317073              527
+4  (41, 28)   1608      41       28       0.329268             1608
+5  (41, 29)   3771      41       29       0.341463             3771
+6  (41, 30)   7457      41       30       0.353659             7457
+7  (41, 31)  15000      41       31       0.365854            27315
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.84 seconds.
+
+------- Length 42
+Selected 15102 braids of length 42:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (42, 24)     19      42       24       0.273810               19
+1  (42, 25)     46      42       25       0.285714               46
+2  (42, 26)    176      42       26       0.297619              176
+3  (42, 27)    482      42       27       0.309524              482
+4  (42, 28)   1396      42       28       0.321429             1396
+5  (42, 29)   3808      42       29       0.333333             3808
+6  (42, 30)   9175      42       30       0.345238             9175
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.36 seconds.
+
+------- Length 43
+Selected 28033 braids of length 43:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (43, 23)      2      43       23       0.255814                2
+1  (43, 24)     12      43       24       0.267442               12
+2  (43, 25)     43      43       25       0.279070               43
+3  (43, 26)    147      43       26       0.290698              147
+4  (43, 27)    433      43       27       0.302326              433
+5  (43, 28)   1183      43       28       0.313953             1183
+6  (43, 29)   3423      43       29       0.325581             3423
+7  (43, 30)   7790      43       30       0.337209             7790
+8  (43, 31)  15000      43       31       0.348837            19775
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.51 seconds.
+
+------- Length 44
+Selected 26273 braids of length 44:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (44, 23)     12      44       23       0.250000               12
+1  (44, 24)     12      44       24       0.261364               12
+2  (44, 25)     39      44       25       0.272727               39
+3  (44, 26)     98      44       26       0.284091               98
+4  (44, 27)    348      44       27       0.295455              348
+5  (44, 28)    993      44       28       0.306818              993
+6  (44, 29)   3116      44       29       0.318182             3116
+7  (44, 30)   6655      44       30       0.329545             6655
+8  (44, 31)  15000      44       31       0.340909            18134
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.12 seconds.
+
+------- Length 45
+Selected 24355 braids of length 45:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (45, 22)      2      45       22       0.233333                2
+1  (45, 23)      4      45       23       0.244444                4
+2  (45, 24)     22      45       24       0.255556               22
+3  (45, 25)     88      45       25       0.266667               88
+4  (45, 26)    109      45       26       0.277778              109
+5  (45, 27)    298      45       27       0.288889              298
+6  (45, 28)    642      45       28       0.300000              642
+7  (45, 29)   2421      45       29       0.311111             2421
+8  (45, 30)   5769      45       30       0.322222             5769
+9  (45, 31)  15000      45       31       0.333333            17327
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.64 seconds.
+
+------- Length 46
+Selected 21034 braids of length 46:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (46, 22)     10      46       22       0.228261               10
+1  (46, 23)     11      46       23       0.239130               11
+2  (46, 24)      9      46       24       0.250000                9
+3  (46, 25)     67      46       25       0.260870               67
+4  (46, 26)    134      46       26       0.271739              134
+5  (46, 27)    581      46       27       0.282609              581
+6  (46, 28)    753      46       28       0.293478              753
+7  (46, 29)   2009      46       29       0.304348             2009
+8  (46, 30)   3996      46       30       0.315217             3996
+9  (46, 31)  13464      46       31       0.326087            13464
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.87 seconds.
+
+------- Length 47
+Selected 21397 braids of length 47:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (47, 22)      4      47       22       0.223404                4
+1  (47, 23)     21      47       23       0.234043               21
+2  (47, 24)     82      47       24       0.244681               82
+3  (47, 25)     60      47       25       0.255319               60
+4  (47, 26)    106      47       26       0.265957              106
+5  (47, 27)    478      47       27       0.276596              478
+6  (47, 28)    844      47       28       0.287234              844
+7  (47, 29)   3304      47       29       0.297872             3304
+8  (47, 30)   4512      47       30       0.308511             4512
+9  (47, 31)  11986      47       31       0.319149            11986
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.93 seconds.
+
+------- Length 48
+Selected 24617 braids of length 48:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (48, 23)      6      48       23       0.229167                6
+1  (48, 24)     36      48       24       0.239583               36
+2  (48, 25)    160      48       25       0.250000              160
+3  (48, 26)    436      48       26       0.260417              436
+4  (48, 27)    458      48       27       0.270833              458
+5  (48, 28)    740      48       28       0.281250              740
+6  (48, 29)   3005      48       29       0.291667             3005
+7  (48, 30)   4776      48       30       0.302083             4776
+8  (48, 31)  15000      48       31       0.312500            17451
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.67 seconds.
+
+------- Length 49
+Selected 26092 braids of length 49:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (49, 24)      1      49       24       0.234694                1
+1  (49, 25)     45      49       25       0.244898               45
+2  (49, 26)    281      49       26       0.255102              281
+3  (49, 27)    893      49       27       0.265306              893
+4  (49, 28)   2216      49       28       0.275510             2216
+5  (49, 29)   2898      49       29       0.285714             2898
+6  (49, 30)   4758      49       30       0.295918             4758
+7  (49, 31)  15000      49       31       0.306122            16637
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.17 seconds.
+
+------- Length 50
+Selected 17947 braids of length 50:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (50, 25)      6      50       25           0.24                6
+1  (50, 26)     42      50       26           0.25               42
+2  (50, 27)    447      50       27           0.26              447
+3  (50, 28)   1708      50       28           0.27             1708
+4  (50, 29)   4710      50       29           0.28             4710
+5  (50, 30)  11034      50       30           0.29            11034
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.01 seconds.
+
+------- Length 51
+Selected 28192 braids of length 51:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (51, 25)      5      51       25       0.235294                5
+1  (51, 26)     30      51       26       0.245098               30
+2  (51, 27)    149      51       27       0.254902              149
+3  (51, 28)    545      51       28       0.264706              545
+4  (51, 29)   3009      51       29       0.274510             3009
+5  (51, 30)   9454      51       30       0.284314             9454
+6  (51, 31)  15000      51       31       0.294118            22549
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.44 seconds.
+
+------- Length 52
+Selected 20830 braids of length 52:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (52, 25)      2      52       25       0.230769                2
+1  (52, 26)     17      52       26       0.240385               17
+2  (52, 27)     98      52       27       0.250000               98
+3  (52, 28)    379      52       28       0.259615              379
+4  (52, 29)   1309      52       29       0.269231             1309
+5  (52, 30)   4025      52       30       0.278846             4025
+6  (52, 31)  15000      52       31       0.288462            16303
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.82 seconds.
+
+------- Length 53
+Selected 27125 braids of length 53:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (53, 26)     13      53       26       0.235849               13
+1  (53, 27)     51      53       27       0.245283               51
+2  (53, 28)    254      53       28       0.254717              254
+3  (53, 29)    930      53       29       0.264151              930
+4  (53, 30)   2945      53       30       0.273585             2945
+5  (53, 31)   7932      53       31       0.283019             7932
+6  (53, 32)  15000      53       32       0.292453            19466
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.41 seconds.
+
+------- Length 54
+Selected 23969 braids of length 54:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (54, 26)      7      54       26       0.231481                7
+1  (54, 27)     43      54       27       0.240741               43
+2  (54, 28)    172      54       28       0.250000              172
+3  (54, 29)    600      54       29       0.259259              600
+4  (54, 30)   2297      54       30       0.268519             2297
+5  (54, 31)   5893      54       31       0.277778             5893
+6  (54, 32)  14957      54       32       0.287037            14957
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.66 seconds.
+
+------- Length 55
+Selected 19134 braids of length 55:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (55, 26)     10      55       26       0.227273               10
+1  (55, 27)     22      55       27       0.236364               22
+2  (55, 28)     93      55       28       0.245455               93
+3  (55, 29)    439      55       29       0.254545              439
+4  (55, 30)   1378      55       30       0.263636             1378
+5  (55, 31)   4561      55       31       0.272727             4561
+6  (55, 32)  12631      55       32       0.281818            12631
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.35 seconds.
+
+------- Length 56
+Selected 27177 braids of length 56:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (56, 26)      9      56       26       0.223214                9
+1  (56, 27)     26      56       27       0.232143               26
+2  (56, 28)     84      56       28       0.241071               84
+3  (56, 29)    265      56       29       0.250000              265
+4  (56, 30)    816      56       30       0.258929              816
+5  (56, 31)   3180      56       31       0.267857             3180
+6  (56, 32)   7797      56       32       0.276786             7797
+7  (56, 33)  15000      56       33       0.285714            21919
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.35 seconds.
+
+------- Length 57
+Selected 23227 braids of length 57:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (57, 26)     11      57       26       0.219298               11
+1  (57, 27)     23      57       27       0.228070               23
+2  (57, 28)     66      57       28       0.236842               66
+3  (57, 29)    279      57       29       0.245614              279
+4  (57, 30)    653      57       30       0.254386              653
+5  (57, 31)   2152      57       31       0.263158             2152
+6  (57, 32)   5043      57       32       0.271930             5043
+7  (57, 33)  15000      57       33       0.280702            15969
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.53 seconds.
+
+------- Length 58
+Selected 19007 braids of length 58:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (58, 26)      8      58       26       0.215517                8
+1  (58, 27)     27      58       27       0.224138               27
+2  (58, 28)     75      58       28       0.232759               75
+3  (58, 29)    224      58       29       0.241379              224
+4  (58, 30)    585      58       30       0.250000              585
+5  (58, 31)   1921      58       31       0.258621             1921
+6  (58, 32)   4232      58       32       0.267241             4232
+7  (58, 33)  11935      58       33       0.275862            11935
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.49 seconds.
+
+------- Length 59
+Selected 17219 braids of length 59:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (59, 26)      5      59       26       0.211864                5
+1  (59, 27)     31      59       27       0.220339               31
+2  (59, 28)     58      59       28       0.228814               58
+3  (59, 29)    248      59       29       0.237288              248
+4  (59, 30)    538      59       30       0.245763              538
+5  (59, 31)   1615      59       31       0.254237             1615
+6  (59, 32)   3895      59       32       0.262712             3895
+7  (59, 33)  10829      59       33       0.271186            10829
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.06 seconds.
+
+------- Length 60
+Selected 29967 braids of length 60:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (60, 26)      2      60       26       0.208333                2
+1  (60, 27)     18      60       27       0.216667               18
+2  (60, 28)     59      60       28       0.225000               59
+3  (60, 29)    259      60       29       0.233333              259
+4  (60, 30)    452      60       30       0.241667              452
+5  (60, 31)   1657      60       31       0.250000             1657
+6  (60, 32)   3422      60       32       0.258333             3422
+7  (60, 33)   9098      60       33       0.266667             9098
+8  (60, 34)  15000      60       34       0.275000            19864
+
+Moving braids forward by 1 GNF letters...
+   Done in 8.15 seconds.
+
+------- Length 61
+Selected 29930 braids of length 61:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (61, 27)      8      61       27       0.213115                8
+1  (61, 28)     28      61       28       0.221311               28
+2  (61, 29)    137      61       29       0.229508              137
+3  (61, 30)    485      61       30       0.237705              485
+4  (61, 31)   1708      61       31       0.245902             1708
+5  (61, 32)   3108      61       32       0.254098             3108
+6  (61, 33)   9456      61       33       0.262295             9456
+7  (61, 34)  15000      61       34       0.270492            17522
+
+Moving braids forward by 1 GNF letters...
+   Done in 8.19 seconds.
+
+------- Length 62
+Selected 29535 braids of length 62:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (62, 27)      2      62       27       0.209677                2
+1  (62, 28)     15      62       28       0.217742               15
+2  (62, 29)     74      62       29       0.225806               74
+3  (62, 30)    311      62       30       0.233871              311
+4  (62, 31)   1027      62       31       0.241935             1027
+5  (62, 32)   3056      62       32       0.250000             3056
+6  (62, 33)  10050      62       33       0.258065            10050
+7  (62, 34)  15000      62       34       0.266129            16823
+
+Moving braids forward by 1 GNF letters...
+   Done in 8.03 seconds.
+
+------- Length 63
+Selected 24804 braids of length 63:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (63, 26)      1      63       26       0.198413                1
+1  (63, 28)      9      63       28       0.214286                9
+2  (63, 29)     29      63       29       0.222222               29
+3  (63, 30)    200      63       30       0.230159              200
+4  (63, 31)    731      63       31       0.238095              731
+5  (63, 32)   2210      63       32       0.246032             2210
+6  (63, 33)   6624      63       33       0.253968             6624
+7  (63, 34)  15000      63       34       0.261905            16545
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.03 seconds.
+
+------- Length 64
+Selected 19727 braids of length 64:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (64, 26)      5      64       26       0.195312                5
+1  (64, 27)      4      64       27       0.203125                4
+2  (64, 28)      4      64       28       0.210938                4
+3  (64, 29)     28      64       29       0.218750               28
+4  (64, 30)    113      64       30       0.226562              113
+5  (64, 31)    290      64       31       0.234375              290
+6  (64, 32)   1586      64       32       0.242188             1586
+7  (64, 33)   5016      64       33       0.250000             5016
+8  (64, 34)  12681      64       34       0.257812            12681
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.65 seconds.
+
+------- Length 65
+Selected 27976 braids of length 65:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (65, 26)      2      65       26       0.192308                2
+1  (65, 27)      3      65       27       0.200000                3
+2  (65, 28)     36      65       28       0.207692               36
+3  (65, 29)     24      65       29       0.215385               24
+4  (65, 30)    113      65       30       0.223077              113
+5  (65, 31)    206      65       31       0.230769              206
+6  (65, 32)    982      65       32       0.238462              982
+7  (65, 33)   2334      65       33       0.246154             2334
+8  (65, 34)   9276      65       34       0.253846             9276
+9  (65, 35)  15000      65       35       0.261538            24878
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.84 seconds.
+
+------- Length 66
+Selected 22107 braids of length 66:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (66, 28)     15      66       28       0.204545               15
+1  (66, 29)     22      66       29       0.212121               22
+2  (66, 30)    208      66       30       0.219697              208
+3  (66, 31)    221      66       31       0.227273              221
+4  (66, 32)    946      66       32       0.234848              946
+5  (66, 33)   1729      66       33       0.242424             1729
+6  (66, 34)   6158      66       34       0.250000             6158
+7  (66, 35)  12808      66       35       0.257576            12808
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.45 seconds.
+
+------- Length 67
+Selected 19657 braids of length 67:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (67, 28)      2      67       28       0.201493                2
+1  (67, 29)      6      67       29       0.208955                6
+2  (67, 30)     97      67       30       0.216418               97
+3  (67, 31)    154      67       31       0.223881              154
+4  (67, 32)   1193      67       32       0.231343             1193
+5  (67, 33)   1692      67       33       0.238806             1692
+6  (67, 34)   6065      67       34       0.246269             6065
+7  (67, 35)  10448      67       35       0.253731            10448
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.71 seconds.
+
+------- Length 68
+Selected 18695 braids of length 68:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (68, 30)     26      68       30       0.213235               26
+1  (68, 31)     64      68       31       0.220588               64
+2  (68, 32)    616      68       32       0.227941              616
+3  (68, 33)   1170      68       33       0.235294             1170
+4  (68, 34)   6802      68       34       0.242647             6802
+5  (68, 35)  10017      68       35       0.250000            10017
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.32 seconds.
+
+------- Length 69
+Selected 26982 braids of length 69:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (69, 30)      8      69       30       0.210145                8
+1  (69, 31)     26      69       31       0.217391               26
+2  (69, 32)    243      69       32       0.224638              243
+3  (69, 33)    581      69       33       0.231884              581
+4  (69, 34)   3840      69       34       0.239130             3840
+5  (69, 35)   7284      69       35       0.246377             7284
+6  (69, 36)  15000      69       36       0.253623            32444
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.61 seconds.
+
+------- Length 70
+Selected 21465 braids of length 70:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (70, 29)      2      70       29       0.200000                2
+1  (70, 30)      8      70       30       0.207143                8
+2  (70, 31)     31      70       31       0.214286               31
+3  (70, 32)    129      70       32       0.221429              129
+4  (70, 33)    359      70       33       0.228571              359
+5  (70, 34)   1844      70       34       0.235714             1844
+6  (70, 35)   4092      70       35       0.242857             4092
+7  (70, 36)  15000      70       36       0.250000            19487
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.22 seconds.
+
+------- Length 71
+Selected 15306 braids of length 71:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (71, 29)      2      71       29       0.197183                2
+1  (71, 30)     11      71       30       0.204225               11
+2  (71, 31)     37      71       31       0.211268               37
+3  (71, 32)    146      71       32       0.218310              146
+4  (71, 33)    314      71       33       0.225352              314
+5  (71, 34)   1269      71       34       0.232394             1269
+6  (71, 35)   2630      71       35       0.239437             2630
+7  (71, 36)  10897      71       36       0.246479            10897
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.69 seconds.
+
+------- Length 72
+Selected 25688 braids of length 72:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (72, 29)      3      72       29       0.194444                3
+1  (72, 30)      9      72       30       0.201389                9
+2  (72, 31)     23      72       31       0.208333               23
+3  (72, 32)    131      72       32       0.215278              131
+4  (72, 33)    356      72       33       0.222222              356
+5  (72, 34)   1188      72       34       0.229167             1188
+6  (72, 35)   2397      72       35       0.236111             2397
+7  (72, 36)   8250      72       36       0.243056             8250
+8  (72, 37)  13331      72       37       0.250000            13331
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.37 seconds.
+
+------- Length 73
+Selected 24833 braids of length 73:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (73, 29)      1      73       29       0.191781                1
+1  (73, 30)     11      73       30       0.198630               11
+2  (73, 31)     21      73       31       0.205479               21
+3  (73, 32)    111      73       32       0.212329              111
+4  (73, 33)    232      73       33       0.219178              232
+5  (73, 34)   1060      73       34       0.226027             1060
+6  (73, 35)   2414      73       35       0.232877             2414
+7  (73, 36)   7669      73       36       0.239726             7669
+8  (73, 37)  13314      73       37       0.246575            13314
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.07 seconds.
+
+------- Length 74
+Selected 23351 braids of length 74:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (74, 29)      1      74       29       0.189189                1
+1  (74, 30)      3      74       30       0.195946                3
+2  (74, 31)     18      74       31       0.202703               18
+3  (74, 32)    111      74       32       0.209459              111
+4  (74, 33)    206      74       33       0.216216              206
+5  (74, 34)    901      74       34       0.222973              901
+6  (74, 35)   1757      74       35       0.229730             1757
+7  (74, 36)   6877      74       36       0.236486             6877
+8  (74, 37)  13477      74       37       0.243243            13477
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.68 seconds.
+
+------- Length 75
+Selected 19148 braids of length 75:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (75, 29)      1      75       29       0.186667                1
+1  (75, 30)      7      75       30       0.193333                7
+2  (75, 31)      9      75       31       0.200000                9
+3  (75, 32)     64      75       32       0.206667               64
+4  (75, 33)    183      75       33       0.213333              183
+5  (75, 34)    832      75       34       0.220000              832
+6  (75, 35)   1489      75       35       0.226667             1489
+7  (75, 36)   6175      75       36       0.233333             6175
+8  (75, 37)  10388      75       37       0.240000            10388
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.61 seconds.
+
+------- Length 76
+Selected 16330 braids of length 76:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (76, 30)      6      76       30       0.190789                6
+1  (76, 31)     12      76       31       0.197368               12
+2  (76, 32)     80      76       32       0.203947               80
+3  (76, 33)    121      76       33       0.210526              121
+4  (76, 34)    615      76       34       0.217105              615
+5  (76, 35)   1344      76       35       0.223684             1344
+6  (76, 36)   5385      76       36       0.230263             5385
+7  (76, 37)   8767      76       37       0.236842             8767
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.89 seconds.
+
+------- Length 77
+Selected 29001 braids of length 77:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (77, 30)      4      77       30       0.188312                4
+1  (77, 31)      6      77       31       0.194805                6
+2  (77, 32)     78      77       32       0.201299               78
+3  (77, 33)    110      77       33       0.207792              110
+4  (77, 34)    615      77       34       0.214286              615
+5  (77, 35)   1009      77       35       0.220779             1009
+6  (77, 36)   4373      77       36       0.227273             4373
+7  (77, 37)   7806      77       37       0.233766             7806
+8  (77, 38)  15000      77       38       0.240260            26751
+
+Moving braids forward by 1 GNF letters...
+   Done in 8.24 seconds.
+
+------- Length 78
+Selected 26982 braids of length 78:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (78, 30)      5      78       30       0.185897                5
+1  (78, 31)      6      78       31       0.192308                6
+2  (78, 32)     47      78       32       0.198718               47
+3  (78, 33)     91      78       33       0.205128               91
+4  (78, 34)    575      78       34       0.211538              575
+5  (78, 35)    850      78       35       0.217949              850
+6  (78, 36)   4033      78       36       0.224359             4033
+7  (78, 37)   6375      78       37       0.230769             6375
+8  (78, 38)  15000      78       38       0.237179            23306
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.74 seconds.
+
+------- Length 79
+Selected 25406 braids of length 79:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (79, 30)      8      79       30       0.183544                8
+1  (79, 31)      6      79       31       0.189873                6
+2  (79, 32)     52      79       32       0.196203               52
+3  (79, 33)     77      79       33       0.202532               77
+4  (79, 34)    399      79       34       0.208861              399
+5  (79, 35)    690      79       35       0.215190              690
+6  (79, 36)   3691      79       36       0.221519             3691
+7  (79, 37)   5483      79       37       0.227848             5483
+8  (79, 38)  15000      79       38       0.234177            21249
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.28 seconds.
+
+------- Length 80
+Selected 23331 braids of length 80:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (80, 30)      4      80       30        0.18125                4
+1  (80, 31)      2      80       31        0.18750                2
+2  (80, 32)     71      80       32        0.19375               71
+3  (80, 33)     70      80       33        0.20000               70
+4  (80, 34)    372      80       34        0.20625              372
+5  (80, 35)    564      80       35        0.21250              564
+6  (80, 36)   2679      80       36        0.21875             2679
+7  (80, 37)   4569      80       37        0.22500             4569
+8  (80, 38)  15000      80       38        0.23125            20016
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.87 seconds.
+
+------- Length 81
+Selected 22126 braids of length 81:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (81, 29)      1      81       29       0.172840                1
+1  (81, 30)      1      81       30       0.179012                1
+2  (81, 31)      4      81       31       0.185185                4
+3  (81, 32)     33      81       32       0.191358               33
+4  (81, 33)     33      81       33       0.197531               33
+5  (81, 34)    436      81       34       0.203704              436
+6  (81, 35)    606      81       35       0.209877              606
+7  (81, 36)   2516      81       36       0.216049             2516
+8  (81, 37)   3731      81       37       0.222222             3731
+9  (81, 38)  14765      81       38       0.228395            14765
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.41 seconds.
+
+------- Length 82
+Selected 21681 braids of length 82:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (82, 29)      2      82       29       0.170732                2
+1  (82, 30)      1      82       30       0.176829                1
+2  (82, 31)      4      82       31       0.182927                4
+3  (82, 32)     18      82       32       0.189024               18
+4  (82, 33)     35      82       33       0.195122               35
+5  (82, 34)    239      82       34       0.201220              239
+6  (82, 35)    324      82       35       0.207317              324
+7  (82, 36)   2735      82       36       0.213415             2735
+8  (82, 37)   3955      82       37       0.219512             3955
+9  (82, 38)  14368      82       38       0.225610            14368
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.25 seconds.
+
+------- Length 83
+Selected 19695 braids of length 83:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (83, 28)      1      83       28       0.162651                1
+1  (83, 30)      8      83       30       0.174699                8
+2  (83, 31)      7      83       31       0.180723                7
+3  (83, 32)     18      83       32       0.186747               18
+4  (83, 33)     21      83       33       0.192771               21
+5  (83, 34)    188      83       34       0.198795              188
+6  (83, 35)    296      83       35       0.204819              296
+7  (83, 36)   1721      83       36       0.210843             1721
+8  (83, 37)   2435      83       37       0.216867             2435
+9  (83, 38)  15000      83       38       0.222892            15034
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.70 seconds.
+
+------- Length 84
+Selected 26642 braids of length 84:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (84, 28)      4      84       28       0.160714                4
+1   (84, 29)      3      84       29       0.166667                3
+2   (84, 30)      5      84       30       0.172619                5
+3   (84, 31)      5      84       31       0.178571                5
+4   (84, 32)     51      84       32       0.184524               51
+5   (84, 33)     55      84       33       0.190476               55
+6   (84, 34)    175      84       34       0.196429              175
+7   (84, 35)    219      84       35       0.202381              219
+8   (84, 36)   1491      84       36       0.208333             1491
+9   (84, 37)   2068      84       37       0.214286             2068
+10  (84, 38)  10488      84       38       0.220238            10488
+11  (84, 39)  12078      84       39       0.226190            12078
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.56 seconds.
+
+------- Length 85
+Selected 24615 braids of length 85:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (85, 28)      3      85       28       0.158824                3
+1   (85, 29)      4      85       29       0.164706                4
+2   (85, 30)     25      85       30       0.170588               25
+3   (85, 31)     16      85       31       0.176471               16
+4   (85, 32)     36      85       32       0.182353               36
+5   (85, 33)     49      85       33       0.188235               49
+6   (85, 34)    328      85       34       0.194118              328
+7   (85, 35)    365      85       35       0.200000              365
+8   (85, 36)   1342      85       36       0.205882             1342
+9   (85, 37)   1716      85       37       0.211765             1716
+10  (85, 38)   9320      85       38       0.217647             9320
+11  (85, 39)  11411      85       39       0.223529            11411
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.05 seconds.
+
+------- Length 86
+Selected 23619 braids of length 86:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (86, 29)      1      86       29       0.162791                1
+1   (86, 30)     21      86       30       0.168605               21
+2   (86, 31)     25      86       31       0.174419               25
+3   (86, 32)    143      86       32       0.180233              143
+4   (86, 33)    111      86       33       0.186047              111
+5   (86, 34)    304      86       34       0.191860              304
+6   (86, 35)    320      86       35       0.197674              320
+7   (86, 36)   2052      86       36       0.203488             2052
+8   (86, 37)   2203      86       37       0.209302             2203
+9   (86, 38)   8663      86       38       0.215116             8663
+10  (86, 39)   9776      86       39       0.220930             9776
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.85 seconds.
+
+------- Length 87
+Selected 29338 braids of length 87:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (87, 30)      7      87       30       0.166667                7
+1  (87, 31)     11      87       31       0.172414               11
+2  (87, 32)    144      87       32       0.178161              144
+3  (87, 33)    145      87       33       0.183908              145
+4  (87, 34)    827      87       34       0.189655              827
+5  (87, 35)    629      87       35       0.195402              629
+6  (87, 36)   2092      87       36       0.201149             2092
+7  (87, 37)   2094      87       37       0.206897             2094
+8  (87, 38)  11640      87       38       0.212644            11640
+9  (87, 39)  11749      87       39       0.218391            11749
+
+Moving braids forward by 1 GNF letters...
+   Done in 8.20 seconds.
+
+------- Length 88
+Selected 22375 braids of length 88:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (88, 30)      5      88       30       0.164773                5
+1  (88, 31)     18      88       31       0.170455               18
+2  (88, 32)     60      88       32       0.176136               60
+3  (88, 33)     93      88       33       0.181818               93
+4  (88, 34)    849      88       34       0.187500              849
+5  (88, 35)    790      88       35       0.193182              790
+6  (88, 36)   4530      88       36       0.198864             4530
+7  (88, 37)   3477      88       37       0.204545             3477
+8  (88, 38)  12553      88       38       0.210227            12553
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.58 seconds.
+
+------- Length 89
+Selected 25146 braids of length 89:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (89, 30)      3      89       30       0.162921                3
+1  (89, 31)     14      89       31       0.168539               14
+2  (89, 32)     60      89       32       0.174157               60
+3  (89, 33)    140      89       33       0.179775              140
+4  (89, 34)    498      89       34       0.185393              498
+5  (89, 35)    582      89       35       0.191011              582
+6  (89, 36)   4707      89       36       0.196629             4707
+7  (89, 37)   4142      89       37       0.202247             4142
+8  (89, 38)  15000      89       38       0.207865            23594
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.17 seconds.
+
+------- Length 90
+Selected 23218 braids of length 90:
+     bucket  count  length  projlen  rhogap/length  reservoir_count
+0  (90, 29)      1      90       29       0.155556                1
+1  (90, 31)      9      90       31       0.166667                9
+2  (90, 32)     37      90       32       0.172222               37
+3  (90, 33)    102      90       33       0.177778              102
+4  (90, 34)    466      90       34       0.183333              466
+5  (90, 35)    842      90       35       0.188889              842
+6  (90, 36)   3360      90       36       0.194444             3360
+7  (90, 37)   3401      90       37       0.200000             3401
+8  (90, 38)  15000      90       38       0.205556            23888
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.89 seconds.
+
+------- Length 91
+Selected 23568 braids of length 91:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (91, 27)      1      91       27       0.142857                1
+1   (91, 28)      1      91       28       0.148352                1
+2   (91, 29)      4      91       29       0.153846                4
+3   (91, 30)      3      91       30       0.159341                3
+4   (91, 31)      8      91       31       0.164835                8
+5   (91, 32)     32      91       32       0.170330               32
+6   (91, 33)     73      91       33       0.175824               73
+7   (91, 34)    339      91       34       0.181319              339
+8   (91, 35)    592      91       35       0.186813              592
+9   (91, 36)   2982      91       36       0.192308             2982
+10  (91, 37)   4533      91       37       0.197802             4533
+11  (91, 38)  15000      91       38       0.203297            18484
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.84 seconds.
+
+------- Length 92
+Selected 21661 braids of length 92:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (92, 25)      2      92       25       0.130435                2
+1   (92, 26)      2      92       26       0.135870                2
+2   (92, 27)      6      92       27       0.141304                6
+3   (92, 28)      4      92       28       0.146739                4
+4   (92, 29)     10      92       29       0.152174               10
+5   (92, 30)      5      92       30       0.157609                5
+6   (92, 31)     31      92       31       0.163043               31
+7   (92, 32)     33      92       32       0.168478               33
+8   (92, 33)     83      92       33       0.173913               83
+9   (92, 34)    279      92       34       0.179348              279
+10  (92, 35)    521      92       35       0.184783              521
+11  (92, 36)   2362      92       36       0.190217             2362
+12  (92, 37)   3323      92       37       0.195652             3323
+13  (92, 38)  15000      92       38       0.201087            16130
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.33 seconds.
+
+------- Length 93
+Selected 20081 braids of length 93:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (93, 24)      1      93       24       0.123656                1
+1   (93, 25)      1      93       25       0.129032                1
+2   (93, 26)      3      93       26       0.134409                3
+3   (93, 27)     19      93       27       0.139785               19
+4   (93, 28)      9      93       28       0.145161                9
+5   (93, 29)     41      93       29       0.150538               41
+6   (93, 30)     24      93       30       0.155914               24
+7   (93, 31)     58      93       31       0.161290               58
+8   (93, 32)     44      93       32       0.166667               44
+9   (93, 33)    183      93       33       0.172043              183
+10  (93, 34)    276      93       34       0.177419              276
+11  (93, 35)    567      93       35       0.182796              567
+12  (93, 36)   2023      93       36       0.188172             2023
+13  (93, 37)   3213      93       37       0.193548             3213
+14  (93, 38)  13619      93       38       0.198925            13619
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.93 seconds.
+
+------- Length 94
+Selected 19528 braids of length 94:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (94, 24)      2      94       24       0.122340                2
+1   (94, 25)      1      94       25       0.127660                1
+2   (94, 26)      4      94       26       0.132979                4
+3   (94, 27)     13      94       27       0.138298               13
+4   (94, 28)     10      94       28       0.143617               10
+5   (94, 29)    103      94       29       0.148936              103
+6   (94, 30)     57      94       30       0.154255               57
+7   (94, 31)    228      94       31       0.159574              228
+8   (94, 32)    153      94       32       0.164894              153
+9   (94, 33)    341      94       33       0.170213              341
+10  (94, 34)    307      94       34       0.175532              307
+11  (94, 35)   1048      94       35       0.180851             1048
+12  (94, 36)   1879      94       36       0.186170             1879
+13  (94, 37)   3413      94       37       0.191489             3413
+14  (94, 38)  11969      94       38       0.196809            11969
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.79 seconds.
+
+------- Length 95
+Selected 23630 braids of length 95:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (95, 23)      1      95       23       0.115789                1
+1   (95, 25)      9      95       25       0.126316                9
+2   (95, 26)      6      95       26       0.131579                6
+3   (95, 27)     18      95       27       0.136842               18
+4   (95, 28)     12      95       28       0.142105               12
+5   (95, 29)     70      95       29       0.147368               70
+6   (95, 30)     50      95       30       0.152632               50
+7   (95, 31)    517      95       31       0.157895              517
+8   (95, 32)    320      95       32       0.163158              320
+9   (95, 33)   1214      95       33       0.168421             1214
+10  (95, 34)    861      95       34       0.173684              861
+11  (95, 35)   1969      95       35       0.178947             1969
+12  (95, 36)   1973      95       36       0.184211             1973
+13  (95, 37)   5660      95       37       0.189474             5660
+14  (95, 38)  10950      95       38       0.194737            10950
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.86 seconds.
+
+------- Length 96
+Selected 26991 braids of length 96:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (96, 21)      1      96       21       0.104167                1
+1   (96, 22)      1      96       22       0.109375                1
+2   (96, 23)      4      96       23       0.114583                4
+3   (96, 24)      3      96       24       0.119792                3
+4   (96, 25)      9      96       25       0.125000                9
+5   (96, 26)      9      96       26       0.130208                9
+6   (96, 27)     52      96       27       0.135417               52
+7   (96, 28)     38      96       28       0.140625               38
+8   (96, 29)     96      96       29       0.145833               96
+9   (96, 30)     56      96       30       0.151042               56
+10  (96, 31)    372      96       31       0.156250              372
+11  (96, 32)    263      96       32       0.161458              263
+12  (96, 33)   2561      96       33       0.166667             2561
+13  (96, 34)   1646      96       34       0.171875             1646
+14  (96, 35)   6403      96       35       0.177083             6403
+15  (96, 36)   4628      96       36       0.182292             4628
+16  (96, 37)  10849      96       37       0.187500            10849
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.58 seconds.
+
+------- Length 97
+Selected 25773 braids of length 97:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (97, 19)      3      97       19       0.092784                3
+1   (97, 20)      1      97       20       0.097938                1
+2   (97, 21)      7      97       21       0.103093                7
+3   (97, 22)      3      97       22       0.108247                3
+4   (97, 23)     11      97       23       0.113402               11
+5   (97, 24)      4      97       24       0.118557                4
+6   (97, 25)     29      97       25       0.123711               29
+7   (97, 26)     12      97       26       0.128866               12
+8   (97, 27)     67      97       27       0.134021               67
+9   (97, 28)     44      97       28       0.139175               44
+10  (97, 29)    290      97       29       0.144330              290
+11  (97, 30)    186      97       30       0.149485              186
+12  (97, 31)    554      97       31       0.154639              554
+13  (97, 32)    293      97       32       0.159794              293
+14  (97, 33)   1990      97       33       0.164948             1990
+15  (97, 34)   1360      97       34       0.170103             1360
+16  (97, 35)  12623      97       35       0.175258            12623
+17  (97, 36)   8296      97       36       0.180412             8296
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.72 seconds.
+
+------- Length 98
+Selected 25624 braids of length 98:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (98, 17)      1      98       17       0.081633                1
+1   (98, 18)      1      98       18       0.086735                1
+2   (98, 19)      6      98       19       0.091837                6
+3   (98, 20)      4      98       20       0.096939                4
+4   (98, 21)     17      98       21       0.102041               17
+5   (98, 22)     11      98       22       0.107143               11
+6   (98, 23)     39      98       23       0.112245               39
+7   (98, 24)     21      98       24       0.117347               21
+8   (98, 25)     57      98       25       0.122449               57
+9   (98, 26)     28      98       26       0.127551               28
+10  (98, 27)    152      98       27       0.132653              152
+11  (98, 28)     78      98       28       0.137755               78
+12  (98, 29)    390      98       29       0.142857              390
+13  (98, 30)    237      98       30       0.147959              237
+14  (98, 31)   1484      98       31       0.153061             1484
+15  (98, 32)    912      98       32       0.158163              912
+16  (98, 33)   3094      98       33       0.163265             3094
+17  (98, 34)   1677      98       34       0.168367             1677
+18  (98, 35)  10529      98       35       0.173469            10529
+19  (98, 36)   6886      98       36       0.178571             6886
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.06 seconds.
+
+------- Length 99
+Selected 17626 braids of length 99:
+      bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (99, 15)      1      99       15       0.070707                1
+1   (99, 17)      5      99       17       0.080808                5
+2   (99, 18)      2      99       18       0.085859                2
+3   (99, 19)      8      99       19       0.090909                8
+4   (99, 20)      6      99       20       0.095960                6
+5   (99, 21)     33      99       21       0.101010               33
+6   (99, 22)     18      99       22       0.106061               18
+7   (99, 23)     98      99       23       0.111111               98
+8   (99, 24)     57      99       24       0.116162               57
+9   (99, 25)    211      99       25       0.121212              211
+10  (99, 26)    109      99       26       0.126263              109
+11  (99, 27)    322      99       27       0.131313              322
+12  (99, 28)    157      99       28       0.136364              157
+13  (99, 29)    781      99       29       0.141414              781
+14  (99, 30)    445      99       30       0.146465              445
+15  (99, 31)   2101      99       31       0.151515             2101
+16  (99, 32)   1244      99       32       0.156566             1244
+17  (99, 33)   7493      99       33       0.161616             7493
+18  (99, 34)   4535      99       34       0.166667             4535
+
+Moving braids forward by 1 GNF letters...
+   Done in 4.90 seconds.
+
+------- Length 100
+Selected 29151 braids of length 100:
+       bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (100, 13)      1     100       13          0.060                1
+1   (100, 14)      1     100       14          0.065                1
+2   (100, 15)      4     100       15          0.070                4
+3   (100, 16)      3     100       16          0.075                3
+4   (100, 17)      6     100       17          0.080                6
+5   (100, 18)      4     100       18          0.085                4
+6   (100, 19)     25     100       19          0.090               25
+7   (100, 20)     16     100       20          0.095               16
+8   (100, 21)     43     100       21          0.100               43
+9   (100, 22)     28     100       22          0.105               28
+10  (100, 23)    163     100       23          0.110              163
+11  (100, 24)     96     100       24          0.115               96
+12  (100, 25)    503     100       25          0.120              503
+13  (100, 26)    294     100       26          0.125              294
+14  (100, 27)   1093     100       27          0.130             1093
+15  (100, 28)    571     100       28          0.135              571
+16  (100, 29)   1743     100       29          0.140             1743
+17  (100, 30)    877     100       30          0.145              877
+18  (100, 31)   4028     100       31          0.150             4028
+19  (100, 32)   2357     100       32          0.155             2357
+20  (100, 33)  10977     100       33          0.160            10977
+21  (100, 34)   6318     100       34          0.165             6318
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.85 seconds.
+
+------- Length 101
+Selected 28617 braids of length 101:
+       bucket  count  length  projlen  rhogap/length  reservoir_count
+0   (101, 10)      1     101       10       0.044554                1
+1   (101, 11)      1     101       11       0.049505                1
+2   (101, 12)      3     101       12       0.054455                3
+3   (101, 13)      5     101       13       0.059406                5
+4   (101, 14)      5     101       14       0.064356                5
+5   (101, 15)      9     101       15       0.069307                9
+6   (101, 16)      6     101       16       0.074257                6
+7   (101, 17)     27     101       17       0.079208               27
+8   (101, 18)     13     101       18       0.084158               13
+9   (101, 19)     40     101       19       0.089109               40
+10  (101, 20)     16     101       20       0.094059               16
+11  (101, 21)    131     101       21       0.099010              131
+12  (101, 22)     79     101       22       0.103960               79
+13  (101, 23)    231     101       23       0.108911              231
+14  (101, 24)    143     101       24       0.113861              143
+15  (101, 25)    793     101       25       0.118812              793
+16  (101, 26)    509     101       26       0.123762              509
+17  (101, 27)   2517     101       27       0.128713             2517
+18  (101, 28)   1487     101       28       0.133663             1487
+19  (101, 29)   5582     101       29       0.138614             5582
+20  (101, 30)   2982     101       30       0.143564             2982
+21  (101, 31)   9269     101       31       0.148515             9269
+22  (101, 32)   4768     101       32       0.153465             4768
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.74 seconds.
+
+------- Length 102
+Selected 22795 braids of length 102:
+       bucket  count  length  projlen  rhogap/length  reservoir_count
+0    (102, 7)      1     102        7       0.029412                1
+1    (102, 8)      1     102        8       0.034314                1
+2    (102, 9)      4     102        9       0.039216                4
+3   (102, 10)      3     102       10       0.044118                3
+4   (102, 11)      8     102       11       0.049020                8
+5   (102, 12)      6     102       12       0.053922                6
+6   (102, 13)     17     102       13       0.058824               17
+7   (102, 14)     12     102       14       0.063725               12
+8   (102, 15)     39     102       15       0.068627               39
+9   (102, 16)     21     102       16       0.073529               21
+10  (102, 17)     57     102       17       0.078431               57
+11  (102, 18)     29     102       18       0.083333               29
+12  (102, 19)    147     102       19       0.088235              147
+13  (102, 20)     72     102       20       0.093137               72
+14  (102, 21)    212     102       21       0.098039              212
+15  (102, 22)     92     102       22       0.102941               92
+16  (102, 23)    642     102       23       0.107843              642
+17  (102, 24)    382     102       24       0.112745              382
+18  (102, 25)   1208     102       25       0.117647             1208
+19  (102, 26)    774     102       26       0.122549              774
+20  (102, 27)   3869     102       27       0.127451             3869
+21  (102, 28)   2679     102       28       0.132353             2679
+22  (102, 29)  12520     102       29       0.137255            12520
+
+Moving braids forward by 1 GNF letters...
+   Done in 6.38 seconds.
+
+------- Length 103
+Selected 19265 braids of length 103:
+       bucket  count  length  projlen  rhogap/length  reservoir_count
+0    (103, 5)      1     103        5       0.019417                1
+1    (103, 7)      5     103        7       0.029126                5
+2    (103, 8)      2     103        8       0.033981                2
+3    (103, 9)     13     103        9       0.038835               13
+4   (103, 10)      5     103       10       0.043689                5
+5   (103, 11)     33     103       11       0.048544               33
+6   (103, 12)     16     103       12       0.053398               16
+7   (103, 13)     58     103       13       0.058252               58
+8   (103, 14)     25     103       14       0.063107               25
+9   (103, 15)    113     103       15       0.067961              113
+10  (103, 16)     49     103       16       0.072816               49
+11  (103, 17)    225     103       17       0.077670              225
+12  (103, 18)    101     103       18       0.082524              101
+13  (103, 19)    325     103       19       0.087379              325
+14  (103, 20)    155     103       20       0.092233              155
+15  (103, 21)    732     103       21       0.097087              732
+16  (103, 22)    379     103       22       0.101942              379
+17  (103, 23)   1115     103       23       0.106796             1115
+18  (103, 24)    530     103       24       0.111650              530
+19  (103, 25)   3149     103       25       0.116505             3149
+20  (103, 26)   1846     103       26       0.121359             1846
+21  (103, 27)   6240     103       27       0.126214             6240
+22  (103, 28)   4148     103       28       0.131068             4148
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.55 seconds.
+
+------- Length 104
+Selected 20399 braids of length 104:
+       bucket  count  length  projlen  rhogap/length  reservoir_count
+0    (104, 3)      2     104        3       0.009615                2
+1    (104, 5)      5     104        5       0.019231                5
+2    (104, 6)      2     104        6       0.024038                2
+3    (104, 7)      6     104        7       0.028846                6
+4    (104, 8)      4     104        8       0.033654                4
+5    (104, 9)     23     104        9       0.038462               23
+6   (104, 10)     18     104       10       0.043269               18
+7   (104, 11)     66     104       11       0.048077               66
+8   (104, 12)     36     104       12       0.052885               36
+9   (104, 13)    173     104       13       0.057692              173
+10  (104, 14)     99     104       14       0.062500               99
+11  (104, 15)    303     104       15       0.067308              303
+12  (104, 16)    154     104       16       0.072115              154
+13  (104, 17)    573     104       17       0.076923              573
+14  (104, 18)    282     104       18       0.081731              282
+15  (104, 19)   1124     104       19       0.086538             1124
+16  (104, 20)    568     104       20       0.091346              568
+17  (104, 21)   1721     104       21       0.096154             1721
+18  (104, 22)    865     104       22       0.100962              865
+19  (104, 23)   3647     104       23       0.105769             3647
+20  (104, 24)   1959     104       24       0.110577             1959
+21  (104, 25)   5830     104       25       0.115385             5830
+22  (104, 26)   2939     104       26       0.120192             2939
+
+Moving braids forward by 1 GNF letters...
+   Done in 5.73 seconds.
+
+------- Length 105
+Found kernel elements:
+(n=4, r=1, p=5) near-kernel element: Garside length 105, Garside form (0, [(3, 2, 0, 1), (2, 0, 3, 1), (3, 1, 0, 2), (2, 0, 3, 1), (3, 1, 0, 2), (2, 3, 0, 1), (2, 0, 1, 3), (1, 2, 0, 3), (2, 0, 3, 1), (1, 0, 3, 2), (3, 1, 0, 2), (2, 1, 3, 0), (3, 1, 0, 2), (0, 2, 1, 3), (2, 3, 0, 1), (0, 2, 1, 3), (2, 0, 3, 1), (1, 3, 2, 0), (0, 2, 1, 3), (2, 3, 0, 1), (0, 2, 3, 1), (0, 3, 1, 2), (2, 0, 3, 1), (1, 0, 3, 2), (1, 3, 2, 0), (3, 0, 2, 1), (1, 0, 3, 2), (0, 3, 1, 2), (2, 0, 3, 1), (1, 2, 0, 3), (2, 3, 0, 1), (2, 0, 3, 1), (0, 3, 1, 2), (2, 0, 3, 1), (3, 1, 0, 2), (2, 0, 3, 1), (3, 1, 0, 2), (2, 0, 3, 1), (1, 0, 3, 2), (1, 0, 3, 2), (1, 3, 0, 2), (2, 3, 0, 1), (0, 2, 1, 3), (2, 0, 3, 1), (0, 1, 3, 2), (0, 3, 1, 2), (2, 0, 3, 1), (0, 3, 1, 2), (2, 0, 3, 1), (1, 0, 3, 2), (3, 1, 0, 2), (2, 1, 0, 3), (2, 3, 1, 0), (2, 3, 0, 1), (2, 0, 3, 1), (3, 1, 0, 2), (2, 0, 3, 1), (3, 1, 0, 2), (2, 3, 1, 0), (2, 0, 3, 1), (3, 1, 2, 0), (1, 0, 3, 2), (1, 3, 0, 2), (2, 3, 0, 1), (2, 3, 0, 1), (2, 0, 3, 1), (0, 3, 1, 2), (2, 0, 3, 1), (0, 3, 1, 2), (2, 0, 3, 1), (1, 3, 2, 0), (2, 0, 3, 1), (1, 0, 3, 2), (1, 3, 2, 0), (2, 0, 3, 1), (3, 1, 0, 2), (2, 3, 0, 1), (2, 0, 1, 3), (1, 2, 0, 3), (2, 3, 0, 1), (2, 0, 3, 1), (3, 1, 0, 2), (2, 1, 3, 0), (1, 0, 3, 2), (3, 1, 2, 0), (0, 3, 1, 2), (2, 0, 3, 1), (3, 1, 2, 0), (1, 0, 3, 2), (3, 1, 2, 0), (0, 3, 1, 2), (0, 2, 3, 1), (0, 3, 1, 2), (2, 3, 0, 1), (2, 0, 3, 1), (1, 3, 2, 0), (3, 0, 2, 1), (1, 0, 3, 2), (0, 3, 1, 2), (2, 0, 3, 1), (3, 0, 1, 2), (1, 2, 3, 0), (0, 3, 1, 2), (2, 0, 3, 1), (0, 1, 3, 2)])
+Selected 26843 braids of length 105:
+       bucket  count  length  projlen  rhogap/length  reservoir_count
+0    (105, 1)      1     105        1       0.000000                1
+1    (105, 3)      4     105        3       0.009524                4
+2    (105, 4)      6     105        4       0.014286                6
+3    (105, 5)      9     105        5       0.019048                9
+4    (105, 6)      8     105        6       0.023810                8
+5    (105, 7)     24     105        7       0.028571               24
+6    (105, 8)     14     105        8       0.033333               14
+7    (105, 9)     36     105        9       0.038095               36
+8   (105, 10)     13     105       10       0.042857               13
+9   (105, 11)    126     105       11       0.047619              126
+10  (105, 12)     75     105       12       0.052381               75
+11  (105, 13)    357     105       13       0.057143              357
+12  (105, 14)    184     105       14       0.061905              184
+13  (105, 15)    885     105       15       0.066667              885
+14  (105, 16)    518     105       16       0.071429              518
+15  (105, 17)   1611     105       17       0.076190             1611
+16  (105, 18)    838     105       18       0.080952              838
+17  (105, 19)   2934     105       19       0.085714             2934
+18  (105, 20)   1477     105       20       0.090476             1477
+19  (105, 21)   5744     105       21       0.095238             5744
+20  (105, 22)   2984     105       22       0.100000             2984
+21  (105, 23)   8995     105       23       0.104762             8995
+
+Moving braids forward by 1 GNF letters...
+   Done in 7.34 seconds.

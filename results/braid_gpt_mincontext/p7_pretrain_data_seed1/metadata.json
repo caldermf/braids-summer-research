@@ -1,0 +1,12 @@
+{
+  "context": "log1p(projlen / max(1, Garside length)); zero during grammar pretraining",
+  "elapsed_seconds": 36.2,
+  "format": "braid-gpt-mincontext-pretrain-dataset-v1",
+  "max_factors": 96,
+  "max_length": 96,
+  "min_length": 8,
+  "n": 4,
+  "p": 7,
+  "seed": 1,
+  "sequence_count": 1000000
+}

@@ -1,0 +1,979 @@
+Python executable: /home/as4843/braids-torch-cu130/bin/python
+sys.executable: /home/as4843/braids-torch-cu130/bin/python
+PyTorch: 2.11.0+cu130
+Bundled CUDA: 13.0
+============================================================
+COMMUTATOR SEARCH: [σ_2, g^{-1}] for p=7
+============================================================
+Device: cuda
+Bucket size: 20000
+Max length: 40
+Bootstrap length: 5
+Prime: 7
+Generator: σ_2
+Degree window: [-160, 160] (321 coeffs, centered)
+Use best: 30000
+Expansion chunk size: 50000
+Matmul chunk size: 8000
+
+Loading tables from /nfs/roberts/project/pi_com36/as4843/braids-summer-research/structural-kernel-experiments/third_party/commutator_search/precomputed_tables/tables_B4_r1_p7.pt...
+Degree window: [-160, 160] (321 coefficients, centered)
+
+Precomputing twisted matrices T_b = M_σ · M_b^{-1} · M_σ^{-1}...
+  σ_2 = permutation (0, 2, 1, 3), index 2
+  M_σ degree shift: 0, M_σ^-1 degree shift: -2
+
+Avoidance condition for σ_2:
+  Centralizer generators (0-indexed): {1}
+  Allowed first factors: 11 / 23 non-identity simples
+    #1: perm=(0, 1, 3, 2), left_descent={2}
+    #4: perm=(0, 3, 1, 2), left_descent={2}
+    #6: perm=(1, 0, 2, 3), left_descent={0}
+    #7: perm=(1, 0, 3, 2), left_descent={0, 2}
+    #8: perm=(1, 2, 0, 3), left_descent={0}
+    #9: perm=(1, 2, 3, 0), left_descent={0}
+    #10: perm=(1, 3, 0, 2), left_descent={0, 2}
+    #11: perm=(1, 3, 2, 0), left_descent={0, 2}
+    #18: perm=(3, 0, 1, 2), left_descent={2}
+    #20: perm=(3, 1, 0, 2), left_descent={0, 2}
+    #21: perm=(3, 1, 2, 0), left_descent={0, 2}
+
+✓ Identity matrix verified (at degree 0, index 160)
+  Precomputing FFTs...
+    D=321, out_D=641, fft_size=1024
+    Total FFT cache: 1.8 MB
+Initializing with 11 allowed first factors (avoidance condition)
+  Generator: σ_2
+  Allowed first factor indices: [1, 4, 6, 7, 8, 9, 10, 11, 18, 20, 21]
+  🎉 FOUND 1 KERNEL ELEMENTS in initial factors!
+  Pruned 1 identity matrices from expansion pool (dead ends)
+  Initial projlen distribution:
+    projlen=5: 7 braids
+    projlen=7: 3 braids
+  Total initialized: 10
+
+============================================================
+Level 2 - BOOTSTRAP
+============================================================
+  Starting braids: 10
+  Candidates to generate: 60
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 8 braids
+    projlen=7: 13 braids
+    projlen=9: 10 braids
+    projlen=11: 21 braids
+    projlen=12: 4 braids
+  Braids kept: 56 (in 5 buckets, 0.00 GB)
+  ⚡ Timing: matmul=0.01s, sampling=0.00s, total=0.12s
+
+============================================================
+Level 3 - BOOTSTRAP
+============================================================
+  Starting braids: 56
+  Candidates to generate: 326
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 16 braids
+    projlen=7: 20 braids
+    projlen=9: 12 braids
+    projlen=11: 49 braids
+    projlen=12: 16 braids
+    projlen=13: 42 braids
+    projlen=15: 107 braids
+    projlen=16: 44 braids
+    projlen=19: 16 braids
+  Braids kept: 322 (in 9 buckets, 0.00 GB)
+  ⚡ Timing: matmul=0.02s, sampling=0.00s, total=0.07s
+
+============================================================
+Level 4 - BOOTSTRAP
+============================================================
+  Starting braids: 322
+  Candidates to generate: 1808
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 16 braids
+    projlen=7: 36 braids
+    projlen=9: 32 braids
+    projlen=11: 100 braids
+    projlen=12: 20 braids
+    projlen=13: 64 braids
+    projlen=15: 231 braids
+    projlen=16: 76 braids
+    projlen=17: 214 braids
+    projlen=19: 545 braids
+  Braids kept: 1804 (in 14 buckets, 0.01 GB)
+  ⚡ Timing: matmul=0.01s, sampling=0.00s, total=0.07s
+
+============================================================
+Level 5 - BOOTSTRAP
+============================================================
+  Starting braids: 1804
+  Candidates to generate: 9950
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 24 braids
+    projlen=7: 52 braids
+    projlen=9: 40 braids
+    projlen=11: 148 braids
+    projlen=12: 44 braids
+    projlen=13: 144 braids
+    projlen=15: 460 braids
+    projlen=16: 180 braids
+    projlen=17: 304 braids
+    projlen=19: 1127 braids
+  Braids kept: 9946 (in 18 buckets, 0.06 GB)
+  ⚡ Timing: matmul=0.03s, sampling=0.00s, total=0.12s
+
+============================================================
+Level 6 - SAMPLING
+============================================================
+  Starting braids: 9946
+  Candidates to generate: 54452
+  Processing in 2 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 32 braids
+    projlen=7: 84 braids
+    projlen=9: 68 braids
+    projlen=11: 228 braids
+    projlen=12: 64 braids
+    projlen=13: 184 braids
+    projlen=15: 684 braids
+    projlen=16: 268 braids
+    projlen=17: 704 braids
+    projlen=19: 2228 braids
+  Braids kept: 54448 (in 23 buckets, 0.32 GB)
+  ⚡ Timing: matmul=0.15s, sampling=0.01s, total=0.40s
+
+============================================================
+Level 7 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 167410
+  Processing in 4 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 48 braids
+    projlen=7: 132 braids
+    projlen=9: 104 braids
+    projlen=11: 356 braids
+    projlen=12: 108 braids
+    projlen=13: 304 braids
+    projlen=15: 1052 braids
+    projlen=16: 428 braids
+    projlen=17: 900 braids
+    projlen=19: 3340 braids
+  Braids kept: 130546 (in 23 buckets, 0.78 GB)
+  ⚡ Timing: matmul=0.09s, sampling=0.06s, total=1.18s
+
+============================================================
+Level 8 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 157636
+  Processing in 4 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 72 braids
+    projlen=7: 212 braids
+    projlen=9: 168 braids
+    projlen=11: 564 braids
+    projlen=12: 172 braids
+    projlen=13: 464 braids
+    projlen=15: 1644 braids
+    projlen=16: 676 braids
+    projlen=17: 1496 braids
+    projlen=19: 5148 braids
+  Braids kept: 127760 (in 20 buckets, 0.76 GB)
+  ⚡ Timing: matmul=0.06s, sampling=0.02s, total=1.04s
+
+============================================================
+Level 9 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 159380
+  Processing in 4 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 112 braids
+    projlen=7: 340 braids
+    projlen=9: 268 braids
+    projlen=11: 900 braids
+    projlen=12: 280 braids
+    projlen=13: 744 braids
+    projlen=15: 2604 braids
+    projlen=16: 1084 braids
+    projlen=17: 2288 braids
+    projlen=19: 8047 braids
+  Braids kept: 129258 (in 20 buckets, 0.77 GB)
+  ⚡ Timing: matmul=0.07s, sampling=0.02s, total=1.06s
+
+============================================================
+Level 10 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 152850
+  Processing in 4 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 176 braids
+    projlen=7: 548 braids
+    projlen=9: 432 braids
+    projlen=11: 1444 braids
+    projlen=12: 452 braids
+    projlen=13: 1184 braids
+    projlen=15: 4156 braids
+    projlen=16: 1740 braids
+    projlen=17: 3676 braids
+    projlen=19: 12601 braids
+  Braids kept: 123382 (in 20 buckets, 0.73 GB)
+  ⚡ Timing: matmul=0.05s, sampling=0.02s, total=1.02s
+
+============================================================
+Level 11 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 151790
+  Processing in 4 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 280 braids
+    projlen=7: 884 braids
+    projlen=9: 696 braids
+    projlen=11: 2324 braids
+    projlen=12: 732 braids
+    projlen=13: 1904 braids
+    projlen=15: 6668 braids
+    projlen=16: 2804 braids
+    projlen=17: 5852 braids
+    projlen=19: 19904 braids
+  Braids kept: 129285 (in 17 buckets, 0.77 GB)
+  ⚡ Timing: matmul=0.05s, sampling=0.02s, total=1.01s
+
+============================================================
+Level 12 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 149570
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 448 braids
+    projlen=7: 1428 braids
+    projlen=9: 1124 braids
+    projlen=11: 3748 braids
+    projlen=12: 1184 braids
+    projlen=13: 3064 braids
+    projlen=15: 10529 braids
+    projlen=16: 4160 braids
+    projlen=17: 8004 braids
+    projlen=19: 28702 braids
+  Braids kept: 123209 (in 17 buckets, 0.73 GB)
+  ⚡ Timing: matmul=0.16s, sampling=0.02s, total=0.96s
+
+============================================================
+Level 13 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 143586
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 720 braids
+    projlen=7: 2308 braids
+    projlen=9: 1816 braids
+    projlen=11: 6052 braids
+    projlen=12: 1916 braids
+    projlen=13: 4944 braids
+    projlen=15: 16594 braids
+    projlen=16: 6269 braids
+    projlen=17: 11357 braids
+    projlen=19: 36905 braids
+  Braids kept: 122687 (in 14 buckets, 0.73 GB)
+  ⚡ Timing: matmul=0.15s, sampling=0.02s, total=0.93s
+
+============================================================
+Level 14 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 145146
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 1160 braids
+    projlen=7: 3732 braids
+    projlen=9: 2936 braids
+    projlen=11: 9641 braids
+    projlen=12: 2912 braids
+    projlen=13: 7153 braids
+    projlen=15: 24600 braids
+    projlen=16: 8382 braids
+    projlen=17: 14802 braids
+    projlen=19: 38705 braids
+  Braids kept: 121837 (in 14 buckets, 0.72 GB)
+  ⚡ Timing: matmul=0.16s, sampling=0.02s, total=0.95s
+
+============================================================
+Level 15 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 137268
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 1872 braids
+    projlen=7: 6036 braids
+    projlen=9: 4748 braids
+    projlen=11: 14780 braids
+    projlen=12: 3966 braids
+    projlen=13: 8429 braids
+    projlen=15: 31995 braids
+    projlen=16: 10761 braids
+    projlen=17: 11587 braids
+    projlen=19: 27759 braids
+  Braids kept: 117510 (in 14 buckets, 0.70 GB)
+  ⚡ Timing: matmul=0.14s, sampling=0.02s, total=0.91s
+
+============================================================
+Level 16 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 132950
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 3024 braids
+    projlen=7: 9764 braids
+    projlen=9: 7490 braids
+    projlen=11: 22437 braids
+    projlen=12: 5937 braids
+    projlen=13: 12345 braids
+    projlen=15: 34012 braids
+    projlen=16: 14683 braids
+    projlen=17: 4802 braids
+    projlen=19: 14452 braids
+  Braids kept: 116497 (in 11 buckets, 0.69 GB)
+  ⚡ Timing: matmul=0.13s, sampling=0.01s, total=0.88s
+
+============================================================
+Level 17 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 131592
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 4888 braids
+    projlen=7: 14414 braids
+    projlen=9: 7842 braids
+    projlen=11: 28199 braids
+    projlen=12: 6442 braids
+    projlen=13: 12446 braids
+    projlen=15: 29302 braids
+    projlen=16: 14837 braids
+    projlen=17: 2881 braids
+    projlen=19: 7553 braids
+  Braids kept: 114087 (in 11 buckets, 0.68 GB)
+  ⚡ Timing: matmul=0.12s, sampling=0.01s, total=0.87s
+
+============================================================
+Level 18 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 126618
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 7904 braids
+    projlen=7: 21996 braids
+    projlen=9: 9483 braids
+    projlen=11: 30706 braids
+    projlen=12: 7227 braids
+    projlen=13: 10342 braids
+    projlen=15: 20805 braids
+    projlen=16: 13793 braids
+    projlen=17: 927 braids
+    projlen=19: 2341 braids
+  Braids kept: 113107 (in 11 buckets, 0.67 GB)
+  ⚡ Timing: matmul=0.11s, sampling=0.01s, total=0.85s
+
+============================================================
+Level 19 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 118152
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 11584 braids
+    projlen=7: 33224 braids
+    projlen=9: 13394 braids
+    projlen=11: 30431 braids
+    projlen=12: 10128 braids
+    projlen=13: 4293 braids
+    projlen=15: 8268 braids
+    projlen=16: 6826 braids
+  Braids kept: 94493 (in 8 buckets, 0.56 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.80s
+
+============================================================
+Level 20 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 116912
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 10674 braids
+    projlen=7: 39458 braids
+    projlen=9: 14513 braids
+    projlen=11: 27606 braids
+    projlen=12: 13765 braids
+    projlen=13: 2176 braids
+    projlen=15: 4366 braids
+    projlen=16: 4350 braids
+  Braids kept: 89844 (in 8 buckets, 0.53 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 21 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117342
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 11034 braids
+    projlen=7: 37870 braids
+    projlen=9: 13476 braids
+    projlen=11: 27299 braids
+    projlen=12: 13523 braids
+    projlen=13: 2820 braids
+    projlen=15: 5680 braids
+    projlen=16: 5636 braids
+  Braids kept: 92169 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.80s
+
+============================================================
+Level 22 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117110
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 10902 braids
+    projlen=7: 38192 braids
+    projlen=9: 13687 braids
+    projlen=11: 27219 braids
+    projlen=12: 13691 braids
+    projlen=13: 2688 braids
+    projlen=15: 5361 braids
+    projlen=16: 5366 braids
+  Braids kept: 91695 (in 8 buckets, 0.54 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 23 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117298
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 11016 braids
+    projlen=7: 38065 braids
+    projlen=9: 13522 braids
+    projlen=11: 27126 braids
+    projlen=12: 13610 braids
+    projlen=13: 2810 braids
+    projlen=15: 5531 braids
+    projlen=16: 5614 braids
+  Braids kept: 92103 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.09s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 24 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117410
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 10764 braids
+    projlen=7: 38310 braids
+    projlen=9: 13655 braids
+    projlen=11: 27269 braids
+    projlen=12: 13726 braids
+    projlen=13: 2741 braids
+    projlen=15: 5465 braids
+    projlen=16: 5476 braids
+  Braids kept: 91827 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.05s, sampling=0.01s, total=0.80s
+
+============================================================
+Level 25 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117418
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 11028 braids
+    projlen=7: 38131 braids
+    projlen=9: 13581 braids
+    projlen=11: 27317 braids
+    projlen=12: 13515 braids
+    projlen=13: 2771 braids
+    projlen=15: 5537 braids
+    projlen=16: 5534 braids
+  Braids kept: 91966 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 26 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117222
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 11030 braids
+    projlen=7: 38474 braids
+    projlen=9: 13715 braids
+    projlen=11: 27189 braids
+    projlen=12: 13652 braids
+    projlen=13: 2632 braids
+    projlen=15: 5274 braids
+    projlen=16: 5252 braids
+  Braids kept: 91555 (in 8 buckets, 0.54 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 27 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117276
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 10850 braids
+    projlen=7: 38219 braids
+    projlen=9: 13576 braids
+    projlen=11: 27133 braids
+    projlen=12: 13762 braids
+    projlen=13: 2748 braids
+    projlen=15: 5494 braids
+    projlen=16: 5490 braids
+  Braids kept: 91920 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 28 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117412
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 10856 braids
+    projlen=7: 38062 braids
+    projlen=9: 13604 braids
+    projlen=11: 27342 braids
+    projlen=12: 13596 braids
+    projlen=13: 2799 braids
+    projlen=15: 5553 braids
+    projlen=16: 5596 braids
+  Braids kept: 92004 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 29 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117424
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 10964 braids
+    projlen=7: 38274 braids
+    projlen=9: 13653 braids
+    projlen=11: 27331 braids
+    projlen=12: 13566 braids
+    projlen=13: 2729 braids
+    projlen=15: 5451 braids
+    projlen=16: 5452 braids
+  Braids kept: 91815 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.09s, sampling=0.01s, total=0.80s
+
+============================================================
+Level 30 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117154
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 11208 braids
+    projlen=7: 38315 braids
+    projlen=9: 13558 braids
+    projlen=11: 27007 braids
+    projlen=12: 13630 braids
+    projlen=13: 2690 braids
+    projlen=15: 5370 braids
+    projlen=16: 5372 braids
+  Braids kept: 91828 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 31 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117258
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 10612 braids
+    projlen=7: 38365 braids
+    projlen=9: 13676 braids
+    projlen=11: 27176 braids
+    projlen=12: 13929 braids
+    projlen=13: 2692 braids
+    projlen=15: 5420 braids
+    projlen=16: 5384 braids
+  Braids kept: 91713 (in 8 buckets, 0.54 GB)
+  ⚡ Timing: matmul=0.09s, sampling=0.01s, total=0.80s
+
+============================================================
+Level 32 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117246
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 11118 braids
+    projlen=7: 37716 braids
+    projlen=9: 13497 braids
+    projlen=11: 27343 braids
+    projlen=12: 13413 braids
+    projlen=13: 2837 braids
+    projlen=15: 5652 braids
+    projlen=16: 5666 braids
+  Braids kept: 92183 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 33 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117126
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 11002 braids
+    projlen=7: 38405 braids
+    projlen=9: 13694 braids
+    projlen=11: 27091 braids
+    projlen=12: 13711 braids
+    projlen=13: 2655 braids
+    projlen=15: 5258 braids
+    projlen=16: 5306 braids
+  Braids kept: 91626 (in 8 buckets, 0.54 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 34 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117414
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 10788 braids
+    projlen=7: 38284 braids
+    projlen=9: 13635 braids
+    projlen=11: 27255 braids
+    projlen=12: 13726 braids
+    projlen=13: 2748 braids
+    projlen=15: 5484 braids
+    projlen=16: 5490 braids
+  Braids kept: 91871 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 35 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117310
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 11088 braids
+    projlen=7: 38121 braids
+    projlen=9: 13574 braids
+    projlen=11: 27256 braids
+    projlen=12: 13526 braids
+    projlen=13: 2749 braids
+    projlen=15: 5496 braids
+    projlen=16: 5496 braids
+  Braids kept: 91929 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 36 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117188
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 10860 braids
+    projlen=7: 38368 braids
+    projlen=9: 13729 braids
+    projlen=11: 27230 braids
+    projlen=12: 13736 braids
+    projlen=13: 2652 braids
+    projlen=15: 5315 braids
+    projlen=16: 5294 braids
+  Braids kept: 91586 (in 8 buckets, 0.54 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.79s
+
+============================================================
+Level 37 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117400
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 10794 braids
+    projlen=7: 38144 braids
+    projlen=9: 13632 braids
+    projlen=11: 27392 braids
+    projlen=12: 13658 braids
+    projlen=13: 2743 braids
+    projlen=15: 5553 braids
+    projlen=16: 5480 braids
+  Braids kept: 91860 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.02s, total=0.79s
+
+============================================================
+Level 38 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117318
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 11028 braids
+    projlen=7: 38138 braids
+    projlen=9: 13648 braids
+    projlen=11: 27359 braids
+    projlen=12: 13511 braids
+    projlen=13: 2727 braids
+    projlen=15: 5455 braids
+    projlen=16: 5448 braids
+  Braids kept: 91817 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.78s
+
+============================================================
+Level 39 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117168
+  Processing in 3 chunks...
+
+  🎉 FOUND 2 KERNEL ELEMENTS! 🎉
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 2 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 10880 braids
+    projlen=7: 38220 braids
+    projlen=9: 13633 braids
+    projlen=11: 27180 braids
+    projlen=12: 13740 braids
+    projlen=13: 2698 braids
+    projlen=15: 5427 braids
+    projlen=16: 5386 braids
+  Braids kept: 91764 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.08s, sampling=0.01s, total=0.78s
+
+============================================================
+Level 40 - SAMPLING
+============================================================
+  Starting braids: 30000
+  Candidates to generate: 117278
+  Processing in 3 chunks...
+  Pruned 4 identity matrices from expansion (dead ends)
+  Filtered 4 trivial commutators (π(g) in centralizer)
+  Projlen distribution:
+    projlen=5: 11030 braids
+    projlen=7: 38069 braids
+    projlen=9: 13525 braids
+    projlen=11: 27142 braids
+    projlen=12: 13602 braids
+    projlen=13: 2794 braids
+    projlen=15: 5532 braids
+    projlen=16: 5580 braids
+  Braids kept: 92063 (in 8 buckets, 0.55 GB)
+  ⚡ Timing: matmul=0.07s, sampling=0.01s, total=0.78s
+
+============================================================
+SEARCH COMPLETE
+============================================================
+Generator: σ_2
+Final level: 40
+Total time: 29.84s
+Avg time per level: 0.75s
+Total kernel elements: 39
+
+============================================================
+VERIFICATION
+============================================================
+
+Batch 0: 1 candidates
+  Candidate 0: [21] - Trivial commutator in the braid group
+
+Batch 1: 2 candidates
+  Candidate 0: [9, 1, 18] - Trivial commutator in the braid group
+  Candidate 1: [18, 6, 9] - Trivial commutator in the braid group
+
+Batch 2: 2 candidates
+  Candidate 0: [9, 1, 1, 1, 18] - Trivial commutator in the braid group
+  Candidate 1: [18, 6, 6, 6, 9] - Trivial commutator in the braid group
+
+Batch 3: 2 candidates
+  Candidate 0: [9, 1, 1, 1, 1, 1, 18] - Trivial commutator in the braid group
+  Candidate 1: [18, 6, 6, 6, 6, 6, 9] - Trivial commutator in the braid group
+
+Batch 4: 2 candidates
+  Candidate 0: [9, 1, 1, 1, 1, 1, 1, 1]... - Trivial commutator in the braid group
+  Candidate 1: [18, 6, 6, 6, 6, 6, 6, 6]... - Trivial commutator in the braid group
+
+Batch 5: 2 candidates
+  Candidate 0: [9, 1, 1, 1, 1, 1, 1, 1]... - Trivial commutator in the braid group
+  Candidate 1: [18, 6, 6, 6, 6, 6, 6, 6]... - Trivial commutator in the braid group
+
+Batch 6: 2 candidates
+  Candidate 0: [9, 1, 1, 1, 1, 1, 1, 1]... - Trivial commutator in the braid group
+  Candidate 1: [18, 6, 6, 6, 6, 6, 6, 6]... - Trivial commutator in the braid group
+
+Batch 7: 2 candidates
+  Candidate 0: [9, 1, 1, 1, 1, 1, 1, 1]... - Trivial commutator in the braid group
+  Candidate 1: [18, 6, 6, 6, 6, 6, 6, 6]... - Trivial commutator in the braid group
+
+Batch 8: 2 candidates
+  Candidate 0: [9, 1, 1, 1, 1, 1, 1, 1]... - Trivial commutator in the braid group
+  Candidate 1: [18, 6, 6, 6, 6, 6, 6, 6]... - Trivial commutator in the braid group
+
+Batch 9: 2 candidates
+  Candidate 0: [9, 1, 1, 1, 1, 1, 1, 1]... - Trivial commutator in the braid group
+  Candidate 1: [18, 6, 6, 6, 6, 6, 6, 6]... - Trivial commutator in the braid group
+
+Batch 10: 2 candidates
+  Candidate 0: [9, 1, 1, 1, 1, 1, 1, 1]... - Trivial commutator in the braid group
+
+Batch 11: 2 candidates
+
+Batch 12: 2 candidates
+
+Batch 13: 2 candidates
+
+Batch 14: 2 candidates
+
+Batch 15: 2 candidates
+
+Batch 16: 2 candidates
+
+Batch 17: 2 candidates
+
+Batch 18: 2 candidates
+
+Batch 19: 2 candidates
+
+============================================================
+SUMMARY
+============================================================
+Generator: σ_2
+Prime: p=7
+Total candidates with projlen=1: 39
+Verified kernel elements: 0
+Rejected kernel candidates: 39
+Rejected exact trivial commutators: 39
+Wrote /home/as4843/project_pi_com36/as4843/braids-summer-research/results/structural_kernel_fixed/commutator_p7_g2_seed1/frontier.json.gz

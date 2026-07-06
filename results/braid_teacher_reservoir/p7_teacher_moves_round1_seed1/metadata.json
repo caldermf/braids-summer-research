@@ -1,0 +1,53 @@
+{
+  "elapsed_seconds": 334.56,
+  "format": "braid-teacher-reservoir-moves-v1",
+  "left_lengths": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "max_factors": 180,
+  "n": 4,
+  "objective": {
+    "degeneracy_weight": 1.0,
+    "identity_density_weight": 8.0,
+    "identity_weight": 1.0,
+    "kernel_bonus": 10000.0,
+    "min_score_length": 45,
+    "projlen_density_weight": 4.0,
+    "projlen_weight": 0.25
+  },
+  "p": 7,
+  "r": 1,
+  "right_lengths": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "scored_moves": 132917,
+  "seed": 1,
+  "seed_count": 800,
+  "seed_sources": [
+    "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/braid_diffusion_repair/p7_self_elite_search_round1_len50_70/summary.json",
+    "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/braid_diffusion_repair/p7_self_elite_search_round1_len70_90/summary.json",
+    "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/braid_diffusion_repair/p7_self_elite_search_round1_len90_110/summary.json",
+    "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/braid_diffusion_repair/p7_self_elite_search_round1_len110_130/summary.json",
+    "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/braid_diffusion_repair/p7_self_elites_round1/p7_search_best_elites.jsonl"
+  ],
+  "teacher_moves": 174,
+  "window_widths": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ]
+}

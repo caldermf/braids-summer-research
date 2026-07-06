@@ -1,0 +1,62 @@
+{"elapsed_seconds": 0.26, "finite_heap_size": 272, "finite_hits_seen": 272, "length": 2, "phase": "length_done", "tested": 164}
+{"elapsed_seconds": 2.0, "finite_heap_size": 1780, "finite_hits_seen": 1780, "length": 3, "phase": "length_done", "tested": 1146}
+{"elapsed_seconds": 16.72, "finite_heap_size": 8000, "finite_hits_seen": 8688, "length": 4, "phase": "length_done", "tested": 6674}
+{"elapsed_seconds": 30.1, "finite_heap_size": 8000, "finite_hits_seen": 14974, "length": 5, "phase": "scan", "rows_this_length": 6798, "tested": 13472}
+{"elapsed_seconds": 60.11, "finite_heap_size": 8000, "finite_hits_seen": 28643, "length": 5, "phase": "scan", "rows_this_length": 21989, "tested": 28663}
+{"elapsed_seconds": 81.32, "finite_heap_size": 8000, "finite_hits_seen": 36309, "length": 5, "phase": "length_done", "tested": 37148}
+{"elapsed_seconds": 90.11, "finite_heap_size": 8000, "finite_hits_seen": 40244, "length": 6, "phase": "scan", "rows_this_length": 4751, "tested": 41899}
+{"elapsed_seconds": 120.11, "finite_heap_size": 8000, "finite_hits_seen": 52738, "length": 6, "phase": "scan", "rows_this_length": 20503, "tested": 57651}
+{"elapsed_seconds": 150.11, "finite_heap_size": 8000, "finite_hits_seen": 64739, "length": 6, "phase": "scan", "rows_this_length": 36007, "tested": 73155}
+{"elapsed_seconds": 177.04, "finite_heap_size": 8000, "finite_hits_seen": 75714, "length": 6, "phase": "length_done", "tested": 87148}
+{"elapsed_seconds": 180.11, "finite_heap_size": 8000, "finite_hits_seen": 76955, "length": 7, "phase": "scan", "rows_this_length": 1637, "tested": 88785}
+{"elapsed_seconds": 210.11, "finite_heap_size": 8000, "finite_hits_seen": 89127, "length": 7, "phase": "scan", "rows_this_length": 17871, "tested": 105019}
+{"elapsed_seconds": 240.12, "finite_heap_size": 8000, "finite_hits_seen": 101030, "length": 7, "phase": "scan", "rows_this_length": 34076, "tested": 121224}
+{"elapsed_seconds": 269.81, "finite_heap_size": 8000, "finite_hits_seen": 112811, "length": 7, "phase": "length_done", "tested": 137148}
+{"elapsed_seconds": 270.12, "finite_heap_size": 8000, "finite_hits_seen": 112942, "length": 8, "phase": "scan", "rows_this_length": 179, "tested": 137327}
+{"elapsed_seconds": 300.12, "finite_heap_size": 8000, "finite_hits_seen": 124888, "length": 8, "phase": "scan", "rows_this_length": 16611, "tested": 153759}
+{"elapsed_seconds": 330.12, "finite_heap_size": 8000, "finite_hits_seen": 136967, "length": 8, "phase": "scan", "rows_this_length": 33049, "tested": 170197}
+{"elapsed_seconds": 360.12, "finite_heap_size": 8000, "finite_hits_seen": 148578, "length": 8, "phase": "scan", "rows_this_length": 49179, "tested": 186327}
+{"elapsed_seconds": 361.66, "finite_heap_size": 8000, "finite_hits_seen": 149131, "length": 8, "phase": "length_done", "tested": 187148}
+{"elapsed_seconds": 390.12, "finite_heap_size": 8000, "finite_hits_seen": 160248, "length": 9, "phase": "scan", "rows_this_length": 15199, "tested": 202347}
+{"elapsed_seconds": 420.12, "finite_heap_size": 8000, "finite_hits_seen": 171837, "length": 9, "phase": "scan", "rows_this_length": 31162, "tested": 218310}
+{"elapsed_seconds": 450.13, "finite_heap_size": 8000, "finite_hits_seen": 183417, "length": 9, "phase": "scan", "rows_this_length": 47140, "tested": 234288}
+{"elapsed_seconds": 455.57, "finite_heap_size": 8000, "finite_hits_seen": 185464, "length": 9, "phase": "length_done", "tested": 237148}
+{"elapsed_seconds": 480.13, "finite_heap_size": 8000, "finite_hits_seen": 192522, "length": 10, "phase": "scan", "rows_this_length": 13027, "tested": 250175}
+{"elapsed_seconds": 510.13, "finite_heap_size": 8000, "finite_hits_seen": 201019, "length": 10, "phase": "scan", "rows_this_length": 29016, "tested": 266164}
+{"elapsed_seconds": 540.13, "finite_heap_size": 8000, "finite_hits_seen": 209520, "length": 10, "phase": "scan", "rows_this_length": 45003, "tested": 282151}
+{"elapsed_seconds": 549.5, "finite_heap_size": 8000, "finite_hits_seen": 212278, "length": 10, "phase": "length_done", "tested": 287148}
+{"elapsed_seconds": 570.13, "finite_heap_size": 8000, "finite_hits_seen": 217530, "length": 11, "phase": "scan", "rows_this_length": 10683, "tested": 297831}
+{"elapsed_seconds": 600.13, "finite_heap_size": 8000, "finite_hits_seen": 225609, "length": 11, "phase": "scan", "rows_this_length": 26519, "tested": 313667}
+{"elapsed_seconds": 630.14, "finite_heap_size": 8000, "finite_hits_seen": 233309, "length": 11, "phase": "scan", "rows_this_length": 42097, "tested": 329245}
+{"elapsed_seconds": 645.41, "finite_heap_size": 8000, "finite_hits_seen": 237242, "length": 11, "phase": "length_done", "tested": 337148}
+{"elapsed_seconds": 660.14, "finite_heap_size": 8000, "finite_hits_seen": 241085, "length": 12, "phase": "scan", "rows_this_length": 7675, "tested": 344823}
+{"elapsed_seconds": 690.14, "finite_heap_size": 8000, "finite_hits_seen": 248812, "length": 12, "phase": "scan", "rows_this_length": 23312, "tested": 360460}
+{"elapsed_seconds": 720.14, "finite_heap_size": 8000, "finite_hits_seen": 256585, "length": 12, "phase": "scan", "rows_this_length": 38942, "tested": 376090}
+{"elapsed_seconds": 741.05, "finite_heap_size": 8000, "finite_hits_seen": 262186, "length": 12, "phase": "length_done", "tested": 387148}
+{"elapsed_seconds": 750.14, "finite_heap_size": 8000, "finite_hits_seen": 264249, "length": 13, "phase": "scan", "rows_this_length": 4729, "tested": 391877}
+{"elapsed_seconds": 780.14, "finite_heap_size": 8000, "finite_hits_seen": 270582, "length": 13, "phase": "scan", "rows_this_length": 20253, "tested": 407401}
+{"elapsed_seconds": 810.14, "finite_heap_size": 8000, "finite_hits_seen": 276912, "length": 13, "phase": "scan", "rows_this_length": 35588, "tested": 422736}
+{"elapsed_seconds": 838.19, "finite_heap_size": 8000, "finite_hits_seen": 282943, "length": 13, "phase": "length_done", "tested": 437148}
+{"elapsed_seconds": 840.15, "finite_heap_size": 8000, "finite_hits_seen": 283264, "length": 14, "phase": "scan", "rows_this_length": 1002, "tested": 438150}
+{"elapsed_seconds": 870.15, "finite_heap_size": 8000, "finite_hits_seen": 288201, "length": 14, "phase": "scan", "rows_this_length": 16140, "tested": 453288}
+{"elapsed_seconds": 900.15, "finite_heap_size": 8000, "finite_hits_seen": 293368, "length": 14, "phase": "scan", "rows_this_length": 31437, "tested": 468585}
+{"elapsed_seconds": 930.15, "finite_heap_size": 8000, "finite_hits_seen": 298567, "length": 14, "phase": "scan", "rows_this_length": 46748, "tested": 483896}
+{"elapsed_seconds": 936.48, "finite_heap_size": 8000, "finite_hits_seen": 299634, "length": 14, "phase": "length_done", "tested": 487148}
+{"elapsed_seconds": 960.15, "finite_heap_size": 8000, "finite_hits_seen": 303549, "length": 15, "phase": "scan", "rows_this_length": 11865, "tested": 499013}
+{"elapsed_seconds": 990.16, "finite_heap_size": 8000, "finite_hits_seen": 308721, "length": 15, "phase": "scan", "rows_this_length": 27031, "tested": 514179}
+{"elapsed_seconds": 1020.16, "finite_heap_size": 8000, "finite_hits_seen": 313859, "length": 15, "phase": "scan", "rows_this_length": 42270, "tested": 529418}
+{"elapsed_seconds": 1035.51, "finite_heap_size": 8000, "finite_hits_seen": 316423, "length": 15, "phase": "length_done", "tested": 537148}
+{"elapsed_seconds": 1050.16, "finite_heap_size": 8000, "finite_hits_seen": 318767, "length": 16, "phase": "scan", "rows_this_length": 7359, "tested": 544507}
+{"elapsed_seconds": 1080.17, "finite_heap_size": 8000, "finite_hits_seen": 323440, "length": 16, "phase": "scan", "rows_this_length": 22289, "tested": 559437}
+{"elapsed_seconds": 1110.17, "finite_heap_size": 8000, "finite_hits_seen": 328226, "length": 16, "phase": "scan", "rows_this_length": 37297, "tested": 574445}
+{"elapsed_seconds": 1135.5, "finite_heap_size": 8000, "finite_hits_seen": 332256, "length": 16, "phase": "length_done", "tested": 587148}
+{"elapsed_seconds": 1140.17, "finite_heap_size": 8000, "finite_hits_seen": 332958, "length": 17, "phase": "scan", "rows_this_length": 2316, "tested": 589464}
+{"elapsed_seconds": 1170.17, "finite_heap_size": 8000, "finite_hits_seen": 337624, "length": 17, "phase": "scan", "rows_this_length": 17079, "tested": 604227}
+{"elapsed_seconds": 1200.17, "finite_heap_size": 8000, "finite_hits_seen": 342340, "length": 17, "phase": "scan", "rows_this_length": 32044, "tested": 619192}
+{"elapsed_seconds": 1230.17, "finite_heap_size": 8000, "finite_hits_seen": 347131, "length": 17, "phase": "scan", "rows_this_length": 46949, "tested": 634097}
+{"elapsed_seconds": 1236.34, "finite_heap_size": 8000, "finite_hits_seen": 348075, "length": 17, "phase": "length_done", "tested": 637148}
+{"elapsed_seconds": 1260.17, "finite_heap_size": 8000, "finite_hits_seen": 351713, "length": 18, "phase": "scan", "rows_this_length": 11603, "tested": 648751}
+{"elapsed_seconds": 1290.18, "finite_heap_size": 8000, "finite_hits_seen": 356406, "length": 18, "phase": "scan", "rows_this_length": 26513, "tested": 663661}
+{"elapsed_seconds": 1320.18, "finite_heap_size": 8000, "finite_hits_seen": 361088, "length": 18, "phase": "scan", "rows_this_length": 41466, "tested": 678614}
+{"elapsed_seconds": 1337.43, "finite_heap_size": 8000, "finite_hits_seen": 363777, "length": 18, "phase": "length_done", "tested": 687148}
+{"elapsed_seconds": 1350.1, "exact_checked": 1500, "exact_skipped": 2, "finite_hits_seen": 363777, "finite_survivors_kept": 8000, "finite_words_tested": 687148, "phase": "done", "usable_kernel_hits": 0}

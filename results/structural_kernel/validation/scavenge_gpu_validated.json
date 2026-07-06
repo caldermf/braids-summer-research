@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "algorithm": "structural-kernel-experiments-v1",
+  "partition": "scavenge_gpu",
+  "gpu": "NVIDIA L40S",
+  "pytorch": "2.11.0+cu130",
+  "cuda_runtime": "13.0",
+  "ordinary_cpu_gpu_words": 16,
+  "commutator_cpu_gpu_words": 16,
+  "commutator_generator": 1,
+  "known_p5_kernel_verified": true,
+  "known_p5_datta_defects": 8,
+  "legal_edits_checked": 100
+}

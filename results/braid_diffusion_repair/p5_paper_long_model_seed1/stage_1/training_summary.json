@@ -1,0 +1,142 @@
+{
+  "best_validation_loss": 3.646580563316245e-05,
+  "history": [
+    {
+      "epoch": 1,
+      "phase": "diffusion_repair_train",
+      "stage_max_noise_level": 1,
+      "train": {
+        "exact_action": 0.9836727823598721,
+        "factor_exact": 0.990725467093082,
+        "factor_loss": 0.053255933893657466,
+        "factor_slot_top1": 0.990725467093082,
+        "loss": 0.13508295460740985,
+        "position_loss": 0.07725244257906613,
+        "position_top1": 0.9860461201817876,
+        "width_loss": 0.013070223874446887,
+        "width_top1": 0.9992425517589631
+      },
+      "validation": {
+        "exact_action": 1.0,
+        "factor_exact": 1.0,
+        "factor_loss": 0.0005664111915910286,
+        "factor_slot_top1": 1.0,
+        "loss": 0.0008078100974932146,
+        "position_loss": 7.330996133682687e-05,
+        "position_top1": 1.0,
+        "width_loss": 0.0004802541510392008,
+        "width_top1": 1.0
+      }
+    },
+    {
+      "epoch": 2,
+      "phase": "diffusion_repair_train",
+      "stage_max_noise_level": 1,
+      "train": {
+        "exact_action": 1.0,
+        "factor_exact": 1.0,
+        "factor_loss": 0.0004408183532918743,
+        "factor_slot_top1": 1.0,
+        "loss": 0.000645300804518547,
+        "position_loss": 8.570397672752658e-05,
+        "position_top1": 1.0,
+        "width_loss": 0.0003393670757131418,
+        "width_top1": 1.0
+      },
+      "validation": {
+        "exact_action": 1.0,
+        "factor_exact": 1.0,
+        "factor_loss": 0.00018826132243436467,
+        "factor_slot_top1": 1.0,
+        "loss": 0.0002646280156749592,
+        "position_loss": 2.3853286570552156e-05,
+        "position_top1": 1.0,
+        "width_loss": 0.00015003831098581386,
+        "width_top1": 1.0
+      }
+    },
+    {
+      "epoch": 3,
+      "phase": "diffusion_repair_train",
+      "stage_max_noise_level": 1,
+      "train": {
+        "exact_action": 1.0,
+        "factor_exact": 1.0,
+        "factor_loss": 0.00017621387064298922,
+        "factor_slot_top1": 1.0,
+        "loss": 0.0002555550642124948,
+        "position_loss": 3.435332753359078e-05,
+        "position_top1": 1.0,
+        "width_loss": 0.00012853676342936056,
+        "width_top1": 1.0
+      },
+      "validation": {
+        "exact_action": 1.0,
+        "factor_exact": 1.0,
+        "factor_loss": 8.738135917783546e-05,
+        "factor_slot_top1": 1.0,
+        "loss": 0.0001222594220027693,
+        "position_loss": 1.1163433308696366e-05,
+        "position_top1": 1.0,
+        "width_loss": 6.775608457226784e-05,
+        "width_top1": 1.0
+      }
+    },
+    {
+      "epoch": 4,
+      "phase": "diffusion_repair_train",
+      "stage_max_noise_level": 1,
+      "train": {
+        "exact_action": 1.0,
+        "factor_exact": 1.0,
+        "factor_loss": 8.843023743614044e-05,
+        "factor_slot_top1": 1.0,
+        "loss": 0.0001275781914374772,
+        "position_loss": 1.7306540135912115e-05,
+        "position_top1": 1.0,
+        "width_loss": 6.240404119972165e-05,
+        "width_top1": 1.0
+      },
+      "validation": {
+        "exact_action": 1.0,
+        "factor_exact": 1.0,
+        "factor_loss": 4.654828715779408e-05,
+        "factor_slot_top1": 1.0,
+        "loss": 6.460940237554282e-05,
+        "position_loss": 5.919004035524609e-06,
+        "position_top1": 1.0,
+        "width_loss": 3.469174760633554e-05,
+        "width_top1": 1.0
+      }
+    },
+    {
+      "epoch": 5,
+      "phase": "diffusion_repair_train",
+      "stage_max_noise_level": 1,
+      "train": {
+        "exact_action": 1.0,
+        "factor_exact": 1.0,
+        "factor_loss": 4.8817400044851226e-05,
+        "factor_slot_top1": 1.0,
+        "loss": 7.017314690428288e-05,
+        "position_loss": 9.609528343329826e-06,
+        "position_top1": 1.0,
+        "width_loss": 3.356062496515313e-05,
+        "width_top1": 1.0
+      },
+      "validation": {
+        "exact_action": 1.0,
+        "factor_exact": 1.0,
+        "factor_loss": 2.6381478116412815e-05,
+        "factor_slot_top1": 1.0,
+        "loss": 3.646580563316245e-05,
+        "position_loss": 3.339225731603995e-06,
+        "position_top1": 1.0,
+        "width_loss": 1.9271719724100612e-05,
+        "width_top1": 1.0
+      }
+    }
+  ],
+  "selected_examples": 62537,
+  "stage_max_noise_level": 1
+}

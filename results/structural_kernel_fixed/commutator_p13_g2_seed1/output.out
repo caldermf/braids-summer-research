@@ -1,0 +1,21 @@
+Python executable: /home/as4843/braids-torch-cu130/bin/python
+sys.executable: /home/as4843/braids-torch-cu130/bin/python
+PyTorch: 2.11.0+cu130
+Bundled CUDA: 13.0
+============================================================
+COMMUTATOR SEARCH: [σ_2, g^{-1}] for p=13
+============================================================
+Device: cuda
+Bucket size: 20000
+Max length: 40
+Bootstrap length: 5
+Prime: 13
+Generator: σ_2
+Degree window: [-160, 160] (321 coeffs, centered)
+Use best: 30000
+Expansion chunk size: 50000
+Matmul chunk size: 8000
+
+ERROR: Could not find table file for p=13
+Searched in: ['/nfs/roberts/project/pi_com36/as4843/braids-summer-research/structural-kernel-experiments/third_party/commutator_search/precomputed_tables/tables_B4_r1_p13.pt', '/nfs/roberts/project/pi_com36/as4843/braids-summer-research/structural-kernel-experiments/third_party/precomputed_tables/tables_B4_r1_p13.pt', '/nfs/roberts/project/pi_com36/as4843/braids-summer-research/structural-kernel-experiments/third_party/commutator_search/tables_B4_r1_p13.pt', 'tables_B4_r1_p13.pt']
+Wrote /home/as4843/project_pi_com36/as4843/braids-summer-research/results/structural_kernel_fixed/commutator_p13_g2_seed1/frontier.json.gz

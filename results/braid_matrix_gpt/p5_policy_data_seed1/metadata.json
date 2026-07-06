@@ -1,0 +1,59 @@
+{
+  "elapsed_seconds": 4825.53,
+  "format": "braid-matrix-gpt-policy-dataset-v1",
+  "kernel_prefix_examples": 0,
+  "label_histogram": {
+    "1": 11588,
+    "2": 5098,
+    "3": 4098,
+    "4": 5400,
+    "5": 89,
+    "6": 15550,
+    "7": 1183,
+    "8": 4842,
+    "9": 9490,
+    "10": 375,
+    "11": 428,
+    "12": 7328,
+    "13": 4403,
+    "14": 118,
+    "15": 44,
+    "16": 14968,
+    "17": 66,
+    "18": 13406,
+    "19": 56,
+    "20": 566,
+    "21": 839,
+    "22": 65
+  },
+  "lookahead": 2,
+  "matrix_channels": [
+    "projectivized_raw",
+    "residual_to_scalar"
+  ],
+  "matrix_dim": 3,
+  "matrix_max_degree": 256,
+  "max_factors": 128,
+  "max_length": 72,
+  "min_length": 12,
+  "n": 4,
+  "objective": {
+    "degeneracy_weight": 1.0,
+    "identity_density_weight": 8.0,
+    "identity_weight": 1.0,
+    "kernel_bonus": 10000.0,
+    "min_score_length": 45,
+    "projlen_density_weight": 4.0,
+    "projlen_weight": 0.25
+  },
+  "p": 5,
+  "r": 1,
+  "rollouts_per_action": 4,
+  "seed": 1,
+  "source_histogram": {
+    "random_policy": 100000
+  },
+  "state_count": 100000,
+  "target_temperature": 0.35,
+  "total_count": 100000
+}

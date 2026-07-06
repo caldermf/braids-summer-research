@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/Braid-Teacher-Reservoir/teacher_reservoir.py", line 1595, in <module>
+    main()
+  File "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/Braid-Teacher-Reservoir/teacher_reservoir.py", line 1591, in main
+    args.func(args)
+  File "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/Braid-Teacher-Reservoir/teacher_reservoir.py", line 891, in train
+    raise RuntimeError("init checkpoint config does not match current dataset/model config")
+RuntimeError: init checkpoint config does not match current dataset/model config

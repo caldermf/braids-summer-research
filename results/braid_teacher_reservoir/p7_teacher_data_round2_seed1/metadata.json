@@ -1,0 +1,59 @@
+{
+  "action_histogram": {
+    "left": 82281,
+    "replace": 18551,
+    "right": 18324
+  },
+  "delete_width_histogram": {
+    "0": 100605,
+    "2": 9551,
+    "3": 4382,
+    "4": 2058,
+    "5": 963,
+    "6": 551,
+    "7": 315,
+    "8": 212,
+    "9": 174,
+    "10": 155,
+    "11": 107,
+    "12": 83
+  },
+  "elapsed_seconds": 75.52,
+  "example_count": 119156,
+  "format": "braid-teacher-reservoir-dataset-v1",
+  "insert_width_histogram": {
+    "1": 54858,
+    "2": 42095,
+    "3": 14486,
+    "4": 4440,
+    "5": 1521,
+    "6": 673,
+    "7": 347,
+    "8": 217,
+    "9": 174,
+    "10": 155,
+    "11": 107,
+    "12": 83
+  },
+  "matrix_dim": 3,
+  "matrix_max_degree": 256,
+  "max_delete_width": 12,
+  "max_factors": 180,
+  "max_insert_width": 12,
+  "n": 4,
+  "objective": {
+    "degeneracy_weight": 8.0,
+    "identity_density_weight": 8.0,
+    "identity_weight": 1.0,
+    "kernel_bonus": 10000.0,
+    "min_score_length": 50,
+    "projlen_density_weight": 4.0,
+    "projlen_weight": 0.8
+  },
+  "p": 7,
+  "r": 1,
+  "seed": 1,
+  "teacher_moves": [
+    "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/braid_teacher_reservoir/p7_teacher_moves_round2_seed1/teacher_moves.jsonl"
+  ]
+}

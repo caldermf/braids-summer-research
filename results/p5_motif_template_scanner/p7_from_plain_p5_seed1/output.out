@@ -1,0 +1,15 @@
+{"evaluated": 500, "total": 6722, "best_width_so_far": 83, "best_defect_so_far": 286, "kernel_hits_so_far": 0}
+{"evaluated": 1000, "total": 6722, "best_width_so_far": 83, "best_defect_so_far": 286, "kernel_hits_so_far": 0}
+{"evaluated": 1500, "total": 6722, "best_width_so_far": 83, "best_defect_so_far": 286, "kernel_hits_so_far": 0}
+{"evaluated": 2000, "total": 6722, "best_width_so_far": 83, "best_defect_so_far": 286, "kernel_hits_so_far": 0}
+{"evaluated": 2500, "total": 6722, "best_width_so_far": 83, "best_defect_so_far": 286, "kernel_hits_so_far": 0}
+{"evaluated": 3000, "total": 6722, "best_width_so_far": 83, "best_defect_so_far": 286, "kernel_hits_so_far": 0}
+{"evaluated": 3500, "total": 6722, "best_width_so_far": 83, "best_defect_so_far": 286, "kernel_hits_so_far": 0}
+{"evaluated": 4000, "total": 6722, "best_width_so_far": 83, "best_defect_so_far": 286, "kernel_hits_so_far": 0}
+{"evaluated": 4500, "total": 6722, "best_width_so_far": 83, "best_defect_so_far": 286, "kernel_hits_so_far": 0}
+{"evaluated": 5000, "total": 6722, "best_width_so_far": 83, "best_defect_so_far": 286, "kernel_hits_so_far": 0}
+{"evaluated": 5500, "total": 6722, "best_width_so_far": 33, "best_defect_so_far": 101, "kernel_hits_so_far": 0}
+{"evaluated": 6000, "total": 6722, "best_width_so_far": 33, "best_defect_so_far": 101, "kernel_hits_so_far": 0}
+{"evaluated": 6500, "total": 6722, "best_width_so_far": 33, "best_defect_so_far": 101, "kernel_hits_so_far": 0}
+{"evaluated": 6722, "total": 6722, "best_width_so_far": 33, "best_defect_so_far": 101, "kernel_hits_so_far": 0}
+{"summary": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/p5_motif_template_scanner/p7_from_plain_p5_seed1/summary.json", "seed_count": 13, "legal_seed_count": 13, "skipped_seed_indices": [], "template_count": 13, "candidate_count": 6722, "candidate_sources": {"seed": 17, "repeat_count": 151, "boundary_single_mutation": 4898, "boundary_bridge_mutation": 1389, "block_swap": 267}, "candidate_lengths": {"17": 48, "19": 42, "29": 88, "31": 80, "41": 320, "43": 84, "53": 647, "55": 84, "65": 718, "67": 84, "77": 680, "79": 82, "89": 683, "91": 82, "101": 680, "103": 84, "113": 731, "115": 82, "125": 639, "137": 630, "149": 154}}

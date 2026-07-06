@@ -1,0 +1,6 @@
+{"loaded_evaluations": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/p5_motif_template_scanner/p7_from_plain_p5_seed1/evaluations.jsonl", "label": "p7_motif", "rows_seen": 6722, "band_memberships_seen": 6722, "selected": 104}
+{"loaded_evaluations": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/p7_seeded_motif_repair/crispr_from_suffix_seed1/evaluations.jsonl", "label": "p7_crispr", "rows_seen": 776077, "band_memberships_seen": 776077, "selected": 279}
+{"loaded_checkpoint": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/collision_reservoir/plain_p5_seed1/frontier.json.gz", "label": "p5_plain", "selected": 100}
+{"audited": 500, "total": 582}
+{"audited": 582, "total": 582}
+{"summary": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/p7_invariant_audit/crispr_motif_p5_seed1/summary.json", "rows": "/home/as4843/project_pi_com36/as4843/braids-summer-research/results/p7_invariant_audit/crispr_motif_p5_seed1/audit_rows.jsonl", "audited": 582}

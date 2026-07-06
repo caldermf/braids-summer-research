@@ -1,0 +1,62 @@
+{
+  "elapsed_seconds": 14373.37,
+  "format": "braid-teacher-reservoir-moves-v1",
+  "left_lengths": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "max_factors": 180,
+  "n": 4,
+  "objective": {
+    "degeneracy_weight": 8.0,
+    "identity_density_weight": 8.0,
+    "identity_weight": 1.0,
+    "kernel_bonus": 10000.0,
+    "min_score_length": 50,
+    "projlen_density_weight": 4.0,
+    "projlen_weight": 0.8
+  },
+  "p": 7,
+  "r": 1,
+  "right_lengths": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "scored_moves": 10894962,
+  "seed": 1,
+  "seed_count": 25000,
+  "seed_sources": [
+    "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/braid_teacher_reservoir/p7_round2_sources/p7_seed8_elites_top2000_per_length_50_160.jsonl",
+    "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/braid_teacher_reservoir/p7_teacher_search_round1_len50_70_strict_seed1/summary.json",
+    "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/braid_teacher_reservoir/p7_teacher_search_round1_len70_90_strict_seed1/summary.json",
+    "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/braid_teacher_reservoir/p7_teacher_search_round1_len90_110_strict_seed1/summary.json",
+    "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/braid_teacher_reservoir/p7_teacher_search_round1_len110_130_strict_seed1/summary.json",
+    "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/braid_teacher_reservoir/p7_teacher_search_round1_len130_160_strict_seed1/summary.json"
+  ],
+  "teacher_moves": 119156,
+  "window_widths": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ]
+}

@@ -1,0 +1,4 @@
+/nfs/roberts/project/pi_com36/as4843/braids-summer-research/Braid-GPT/braid_gpt.py:551: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.encoder = nn.TransformerEncoder(layer, num_layers=cfg.num_layers)
+/home/as4843/braids-torch-cu130/lib/python3.10/site-packages/torch/nn/modules/transformer.py:431: UserWarning: Support for mismatched src_key_padding_mask and mask is deprecated. Use same type for both instead.
+  src_key_padding_mask = F._canonical_mask(

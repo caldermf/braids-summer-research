@@ -1,0 +1,11 @@
+{
+  "elapsed_seconds": 0.02,
+  "format": "braid-gpt-pretrain-dataset-v1",
+  "max_factors": 8,
+  "max_length": 5,
+  "min_length": 2,
+  "n": 4,
+  "p": 7,
+  "seed": 1,
+  "sequence_count": 8
+}

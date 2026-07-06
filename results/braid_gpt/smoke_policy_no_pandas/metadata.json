@@ -1,0 +1,24 @@
+{
+  "best_score_median": 121.38333129882812,
+  "best_score_min": 119.38333129882812,
+  "degeneracy_weight": 1.0,
+  "elapsed_seconds": 0.11,
+  "format": "braid-gpt-policy-dataset-v1",
+  "label_histogram": {
+    "3": 1,
+    "7": 1
+  },
+  "lookahead": 1,
+  "max_factors": 8,
+  "max_length": 4,
+  "min_length": 2,
+  "min_meaningful_length": 15,
+  "n": 4,
+  "p": 7,
+  "r": 1,
+  "rollouts_per_action": 1,
+  "seed": 1,
+  "state_count": 2,
+  "target_temperature": 8.0,
+  "width_weight": 0.15
+}
