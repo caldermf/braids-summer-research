@@ -19,8 +19,12 @@ def setup_author_imports(author_repo: Path):
     author_repo = Path(author_repo).resolve()
     if not (author_repo / "peyl" / "braid.py").exists():
         raise FileNotFoundError(f"peyl package not found under author repo: {author_repo}")
-    if str(author_repo) not in sys.path:
-        sys.path.insert(0, str(author_repo))
+    author_path = str(author_repo)
+    sys.path = [path for path in sys.path if path != author_path]
+    sys.path.insert(0, author_path)
+    for name in list(sys.modules):
+        if name == "peyl" or name.startswith("peyl."):
+            del sys.modules[name]
 
     import peyl  # type: ignore
     from peyl import polymat  # type: ignore

@@ -181,30 +181,30 @@ status
 Initial CPU search on `scavenge`:
 
 ```bash
-cd /path/to/Summer_2026-Calder/braids-summer-research/BraidZero
-sbatch jobs/01_braidzero_search_scavenge_cpu.sh
+cd /path/to/braids-summer-research
+sbatch BraidZero/jobs/01_braidzero_search_scavenge_cpu.sh
 ```
 
-Submit from the `BraidZero` directory when possible. Slurm copies batch scripts
-under `/var/spool/slurmd`, so the scripts resolve the project root from
-`SLURM_SUBMIT_DIR` rather than `$0`. If you submit from another directory, set
-`BZ_ROOT` explicitly:
+This follows the same convention as the earlier project jobs: `REPO_ROOT` is
+the `braids-summer-research` directory. Slurm copies batch scripts under
+`/var/spool/slurmd`, so the scripts intentionally avoid using `$0` as the root.
+If you submit from another directory, set `REPO_ROOT` explicitly:
 
 ```bash
-BZ_ROOT=/path/to/Summer_2026-Calder/braids-summer-research/BraidZero \
-  sbatch /path/to/Summer_2026-Calder/braids-summer-research/BraidZero/jobs/01_braidzero_search_scavenge_cpu.sh
+REPO_ROOT=/path/to/braids-summer-research \
+  sbatch /path/to/braids-summer-research/BraidZero/jobs/01_braidzero_search_scavenge_cpu.sh
 ```
 
 Train the transformer on `scavenge_gpu`:
 
 ```bash
-sbatch jobs/02_train_transformer_scavenge_gpu.sh
+sbatch BraidZero/jobs/02_train_transformer_scavenge_gpu.sh
 ```
 
 Run policy-guided CPU search on `scavenge`:
 
 ```bash
-sbatch jobs/03_policy_search_scavenge_cpu.sh
+sbatch BraidZero/jobs/03_policy_search_scavenge_cpu.sh
 ```
 
 Useful overrides:

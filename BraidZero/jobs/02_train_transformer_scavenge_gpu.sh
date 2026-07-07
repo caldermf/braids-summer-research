@@ -17,40 +17,11 @@
 
 set -euo pipefail
 
-resolve_braidzero_root() {
-  local candidates=()
-  if [[ -n "${BZ_ROOT:-}" ]]; then
-    candidates+=("$BZ_ROOT")
-  fi
-  if [[ -n "${SLURM_SUBMIT_DIR:-}" ]]; then
-    candidates+=(
-      "$SLURM_SUBMIT_DIR"
-      "$SLURM_SUBMIT_DIR/BraidZero"
-      "$SLURM_SUBMIT_DIR/braids-summer-research/BraidZero"
-    )
-  fi
-  candidates+=(
-    "$(pwd)"
-    "$(pwd)/BraidZero"
-    "$(pwd)/braids-summer-research/BraidZero"
-  )
-  for candidate in "${candidates[@]}"; do
-    if [[ -d "$candidate/braidzero" && -d "$candidate/jobs" ]]; then
-      cd "$candidate"
-      pwd
-      return 0
-    fi
-  done
-  echo "Could not locate BraidZero root. Submit from the BraidZero folder or set BZ_ROOT=/path/to/BraidZero." >&2
-  return 1
-}
-
-BZ_ROOT="$(resolve_braidzero_root)"
-SUMMER_ROOT="$(cd "$BZ_ROOT/.." && pwd)"
-
+REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-$(pwd)}}"
+PROJECT_ROOT="${PROJECT_ROOT:-$REPO_ROOT/BraidZero}"
 PYTHON_PATH="${PYTHON_PATH:-/home/as4843/braids-torch/bin/python}"
-DATA_PATH="${DATA_PATH:-$SUMMER_ROOT/results/BraidZero/p7_bank17_pref24_seed1/training_examples.jsonl}"
-OUT_DIR="${OUT_DIR:-$SUMMER_ROOT/results/BraidZero/models/p7_oracle_transformer_seed1}"
+DATA_PATH="${DATA_PATH:-$REPO_ROOT/results/BraidZero/p7_bank17_pref24_seed1/training_examples.jsonl}"
+OUT_DIR="${OUT_DIR:-$REPO_ROOT/results/BraidZero/models/p7_oracle_transformer_seed1}"
 
 MAX_LEN="${MAX_LEN:-256}"
 D_MODEL="${D_MODEL:-512}"
@@ -61,13 +32,18 @@ EPOCHS="${EPOCHS:-20}"
 LR="${LR:-3e-4}"
 LIMIT="${LIMIT:-0}"
 
-mkdir -p "$BZ_ROOT/slurm_logs" "$OUT_DIR"
-cd "$BZ_ROOT"
+cd "$REPO_ROOT"
+mkdir -p slurm_logs "$OUT_DIR"
 export PYTHONUNBUFFERED=1
-export PYTHONPATH="$BZ_ROOT:${PYTHONPATH:-}"
+export PYTHONPATH="$PROJECT_ROOT:${PYTHONPATH:-}"
 
 if [[ ! -x "$PYTHON_PATH" ]]; then
   echo "Python executable not found at $PYTHON_PATH" >&2
+  exit 1
+fi
+if [[ ! -d "$PROJECT_ROOT/braidzero" ]]; then
+  echo "BraidZero project not found at $PROJECT_ROOT" >&2
+  echo "Submit from braids-summer-research or set REPO_ROOT=/path/to/braids-summer-research." >&2
   exit 1
 fi
 if [[ ! -f "$DATA_PATH" ]]; then

@@ -16,40 +16,10 @@
 
 set -euo pipefail
 
-resolve_braidzero_root() {
-  local candidates=()
-  if [[ -n "${BZ_ROOT:-}" ]]; then
-    candidates+=("$BZ_ROOT")
-  fi
-  if [[ -n "${SLURM_SUBMIT_DIR:-}" ]]; then
-    candidates+=(
-      "$SLURM_SUBMIT_DIR"
-      "$SLURM_SUBMIT_DIR/BraidZero"
-      "$SLURM_SUBMIT_DIR/braids-summer-research/BraidZero"
-    )
-  fi
-  candidates+=(
-    "$(pwd)"
-    "$(pwd)/BraidZero"
-    "$(pwd)/braids-summer-research/BraidZero"
-  )
-  for candidate in "${candidates[@]}"; do
-    if [[ -d "$candidate/braidzero" && -d "$candidate/jobs" ]]; then
-      cd "$candidate"
-      pwd
-      return 0
-    fi
-  done
-  echo "Could not locate BraidZero root. Submit from the BraidZero folder or set BZ_ROOT=/path/to/BraidZero." >&2
-  return 1
-}
-
-BZ_ROOT="$(resolve_braidzero_root)"
-SUMMER_ROOT="$(cd "$BZ_ROOT/.." && pwd)"
-WORKSPACE_ROOT="$(cd "$SUMMER_ROOT/.." && pwd)"
-
+REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-$(pwd)}}"
+PROJECT_ROOT="${PROJECT_ROOT:-$REPO_ROOT/BraidZero}"
 PYTHON_PATH="${PYTHON_PATH:-/home/as4843/braids-torch/bin/python}"
-AUTHOR_REPO="${AUTHOR_REPO:-$WORKSPACE_ROOT/braids-project}"
+AUTHOR_REPO="${AUTHOR_REPO:-$REPO_ROOT/structural-kernel-experiments/third_party/braids_project}"
 
 P="${P:-7}"
 N="${N:-4}"
@@ -71,15 +41,20 @@ STOP_AFTER_VERIFIED_KERNEL="${STOP_AFTER_VERIFIED_KERNEL:-0}"
 STOP_AFTER_SCALAR_IDENTITY="${STOP_AFTER_SCALAR_IDENTITY:-0}"
 
 RUN_NAME="${RUN_NAME:-p${P}_bank${BANK_LENGTH}_pref${PREFIX_LENGTH}_seed${SEED}}"
-OUTPUT_DIR="${OUTPUT_DIR:-$SUMMER_ROOT/results/BraidZero/$RUN_NAME}"
+OUTPUT_DIR="${OUTPUT_DIR:-$REPO_ROOT/results/BraidZero/$RUN_NAME}"
 
-mkdir -p "$BZ_ROOT/slurm_logs" "$OUTPUT_DIR"
-cd "$BZ_ROOT"
+cd "$REPO_ROOT"
+mkdir -p slurm_logs "$OUTPUT_DIR"
 export PYTHONUNBUFFERED=1
-export PYTHONPATH="$BZ_ROOT:$AUTHOR_REPO:${PYTHONPATH:-}"
+export PYTHONPATH="$PROJECT_ROOT:$AUTHOR_REPO:${PYTHONPATH:-}"
 
 if [[ ! -x "$PYTHON_PATH" ]]; then
   echo "Python executable not found at $PYTHON_PATH" >&2
+  exit 1
+fi
+if [[ ! -d "$PROJECT_ROOT/braidzero" ]]; then
+  echo "BraidZero project not found at $PROJECT_ROOT" >&2
+  echo "Submit from braids-summer-research or set REPO_ROOT=/path/to/braids-summer-research." >&2
   exit 1
 fi
 if [[ ! -d "$AUTHOR_REPO/peyl" ]]; then
