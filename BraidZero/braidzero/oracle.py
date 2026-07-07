@@ -175,9 +175,13 @@ class ShadowOracle:
         prefix_matrices: MatrixTuple,
         *,
         legal_first: Sequence[int],
+        target_matrices: MatrixTuple | None = None,
         limit: int,
     ) -> tuple[int, tuple[ShadowRecord, ...]]:
-        needed = self.env.finite_key(self.env.finite_inverse(prefix_matrices))
+        target_matrices = target_matrices if target_matrices is not None else self.env.identity_finite
+        needed = self.env.finite_key(
+            self.env.finite_mul(self.env.finite_inverse(prefix_matrices), target_matrices)
+        )
         legal = set(int(x) for x in legal_first)
         records = tuple(record for record in self.index.get(needed, ()) if record.first in legal)
         total = len(records)

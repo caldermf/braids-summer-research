@@ -229,12 +229,12 @@ Useful overrides:
 
 ```bash
 P=7 SEED=3 BANK_LENGTH=18 BANK_SAMPLES=1000000 PREFIX_LENGTH=28 BEAM_SIZE=50000 \
-  sbatch jobs/01_braidzero_search_scavenge_cpu.sh
+  sbatch BraidZero/jobs/01_braidzero_search_scavenge_cpu.sh
 ```
 
 ```bash
 DATA_PATH=/path/to/training_examples.jsonl D_MODEL=768 LAYERS=12 HEADS=12 \
-  sbatch jobs/02_train_transformer_scavenge_gpu.sh
+  sbatch BraidZero/jobs/02_train_transformer_scavenge_gpu.sh
 ```
 
 ## Recommended First Runs
@@ -244,7 +244,19 @@ Use p=5 as the control:
 ```bash
 P=5 SEED=1 BANK_LENGTH=14 BANK_SAMPLES=200000 PREFIX_LENGTH=20 \
   RUN_NAME=p5_control_bank14_pref20_seed1 \
-  sbatch jobs/01_braidzero_search_scavenge_cpu.sh
+  sbatch BraidZero/jobs/01_braidzero_search_scavenge_cpu.sh
+```
+
+For the known paper-style p=5 recovery mechanism, include the Delta target.
+The known p=5 witnesses may map projectively to `rho(Delta)` rather than to
+the identity; two distinct exact Delta-target hits with the same matrix give a
+kernel quotient.
+
+```bash
+P=5 SEED=1 BANK_LENGTH=28 BANK_SAMPLES=750000 PREFIX_LENGTH=38 \
+  BEAM_SIZE=40000 COMPLETION_TARGETS=identity,delta \
+  RUN_NAME=p5_recovery_bank28_pref38_seed1_targets_identity_delta \
+  sbatch BraidZero/jobs/01_braidzero_search_scavenge_cpu.sh
 ```
 
 Then p=7:
@@ -252,7 +264,7 @@ Then p=7:
 ```bash
 P=7 SEED=1 BANK_LENGTH=17 BANK_SAMPLES=250000 PREFIX_LENGTH=24 \
   RUN_NAME=p7_braidzero_bank17_pref24_seed1 \
-  sbatch jobs/01_braidzero_search_scavenge_cpu.sh
+  sbatch BraidZero/jobs/01_braidzero_search_scavenge_cpu.sh
 ```
 
 The first benchmark is not only “did it find p=7?” It is:

@@ -16,6 +16,9 @@ from .ledger import RunLedger
 from .oracle import ShadowOracle, ShadowRecord
 
 
+VALID_COMPLETION_TARGETS = {"identity", "delta"}
+
+
 @dataclass
 class SearchState:
     factors: tuple[int, ...]
@@ -129,12 +132,32 @@ def compact_candidate_row(*, kind: str, factors: Sequence[int], metrics: dict, e
     }
 
 
+def candidate_rank(row: dict) -> tuple[int, int, int]:
+    metrics = row["metrics"]
+    return (
+        int(metrics["identity_defect"]),
+        int(metrics["projlen"]),
+        int(row["length"]),
+    )
+
+
+def parse_completion_targets(value: str) -> tuple[str, ...]:
+    targets = tuple(part.strip().lower() for part in value.split(",") if part.strip())
+    if not targets:
+        return ("identity",)
+    unknown = [target for target in targets if target not in VALID_COMPLETION_TARGETS]
+    if unknown:
+        raise ValueError(f"unknown completion target(s): {unknown}; valid targets are identity,delta")
+    return tuple(dict.fromkeys(targets))
+
+
 def run_search(args: argparse.Namespace) -> dict:
     start_time = time.time()
     rng = random.Random(args.seed)
     output_dir = Path(args.output_dir)
     ledger = RunLedger(output_dir=output_dir)
     t_values = parse_int_list(args.t_values, default=tuple(range(1, args.p)))
+    completion_targets = parse_completion_targets(args.completion_targets)
 
     env = BraidEnvironment(
         author_repo=Path(args.author_repo),
@@ -145,6 +168,7 @@ def run_search(args: argparse.Namespace) -> dict:
     )
     config = vars(args).copy()
     config["t_values"] = list(t_values)
+    config["completion_targets"] = list(completion_targets)
     config["representation"] = env.representation_label
     write_json(output_dir / "config.json", config)
 
@@ -198,15 +222,20 @@ def run_search(args: argparse.Namespace) -> dict:
     exact_partner_cache: dict[int, tuple[np.ndarray, str, dict]] = {}
     seen_complete_by_digest: dict[str, tuple[int, ...]] = {}
     best_scalar_identity_candidate: dict | None = None
-    best_projlen = int(initial_metrics["projlen"])
-    best_identity_defect = int(initial_metrics["identity_defect"])
+    best_target_match_candidate: dict | None = None
+    best_prefix_candidate: dict | None = None
+    best_completion_candidate: dict | None = None
+    best_projlen: int | None = None
+    best_identity_defect: int | None = None
     exact_evaluations = 0
     symbolic_factor_multiplications = 0
     finite_collision_pairs = 0
     finite_scalar_completion_pairs = 0
+    finite_target_completion_pairs = 0
     exact_collisions = 0
     verified_kernel_quotients = 0
     scalar_identity_candidates = 0
+    target_match_candidates = 0
     expanded_states = 0
     last_progress = start_time
 
@@ -228,8 +257,10 @@ def run_search(args: argparse.Namespace) -> dict:
         depth_expansions = 0
         depth_finite_collision_pairs = 0
         depth_finite_scalar_pairs = 0
+        depth_finite_target_pairs = 0
         depth_exact_collisions = 0
         depth_scalar_identities = 0
+        depth_target_matches = 0
 
         for state in beam:
             legal = env.legal_next(state.factors)
@@ -252,26 +283,50 @@ def run_search(args: argparse.Namespace) -> dict:
                 expanded_states += 1
                 depth_expansions += 1
                 child_metrics = env.exact_metrics(child_exact)
-                best_projlen = min(best_projlen, int(child_metrics["projlen"]))
-                best_identity_defect = min(best_identity_defect, int(child_metrics["identity_defect"]))
+                child_row = compact_candidate_row(
+                    kind="prefix",
+                    factors=child_factors,
+                    metrics=child_metrics,
+                )
+                if best_prefix_candidate is None or candidate_rank(child_row) < candidate_rank(best_prefix_candidate):
+                    best_prefix_candidate = child_row
+                best_projlen = (
+                    int(child_metrics["projlen"])
+                    if best_projlen is None
+                    else min(best_projlen, int(child_metrics["projlen"]))
+                )
+                best_identity_defect = (
+                    int(child_metrics["identity_defect"])
+                    if best_identity_defect is None
+                    else min(best_identity_defect, int(child_metrics["identity_defect"]))
+                )
 
                 collision_hits, collision_records = oracle.collision_partners(
                     child_key,
                     limit=args.max_collision_partners_per_prefix,
                 )
-                scalar_hits, scalar_records = oracle.scalar_suffixes(
-                    child_finite,
-                    legal_first=env.legal_next(child_factors),
-                    limit=args.max_scalar_suffixes_per_prefix,
-                )
+                scalar_hits = 0
+                target_completion_records: list[tuple[str, int, tuple[ShadowRecord, ...]]] = []
+                for target_label in completion_targets:
+                    target_hits, target_records = oracle.scalar_suffixes(
+                        child_finite,
+                        legal_first=env.legal_next(child_factors),
+                        target_matrices=env.target_finite(target_label),
+                        limit=args.max_scalar_suffixes_per_prefix,
+                    )
+                    target_completion_records.append((target_label, target_hits, target_records))
+                    finite_target_completion_pairs += target_hits
+                    depth_finite_target_pairs += target_hits
+                    if target_label == "identity":
+                        scalar_hits = target_hits
+                        finite_scalar_completion_pairs += target_hits
+                        depth_finite_scalar_pairs += target_hits
                 finite_collision_pairs += collision_hits
-                finite_scalar_completion_pairs += scalar_hits
                 depth_finite_collision_pairs += collision_hits
-                depth_finite_scalar_pairs += scalar_hits
 
                 score = state_priority(
                     metrics=child_metrics,
-                    scalar_suffix_hits=scalar_hits,
+                    scalar_suffix_hits=sum(hits for _, hits, _ in target_completion_records),
                     collision_hits=collision_hits,
                 )
                 next_states.append(
@@ -295,6 +350,7 @@ def run_search(args: argparse.Namespace) -> dict:
                         "child_projlen": int(child_metrics["projlen"]),
                         "child_identity_defect": int(child_metrics["identity_defect"]),
                         "scalar_suffix_hits": int(scalar_hits),
+                        "target_suffix_hits": int(sum(hits for _, hits, _ in target_completion_records)),
                         "collision_hits": int(collision_hits),
                         "bank_length": int(args.bank_length),
                         "depth": depth,
@@ -333,57 +389,76 @@ def run_search(args: argparse.Namespace) -> dict:
                     if args.stop_after_verified_kernel:
                         break
 
-                for suffix in scalar_records:
-                    full_factors = child_factors + suffix.factors
-                    if not env.is_legal(full_factors):
-                        continue
-                    full_exact = env.exact_append_sequence(child_exact, suffix.factors)
-                    exact_evaluations += 1
-                    symbolic_factor_multiplications += len(suffix.factors)
-                    full_metrics = env.exact_metrics(full_exact)
-                    best_projlen = min(best_projlen, int(full_metrics["projlen"]))
-                    best_identity_defect = min(best_identity_defect, int(full_metrics["identity_defect"]))
-                    full_digest = env.exact_digest(full_exact)
-                    finite_product = env.finite_mul(child_finite, env.finite_evaluate(suffix.factors))
-                    row = compact_candidate_row(
-                        kind="finite_scalar_completion",
-                        factors=full_factors,
-                        metrics=full_metrics,
-                        extra={
-                            "prefix_length": len(child_factors),
-                            "suffix_record_id": suffix.record_id,
-                            "suffix_factor_ids": list(suffix.factors),
-                            "finite_scalar_at_t_values": env.finite_scalar_flags(finite_product),
-                            "matrix_digest": full_digest,
-                        },
-                    )
-                    ledger.candidate(row)
-                    if full_metrics["scalar_identity"]:
-                        scalar_identity_candidates += 1
-                        depth_scalar_identities += 1
-                        best_scalar_identity_candidate = row
-                        print(json.dumps({"phase": "exact_scalar_identity", **row}, sort_keys=True), flush=True)
-                    prior = seen_complete_by_digest.get(full_digest)
-                    if prior is not None and prior != full_factors:
-                        exact_collisions += 1
-                        verified_kernel_quotients += 1
-                        depth_exact_collisions += 1
-                        ledger.collision(
-                            {
-                                "kind": "exact_completion_collision",
-                                "p": args.p,
-                                "representation": env.representation_label,
-                                "u_factor_ids": list(prior),
-                                "v_factor_ids": list(full_factors),
-                                "u_digest": word_digest(0, prior),
-                                "v_digest": word_digest(0, full_factors),
-                                "matrix_digest": full_digest,
-                                "v_metrics": full_metrics,
-                                "quotient_certificate": "u*v^{-1} is nontrivial because u and v are distinct positive GNF normal forms with the same exact projective matrix",
-                            }
+                for target_label, _, target_records in target_completion_records:
+                    for suffix in target_records:
+                        full_factors = child_factors + suffix.factors
+                        if not env.is_legal(full_factors):
+                            continue
+                        full_exact = env.exact_append_sequence(child_exact, suffix.factors)
+                        exact_evaluations += 1
+                        symbolic_factor_multiplications += len(suffix.factors)
+                        full_metrics = env.exact_target_metrics(full_exact, target_label)
+                        best_projlen = (
+                            int(full_metrics["projlen"])
+                            if best_projlen is None
+                            else min(best_projlen, int(full_metrics["projlen"]))
                         )
-                    else:
-                        seen_complete_by_digest[full_digest] = tuple(full_factors)
+                        best_identity_defect = (
+                            int(full_metrics["identity_defect"])
+                            if best_identity_defect is None
+                            else min(best_identity_defect, int(full_metrics["identity_defect"]))
+                        )
+                        full_digest = env.exact_digest(full_exact)
+                        finite_product = env.finite_mul(child_finite, env.finite_evaluate(suffix.factors))
+                        finite_target = env.target_finite(target_label)
+                        row = compact_candidate_row(
+                            kind="finite_target_completion",
+                            factors=full_factors,
+                            metrics=full_metrics,
+                            extra={
+                                "target_label": target_label,
+                                "prefix_length": len(child_factors),
+                                "suffix_record_id": suffix.record_id,
+                                "suffix_factor_ids": list(suffix.factors),
+                                "finite_target_at_t_values": env.finite_projective_equal_flags(finite_product, finite_target),
+                                "matrix_digest": full_digest,
+                            },
+                        )
+                        if best_completion_candidate is None or candidate_rank(row) < candidate_rank(best_completion_candidate):
+                            best_completion_candidate = row
+                        ledger.candidate(row)
+                        if full_metrics.get("scalar_identity"):
+                            scalar_identity_candidates += 1
+                            depth_scalar_identities += 1
+                            best_scalar_identity_candidate = row
+                            print(json.dumps({"phase": "exact_scalar_identity", **row}, sort_keys=True), flush=True)
+                        if full_metrics.get("target_match"):
+                            target_match_candidates += 1
+                            depth_target_matches += 1
+                            best_target_match_candidate = row
+                            print(json.dumps({"phase": "exact_target_match", **row}, sort_keys=True), flush=True)
+                        prior = seen_complete_by_digest.get(full_digest)
+                        if prior is not None and prior != full_factors:
+                            exact_collisions += 1
+                            verified_kernel_quotients += 1
+                            depth_exact_collisions += 1
+                            ledger.collision(
+                                {
+                                    "kind": "exact_completion_collision",
+                                    "p": args.p,
+                                    "representation": env.representation_label,
+                                    "target_label": target_label,
+                                    "u_factor_ids": list(prior),
+                                    "v_factor_ids": list(full_factors),
+                                    "u_digest": word_digest(0, prior),
+                                    "v_digest": word_digest(0, full_factors),
+                                    "matrix_digest": full_digest,
+                                    "v_metrics": full_metrics,
+                                    "quotient_certificate": "u*v^{-1} is nontrivial because u and v are distinct positive GNF normal forms with the same exact projective matrix",
+                                }
+                            )
+                        else:
+                            seen_complete_by_digest[full_digest] = tuple(full_factors)
 
                 if args.stop_after_verified_kernel and verified_kernel_quotients:
                     break
@@ -413,13 +488,17 @@ def run_search(args: argparse.Namespace) -> dict:
             "beam_best_identity_defect": beam_best_defect,
             "finite_collision_pairs": finite_collision_pairs,
             "finite_scalar_completion_pairs": finite_scalar_completion_pairs,
+            "finite_target_completion_pairs": finite_target_completion_pairs,
             "depth_finite_collision_pairs": depth_finite_collision_pairs,
             "depth_finite_scalar_completion_pairs": depth_finite_scalar_pairs,
+            "depth_finite_target_completion_pairs": depth_finite_target_pairs,
             "exact_collisions": exact_collisions,
             "verified_kernel_quotients": verified_kernel_quotients,
             "scalar_identity_candidates": scalar_identity_candidates,
+            "target_match_candidates": target_match_candidates,
             "depth_exact_collisions": depth_exact_collisions,
             "depth_scalar_identities": depth_scalar_identities,
+            "depth_target_matches": depth_target_matches,
             "exact_evaluations": exact_evaluations,
             "elapsed_seconds": round(time.time() - start_time, 2),
         }
@@ -452,6 +531,7 @@ def run_search(args: argparse.Namespace) -> dict:
         "seed": args.seed,
         "length_range": length_range,
         "t_values": list(t_values),
+        "completion_targets": list(completion_targets),
         "oracle": oracle.metadata,
         "search": {
             "elapsed_seconds": round(elapsed, 2),
@@ -460,12 +540,17 @@ def run_search(args: argparse.Namespace) -> dict:
             "symbolic_factor_multiplications": symbolic_factor_multiplications,
             "best_projlen": best_projlen,
             "best_identity_defect": best_identity_defect,
+            "best_prefix_candidate": best_prefix_candidate,
+            "best_completion_candidate": best_completion_candidate,
             "best_scalar_identity_candidate": best_scalar_identity_candidate,
+            "best_target_match_candidate": best_target_match_candidate,
             "finite_collision_pairs": finite_collision_pairs,
             "finite_scalar_completion_pairs": finite_scalar_completion_pairs,
+            "finite_target_completion_pairs": finite_target_completion_pairs,
             "exact_collisions": exact_collisions,
             "verified_kernel_quotients": verified_kernel_quotients,
             "scalar_identity_candidates": scalar_identity_candidates,
+            "target_match_candidates": target_match_candidates,
             "final_beam_size": len(beam),
         },
     }
@@ -478,7 +563,10 @@ def run_search(args: argparse.Namespace) -> dict:
         "number_exact_evaluations": exact_evaluations,
         "best_projlen": best_projlen,
         "best_identity_defect": best_identity_defect,
+        "best_prefix_candidate": best_prefix_candidate,
+        "best_completion_candidate": best_completion_candidate,
         "best_scalar_identity_candidate": best_scalar_identity_candidate,
+        "best_target_match_candidate": best_target_match_candidate,
         "number_exact_collisions": exact_collisions,
         "number_verified_kernel_quotients": verified_kernel_quotients,
         "verifier_version": env.verifier_version,
@@ -514,6 +602,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-actions-per-state", type=int, default=0)
     parser.add_argument("--max-collision-partners-per-prefix", type=int, default=8)
     parser.add_argument("--max-scalar-suffixes-per-prefix", type=int, default=8)
+    parser.add_argument("--completion-targets", default="identity")
     parser.add_argument("--policy-checkpoint", default="")
     parser.add_argument("--policy-device", default="cpu")
     parser.add_argument("--model-top-k", type=int, default=8)

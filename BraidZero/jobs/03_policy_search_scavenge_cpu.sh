@@ -55,6 +55,7 @@ BANK_MODE="${BANK_MODE:-random}"
 BANK_SAMPLES="${BANK_SAMPLES:-250000}"
 PREFIX_LENGTH="${PREFIX_LENGTH:-24}"
 BEAM_SIZE="${BEAM_SIZE:-25000}"
+COMPLETION_TARGETS="${COMPLETION_TARGETS:-identity}"
 MODEL_TOP_K="${MODEL_TOP_K:-8}"
 MODEL_RANDOM_EXTRA="${MODEL_RANDOM_EXTRA:-2}"
 RUN_NAME="${RUN_NAME:-p${P}_policy_bank${BANK_LENGTH}_pref${PREFIX_LENGTH}_seed${SEED}}"
@@ -103,6 +104,7 @@ fi
   --bank-samples "$BANK_SAMPLES" \
   --prefix-length "$PREFIX_LENGTH" \
   --beam-size "$BEAM_SIZE" \
+  --completion-targets "$COMPLETION_TARGETS" \
   --policy-checkpoint "$POLICY_CHECKPOINT" \
   --policy-device cpu \
   --model-top-k "$MODEL_TOP_K" \

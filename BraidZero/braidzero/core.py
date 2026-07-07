@@ -194,6 +194,30 @@ def exact_matrix_digest(polymat_module, image: np.ndarray) -> str:
     return digest.hexdigest()
 
 
+def _zeropad_last(A: np.ndarray, width: int) -> np.ndarray:
+    if A.shape[-1] == width:
+        return A
+    out = np.zeros((*A.shape[:-1], width), dtype=A.dtype)
+    out[..., : A.shape[-1]] = A
+    return out
+
+
+def target_projective_metrics(polymat_module, image: np.ndarray, target: np.ndarray, target_label: str) -> dict:
+    projected = polymat_module.projectivise(image)
+    projected_target = polymat_module.projectivise(target)
+    width = max(projected.shape[-1], projected_target.shape[-1])
+    diff = _zeropad_last(projected, width) - _zeropad_last(projected_target, width)
+    target_defect = int(np.count_nonzero(diff))
+    return {
+        "target_label": target_label,
+        "target_projlen": int(projected_target.shape[-1]),
+        "target_match": target_defect == 0,
+        "target_defect": target_defect,
+        "projlen": int(projected.shape[-1]),
+        "nonzero_terms": int(np.count_nonzero(projected)),
+    }
+
+
 class BraidEnvironment:
     """Exact and finite-shadow arithmetic for the B4 two-rowed search."""
 
@@ -227,6 +251,11 @@ class BraidEnvironment:
         self.identity_finite = tuple(identity_flat(self.dim) for _ in self.t_values)
 
         sym_table = symmetric_table(self.rep)
+        delta_perm = self.nf_table.divs[self.nf_table.D]
+        self.delta_exact = self.polymat.projectivise(sym_table[delta_perm])
+        self.delta_finite = tuple(
+            specialize_polymat(self.delta_exact, t_value, self.p) for t_value in self.t_values
+        )
         self.factor_polymats: dict[int, np.ndarray] = {}
         self.factor_finite: dict[int, MatrixTuple] = {}
         for factor_id, perm in enumerate(self.nf_table.divs):
@@ -278,6 +307,26 @@ class BraidEnvironment:
     def finite_scalar_flags(self, matrices: MatrixTuple) -> list[bool]:
         return [is_scalar_flat(matrix, self.dim, self.p) for matrix in matrices]
 
+    def finite_projective_equal_flags(self, left: MatrixTuple, right: MatrixTuple) -> list[bool]:
+        return [
+            normalize_flat(a, self.p) == normalize_flat(b, self.p)
+            for a, b in zip(left, right)
+        ]
+
+    def target_finite(self, label: str) -> MatrixTuple:
+        if label == "identity":
+            return self.identity_finite
+        if label == "delta":
+            return self.delta_finite
+        raise ValueError(f"unknown target label: {label}")
+
+    def target_exact(self, label: str) -> np.ndarray:
+        if label == "identity":
+            return self.identity_exact
+        if label == "delta":
+            return self.delta_exact
+        raise ValueError(f"unknown target label: {label}")
+
     def finite_append(self, matrices: MatrixTuple, factor_id: int) -> MatrixTuple:
         return self.finite_mul(matrices, self.factor_finite[int(factor_id)])
 
@@ -304,6 +353,20 @@ class BraidEnvironment:
 
     def exact_metrics(self, image: np.ndarray) -> dict:
         return scalar_identity_metrics(self.polymat, image)
+
+    def exact_target_metrics(self, image: np.ndarray, label: str) -> dict:
+        if label == "identity":
+            metrics = scalar_identity_metrics(self.polymat, image)
+            return {
+                **metrics,
+                "target_label": "identity",
+                "target_match": bool(metrics["scalar_identity"]),
+                "target_defect": int(metrics["identity_defect"]),
+            }
+        return {
+            **scalar_identity_metrics(self.polymat, image),
+            **target_projective_metrics(self.polymat, image, self.target_exact(label), label),
+        }
 
     def exact_digest(self, image: np.ndarray) -> str:
         return exact_matrix_digest(self.polymat, image)
