@@ -185,6 +185,16 @@ cd /path/to/Summer_2026-Calder/braids-summer-research/BraidZero
 sbatch jobs/01_braidzero_search_scavenge_cpu.sh
 ```
 
+Submit from the `BraidZero` directory when possible. Slurm copies batch scripts
+under `/var/spool/slurmd`, so the scripts resolve the project root from
+`SLURM_SUBMIT_DIR` rather than `$0`. If you submit from another directory, set
+`BZ_ROOT` explicitly:
+
+```bash
+BZ_ROOT=/path/to/Summer_2026-Calder/braids-summer-research/BraidZero \
+  sbatch /path/to/Summer_2026-Calder/braids-summer-research/BraidZero/jobs/01_braidzero_search_scavenge_cpu.sh
+```
+
 Train the transformer on `scavenge_gpu`:
 
 ```bash
@@ -233,4 +243,3 @@ The first benchmark is not only “did it find p=7?” It is:
 - does p=7 produce finite-shadow partners that exact verification respects?
 - at equal exact-evaluation budget, does BraidZero beat reservoir best `projlen`
   or identity defect?
-

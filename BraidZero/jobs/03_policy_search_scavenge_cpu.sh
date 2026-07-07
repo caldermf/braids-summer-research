@@ -16,7 +16,35 @@
 
 set -euo pipefail
 
-BZ_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+resolve_braidzero_root() {
+  local candidates=()
+  if [[ -n "${BZ_ROOT:-}" ]]; then
+    candidates+=("$BZ_ROOT")
+  fi
+  if [[ -n "${SLURM_SUBMIT_DIR:-}" ]]; then
+    candidates+=(
+      "$SLURM_SUBMIT_DIR"
+      "$SLURM_SUBMIT_DIR/BraidZero"
+      "$SLURM_SUBMIT_DIR/braids-summer-research/BraidZero"
+    )
+  fi
+  candidates+=(
+    "$(pwd)"
+    "$(pwd)/BraidZero"
+    "$(pwd)/braids-summer-research/BraidZero"
+  )
+  for candidate in "${candidates[@]}"; do
+    if [[ -d "$candidate/braidzero" && -d "$candidate/jobs" ]]; then
+      cd "$candidate"
+      pwd
+      return 0
+    fi
+  done
+  echo "Could not locate BraidZero root. Submit from the BraidZero folder or set BZ_ROOT=/path/to/BraidZero." >&2
+  return 1
+}
+
+BZ_ROOT="$(resolve_braidzero_root)"
 SUMMER_ROOT="$(cd "$BZ_ROOT/.." && pwd)"
 WORKSPACE_ROOT="$(cd "$SUMMER_ROOT/.." && pwd)"
 
@@ -74,5 +102,4 @@ fi
   --policy-device cpu \
   --model-top-k "$MODEL_TOP_K" \
   --model-random-extra "$MODEL_RANDOM_EXTRA" \
-  "${EXTRA_ARGS[@]}"
-
+  ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}

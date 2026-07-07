@@ -17,7 +17,35 @@
 
 set -euo pipefail
 
-BZ_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+resolve_braidzero_root() {
+  local candidates=()
+  if [[ -n "${BZ_ROOT:-}" ]]; then
+    candidates+=("$BZ_ROOT")
+  fi
+  if [[ -n "${SLURM_SUBMIT_DIR:-}" ]]; then
+    candidates+=(
+      "$SLURM_SUBMIT_DIR"
+      "$SLURM_SUBMIT_DIR/BraidZero"
+      "$SLURM_SUBMIT_DIR/braids-summer-research/BraidZero"
+    )
+  fi
+  candidates+=(
+    "$(pwd)"
+    "$(pwd)/BraidZero"
+    "$(pwd)/braids-summer-research/BraidZero"
+  )
+  for candidate in "${candidates[@]}"; do
+    if [[ -d "$candidate/braidzero" && -d "$candidate/jobs" ]]; then
+      cd "$candidate"
+      pwd
+      return 0
+    fi
+  done
+  echo "Could not locate BraidZero root. Submit from the BraidZero folder or set BZ_ROOT=/path/to/BraidZero." >&2
+  return 1
+}
+
+BZ_ROOT="$(resolve_braidzero_root)"
 SUMMER_ROOT="$(cd "$BZ_ROOT/.." && pwd)"
 
 PYTHON_PATH="${PYTHON_PATH:-/home/as4843/braids-torch/bin/python}"
@@ -60,4 +88,3 @@ fi
   --lr "$LR" \
   --device cuda \
   --num-workers 4
-
