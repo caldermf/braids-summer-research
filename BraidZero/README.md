@@ -225,6 +225,17 @@ Run policy-guided CPU search on `scavenge`:
 sbatch BraidZero/jobs/03_policy_search_scavenge_cpu.sh
 ```
 
+Run many independent CPU shards in parallel on `scavenge`:
+
+```bash
+sbatch --array=1-16 BraidZero/jobs/04_braidzero_array_scavenge_cpu.sh
+```
+
+This is usually the best way to use many CPUs for BraidZero. The symbolic exact
+arithmetic is small-matrix, variable-degree, Python/NumPy-heavy work, so a GPU is
+not useful unless the finite-shadow and exact-verification kernels are rewritten.
+The array script runs independent random-bank/search shards instead.
+
 Useful overrides:
 
 ```bash
@@ -254,9 +265,23 @@ kernel quotient.
 
 ```bash
 P=5 SEED=1 BANK_LENGTH=28 BANK_SAMPLES=750000 PREFIX_LENGTH=38 \
-  BEAM_SIZE=40000 COMPLETION_TARGETS=identity,delta \
-  RUN_NAME=p5_recovery_bank28_pref38_seed1_targets_identity_delta \
+  BEAM_SIZE=40000 COMPLETION_TARGETS=identity,delta MIN_VERIFY_TOTAL_LENGTH=50 \
+  RUN_NAME=p5_recovery_bank28_pref38_seed1_targets_identity_delta_minverify50 \
   sbatch BraidZero/jobs/01_braidzero_search_scavenge_cpu.sh
+```
+
+The `MIN_VERIFY_TOTAL_LENGTH=50` setting uses finite target hits to guide early
+search but skips expensive exact completion checks below total length 50, which
+avoids spending hours on length 29-40 false positives when the known p=5
+examples live near lengths 54-65.
+
+Parallel p=5 recovery shards:
+
+```bash
+P=5 BANK_LENGTH=28 BANK_SAMPLES=150000 PREFIX_LENGTH=38 \
+  BEAM_SIZE=8000 COMPLETION_TARGETS=identity,delta MIN_VERIFY_TOTAL_LENGTH=50 \
+  RUN_GROUP=p5_recovery_array_bank28_pref38_minverify50 \
+  sbatch --array=1-16 BraidZero/jobs/04_braidzero_array_scavenge_cpu.sh
 ```
 
 Then p=7:

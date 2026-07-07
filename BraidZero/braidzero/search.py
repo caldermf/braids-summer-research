@@ -232,6 +232,7 @@ def run_search(args: argparse.Namespace) -> dict:
     finite_collision_pairs = 0
     finite_scalar_completion_pairs = 0
     finite_target_completion_pairs = 0
+    skipped_target_completion_records = 0
     exact_collisions = 0
     verified_kernel_quotients = 0
     scalar_identity_candidates = 0
@@ -258,6 +259,7 @@ def run_search(args: argparse.Namespace) -> dict:
         depth_finite_collision_pairs = 0
         depth_finite_scalar_pairs = 0
         depth_finite_target_pairs = 0
+        depth_skipped_target_records = 0
         depth_exact_collisions = 0
         depth_scalar_identities = 0
         depth_target_matches = 0
@@ -394,6 +396,10 @@ def run_search(args: argparse.Namespace) -> dict:
                         full_factors = child_factors + suffix.factors
                         if not env.is_legal(full_factors):
                             continue
+                        if len(full_factors) < args.min_verify_total_length:
+                            skipped_target_completion_records += 1
+                            depth_skipped_target_records += 1
+                            continue
                         full_exact = env.exact_append_sequence(child_exact, suffix.factors)
                         exact_evaluations += 1
                         symbolic_factor_multiplications += len(suffix.factors)
@@ -492,6 +498,8 @@ def run_search(args: argparse.Namespace) -> dict:
             "depth_finite_collision_pairs": depth_finite_collision_pairs,
             "depth_finite_scalar_completion_pairs": depth_finite_scalar_pairs,
             "depth_finite_target_completion_pairs": depth_finite_target_pairs,
+            "depth_skipped_target_completion_records": depth_skipped_target_records,
+            "skipped_target_completion_records": skipped_target_completion_records,
             "exact_collisions": exact_collisions,
             "verified_kernel_quotients": verified_kernel_quotients,
             "scalar_identity_candidates": scalar_identity_candidates,
@@ -532,6 +540,7 @@ def run_search(args: argparse.Namespace) -> dict:
         "length_range": length_range,
         "t_values": list(t_values),
         "completion_targets": list(completion_targets),
+        "min_verify_total_length": args.min_verify_total_length,
         "oracle": oracle.metadata,
         "search": {
             "elapsed_seconds": round(elapsed, 2),
@@ -547,6 +556,7 @@ def run_search(args: argparse.Namespace) -> dict:
             "finite_collision_pairs": finite_collision_pairs,
             "finite_scalar_completion_pairs": finite_scalar_completion_pairs,
             "finite_target_completion_pairs": finite_target_completion_pairs,
+            "skipped_target_completion_records": skipped_target_completion_records,
             "exact_collisions": exact_collisions,
             "verified_kernel_quotients": verified_kernel_quotients,
             "scalar_identity_candidates": scalar_identity_candidates,
@@ -603,6 +613,15 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-collision-partners-per-prefix", type=int, default=8)
     parser.add_argument("--max-scalar-suffixes-per-prefix", type=int, default=8)
     parser.add_argument("--completion-targets", default="identity")
+    parser.add_argument(
+        "--min-verify-total-length",
+        type=int,
+        default=1,
+        help=(
+            "Do not exact-verify finite target completions until prefix length + bank "
+            "suffix length reaches this total length. Finite hits still guide the beam."
+        ),
+    )
     parser.add_argument("--policy-checkpoint", default="")
     parser.add_argument("--policy-device", default="cpu")
     parser.add_argument("--model-top-k", type=int, default=8)
