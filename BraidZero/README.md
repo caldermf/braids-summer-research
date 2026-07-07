@@ -195,6 +195,24 @@ REPO_ROOT=/path/to/braids-summer-research \
   sbatch /path/to/braids-summer-research/BraidZero/jobs/01_braidzero_search_scavenge_cpu.sh
 ```
 
+The search jobs auto-detect the author `peyl` repo from several known locations:
+
+```text
+BraidZero/third_party/braids_project
+structural-kernel-experiments/third_party/braids_project
+hybrid_of_reservoir_crispr_mcts_suffix/third_party/braids_project
+CRISPR-Transformer*/third_party/braids_project
+annealed_reservoir_search/third_party/braids_project
+../braids-project
+```
+
+If Bouchet has the paper code somewhere else, pass it explicitly:
+
+```bash
+AUTHOR_REPO=/path/to/braids_project \
+  sbatch BraidZero/jobs/01_braidzero_search_scavenge_cpu.sh
+```
+
 Train the transformer on `scavenge_gpu`:
 
 ```bash

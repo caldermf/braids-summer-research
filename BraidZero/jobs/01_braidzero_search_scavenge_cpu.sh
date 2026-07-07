@@ -19,7 +19,30 @@ set -euo pipefail
 REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-$(pwd)}}"
 PROJECT_ROOT="${PROJECT_ROOT:-$REPO_ROOT/BraidZero}"
 PYTHON_PATH="${PYTHON_PATH:-/home/as4843/braids-torch/bin/python}"
-AUTHOR_REPO="${AUTHOR_REPO:-$REPO_ROOT/structural-kernel-experiments/third_party/braids_project}"
+find_author_repo() {
+  local candidates=(
+    "$PROJECT_ROOT/third_party/braids_project"
+    "$REPO_ROOT/structural-kernel-experiments/third_party/braids_project"
+    "$REPO_ROOT/hybrid_of_reservoir_crispr_mcts_suffix/third_party/braids_project"
+    "$REPO_ROOT/CRISPR-Transformer-v3-wide-edit/third_party/braids_project"
+    "$REPO_ROOT/CRISPR-Transformer-v2/third_party/braids_project"
+    "$REPO_ROOT/CRISPR-Transformer/third_party/braids_project"
+    "$REPO_ROOT/annealed_reservoir_search/third_party/braids_project"
+    "$REPO_ROOT/../braids-project"
+    "$REPO_ROOT/braids-project"
+  )
+  for candidate in "${candidates[@]}"; do
+    if [[ -d "$candidate/peyl" ]]; then
+      cd "$candidate"
+      pwd
+      return 0
+    fi
+  done
+  return 1
+}
+if [[ -z "${AUTHOR_REPO:-}" ]]; then
+  AUTHOR_REPO="$(find_author_repo || true)"
+fi
 
 P="${P:-7}"
 N="${N:-4}"
@@ -58,9 +81,12 @@ if [[ ! -d "$PROJECT_ROOT/braidzero" ]]; then
   exit 1
 fi
 if [[ ! -d "$AUTHOR_REPO/peyl" ]]; then
-  echo "Author peyl repo not found at $AUTHOR_REPO" >&2
+  echo "Author peyl repo not found." >&2
+  echo "Looked under BraidZero/third_party, structural-kernel-experiments, hybrid_of_reservoir_crispr_mcts_suffix, CRISPR-Transformer*, annealed_reservoir_search, and ../braids-project." >&2
+  echo "Set AUTHOR_REPO=/path/to/braids_project if it lives somewhere else on Bouchet." >&2
   exit 1
 fi
+echo "Using AUTHOR_REPO=$AUTHOR_REPO"
 
 EXTRA_ARGS=()
 if [[ -n "$T_VALUES" ]]; then
