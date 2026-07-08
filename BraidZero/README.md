@@ -259,6 +259,65 @@ once, and each array task gets a deterministic shard of the finite-shadow keys.
 That reduces repeated work on the same finite-shadow buckets across seeds while
 keeping the cache read-only during the array run.
 
+## BraidZero v2: Exhaustive Frontier + Sharded Continuation
+
+The first p=5 array showed that a random-bank beam can miss known p=5 kernel
+structure even through total length 66. BraidZero v2 changes the early search
+unit:
+
+```text
+exhaustively enumerate every GNF prefix to length l
+then assign disjoint frontier shards to continuation jobs
+```
+
+This prevents the beam from killing the right length-`l` prefix family before
+the deeper search begins.
+
+Build the shared suffix bank:
+
+```bash
+P=5 BANK_LENGTH=28 BANK_SAMPLES=2400000 CACHE_SEED=1729 \
+  sbatch BraidZero/jobs/05_build_bank_cache_scavenge_cpu.sh
+```
+
+Build the exhaustive frontier. For `B_4`, `FRONTIER_LENGTH=8` has `4,963,856`
+positive GNF prefixes, so this is the aggressive but still plausible control:
+
+```bash
+P=5 FRONTIER_LENGTH=8 \
+  sbatch BraidZero/jobs/06_build_frontier_cache_scavenge_cpu.sh
+```
+
+After both builder jobs finish cleanly, run the v2 array:
+
+```bash
+P=5 FRONTIER_LENGTH=8 BANK_LENGTH=28 CONTINUATION_LENGTH=30 \
+  FRONTIER_PATH=results/BraidZero/frontiers/p5_frontier8.jsonl.gz \
+  BANK_CACHE_PATH=results/BraidZero/cache/p5_bank28_samples2400000_seed1729.jsonl.gz \
+  COMPLETION_TARGETS=identity,delta MIN_VERIFY_TOTAL_LENGTH=50 \
+  BEAM_SIZE=8000 RUN_GROUP=p5_v2_frontier8_bank28_cont30 \
+  sbatch --array=1-16 BraidZero/jobs/07_braidzero_v2_array_scavenge_cpu.sh
+```
+
+With these settings, the search exactly covers all prefixes through length 8.
+Then each array task receives a disjoint `record` shard of the frontier. The
+shared suffix bank is not sharded by default, so every frontier shard can still
+see the full suffix-completion oracle. If memory becomes the bottleneck, set
+`BANK_SHARD_BY=key`, but that is a weaker p=5 recovery test because it only
+checks a subset of suffix completions per frontier shard.
+
+Length accounting for the p=5 control:
+
+```text
+total candidate length = FRONTIER_LENGTH + continuation_depth + BANK_LENGTH
+54 = 8 + 18 + 28
+63 = 8 + 27 + 28
+65 = 8 + 29 + 28
+66 = 8 + 30 + 28
+```
+
+So `CONTINUATION_LENGTH=30` covers the known p=5 length window.
+
 Useful overrides:
 
 ```bash
