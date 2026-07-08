@@ -236,6 +236,29 @@ arithmetic is small-matrix, variable-degree, Python/NumPy-heavy work, so a GPU i
 not useful unless the finite-shadow and exact-verification kernels are rewritten.
 The array script runs independent random-bank/search shards instead.
 
+Build one shared suffix bank, then run a diversity-sharded array:
+
+```bash
+P=5 BANK_LENGTH=28 BANK_SAMPLES=2400000 CACHE_SEED=1729 \
+  sbatch BraidZero/jobs/05_build_bank_cache_scavenge_cpu.sh
+```
+
+After the cache-builder finishes cleanly, use the emitted `BANK_CACHE_PATH`:
+
+```bash
+P=5 BANK_LENGTH=28 PREFIX_LENGTH=38 BEAM_SIZE=8000 \
+  BANK_CACHE_PATH=results/BraidZero/cache/p5_bank28_samples2400000_seed1729.jsonl.gz \
+  BANK_CACHE_MODE=load BANK_SHARD_BY=key \
+  COMPLETION_TARGETS=identity,delta MIN_VERIFY_TOTAL_LENGTH=50 \
+  RUN_GROUP=p5_shared_key_bank28_pref38_minverify50 \
+  sbatch --array=1-16 BraidZero/jobs/04_braidzero_array_scavenge_cpu.sh
+```
+
+This is different from merely changing the random seed. The cache is generated
+once, and each array task gets a deterministic shard of the finite-shadow keys.
+That reduces repeated work on the same finite-shadow buckets across seeds while
+keeping the cache read-only during the array run.
+
 Useful overrides:
 
 ```bash

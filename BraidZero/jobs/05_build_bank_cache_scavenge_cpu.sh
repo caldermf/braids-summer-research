@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
-# Run many independent BraidZero shards in parallel on scavenge.
+# Build one shared BraidZero finite-shadow bank cache on scavenge.
 # Submit from the braids-summer-research directory.
 
-#SBATCH --job-name=braidzero-array
+#SBATCH --job-name=braidzero-bank
 #SBATCH --partition=scavenge
-#SBATCH --array=1-8
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=32G
+#SBATCH --mem=96G
 #SBATCH --time=1-00:00:00
 #SBATCH --requeue
 #SBATCH --signal=B:USR1@120
-#SBATCH --output=slurm_logs/%x-%A_%a.out
-#SBATCH --error=slurm_logs/%x-%A_%a.err
+#SBATCH --output=slurm_logs/%x-%j.out
+#SBATCH --error=slurm_logs/%x-%j.err
 
 set -euo pipefail
 
@@ -49,41 +48,20 @@ fi
 P="${P:-5}"
 N="${N:-4}"
 R="${R:-1}"
-BASE_SEED="${BASE_SEED:-1000}"
-SEED="${SEED:-$((BASE_SEED + SLURM_ARRAY_TASK_ID))}"
 T_VALUES="${T_VALUES:-}"
+CACHE_SEED="${CACHE_SEED:-1729}"
 BANK_LENGTH="${BANK_LENGTH:-28}"
 BANK_MODE="${BANK_MODE:-random}"
-BANK_SAMPLES="${BANK_SAMPLES:-150000}"
+BANK_SAMPLES="${BANK_SAMPLES:-2400000}"
 MAX_EXHAUSTIVE_BANK="${MAX_EXHAUSTIVE_BANK:-2000000}"
 MAX_BANK_RECORDS_PER_KEY="${MAX_BANK_RECORDS_PER_KEY:-256}"
-BANK_CACHE_PATH="${BANK_CACHE_PATH:-}"
-if [[ -z "${BANK_CACHE_MODE:-}" ]]; then
-  if [[ -n "$BANK_CACHE_PATH" ]]; then
-    BANK_CACHE_MODE="load"
-  else
-    BANK_CACHE_MODE="none"
-  fi
-fi
-BANK_SHARD_COUNT="${BANK_SHARD_COUNT:-${SLURM_ARRAY_TASK_COUNT:-1}}"
-BANK_SHARD_INDEX="${BANK_SHARD_INDEX:-$((SLURM_ARRAY_TASK_ID - 1))}"
-BANK_SHARD_BY="${BANK_SHARD_BY:-key}"
-PREFIX_LENGTH="${PREFIX_LENGTH:-38}"
-BEAM_SIZE="${BEAM_SIZE:-8000}"
-PER_FINITE_KEY_CAP="${PER_FINITE_KEY_CAP:-8}"
-MAX_ACTIONS_PER_STATE="${MAX_ACTIONS_PER_STATE:-0}"
-MAX_COLLISION_PARTNERS="${MAX_COLLISION_PARTNERS:-4}"
-MAX_SCALAR_SUFFIXES="${MAX_SCALAR_SUFFIXES:-4}"
-COMPLETION_TARGETS="${COMPLETION_TARGETS:-identity,delta}"
-MIN_VERIFY_TOTAL_LENGTH="${MIN_VERIFY_TOTAL_LENGTH:-50}"
 PROGRESS_INTERVAL_SECONDS="${PROGRESS_INTERVAL_SECONDS:-30}"
-
-RUN_GROUP="${RUN_GROUP:-p${P}_array_bank${BANK_LENGTH}_pref${PREFIX_LENGTH}_minverify${MIN_VERIFY_TOTAL_LENGTH}}"
-RUN_NAME="${RUN_NAME:-${RUN_GROUP}/seed${SEED}_task${SLURM_ARRAY_TASK_ID}}"
-OUTPUT_DIR="${OUTPUT_DIR:-$REPO_ROOT/results/BraidZero/$RUN_NAME}"
+CACHE_DIR="${CACHE_DIR:-$REPO_ROOT/results/BraidZero/cache}"
+BANK_CACHE_PATH="${BANK_CACHE_PATH:-$CACHE_DIR/p${P}_bank${BANK_LENGTH}_samples${BANK_SAMPLES}_seed${CACHE_SEED}.jsonl.gz}"
+SUMMARY_OUTPUT="${SUMMARY_OUTPUT:-$BANK_CACHE_PATH.summary.json}"
 
 cd "$REPO_ROOT"
-mkdir -p slurm_logs "$OUTPUT_DIR"
+mkdir -p slurm_logs "$CACHE_DIR"
 export PYTHONUNBUFFERED=1
 export PYTHONPATH="$PROJECT_ROOT:$AUTHOR_REPO:${PYTHONPATH:-}"
 export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
@@ -103,40 +81,25 @@ if [[ ! -d "$AUTHOR_REPO/peyl" ]]; then
   exit 1
 fi
 echo "Using AUTHOR_REPO=$AUTHOR_REPO"
+echo "Writing BANK_CACHE_PATH=$BANK_CACHE_PATH"
 
 EXTRA_ARGS=()
 if [[ -n "$T_VALUES" ]]; then
   EXTRA_ARGS+=(--t-values "$T_VALUES")
 fi
-if [[ -n "$BANK_CACHE_PATH" ]]; then
-  EXTRA_ARGS+=(
-    --bank-cache-path "$BANK_CACHE_PATH"
-    --bank-cache-mode "$BANK_CACHE_MODE"
-    --bank-shard-count "$BANK_SHARD_COUNT"
-    --bank-shard-index "$BANK_SHARD_INDEX"
-    --bank-shard-by "$BANK_SHARD_BY"
-  )
-fi
 
-"$PYTHON_PATH" -u -m braidzero.search \
+"$PYTHON_PATH" -u -m braidzero.build_bank \
   --author-repo "$AUTHOR_REPO" \
-  --output-dir "$OUTPUT_DIR" \
+  --output "$BANK_CACHE_PATH" \
+  --summary-output "$SUMMARY_OUTPUT" \
   --n "$N" \
   --r "$R" \
   --p "$P" \
-  --seed "$SEED" \
+  --seed "$CACHE_SEED" \
   --bank-length "$BANK_LENGTH" \
   --bank-mode "$BANK_MODE" \
   --bank-samples "$BANK_SAMPLES" \
   --max-exhaustive-bank "$MAX_EXHAUSTIVE_BANK" \
   --max-bank-records-per-key "$MAX_BANK_RECORDS_PER_KEY" \
-  --prefix-length "$PREFIX_LENGTH" \
-  --beam-size "$BEAM_SIZE" \
-  --per-finite-key-cap "$PER_FINITE_KEY_CAP" \
-  --max-actions-per-state "$MAX_ACTIONS_PER_STATE" \
-  --max-collision-partners-per-prefix "$MAX_COLLISION_PARTNERS" \
-  --max-scalar-suffixes-per-prefix "$MAX_SCALAR_SUFFIXES" \
-  --completion-targets "$COMPLETION_TARGETS" \
-  --min-verify-total-length "$MIN_VERIFY_TOTAL_LENGTH" \
   --progress-interval-seconds "$PROGRESS_INTERVAL_SECONDS" \
   ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}

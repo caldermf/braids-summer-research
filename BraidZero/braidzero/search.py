@@ -172,16 +172,36 @@ def run_search(args: argparse.Namespace) -> dict:
     config["representation"] = env.representation_label
     write_json(output_dir / "config.json", config)
 
-    oracle = ShadowOracle.build(
-        env=env,
-        bank_length=args.bank_length,
-        mode=args.bank_mode,
-        samples=args.bank_samples,
-        seed=args.seed + 104729,
-        max_exhaustive=args.max_exhaustive_bank,
-        max_records_per_key=args.max_bank_records_per_key,
-        progress_interval_seconds=args.progress_interval_seconds,
+    bank_cache_path = Path(args.bank_cache_path) if args.bank_cache_path else None
+    load_from_cache = args.bank_cache_mode == "load" or (
+        args.bank_cache_mode == "auto" and bank_cache_path is not None and bank_cache_path.exists()
     )
+    if args.bank_cache_mode == "load" and bank_cache_path is None:
+        raise ValueError("--bank-cache-mode load requires --bank-cache-path")
+    if load_from_cache:
+        if not bank_cache_path.exists():
+            raise FileNotFoundError(f"shadow bank cache not found: {bank_cache_path}")
+        oracle = ShadowOracle.load_cache(
+            env=env,
+            path=bank_cache_path,
+            max_records_per_key=args.max_bank_records_per_key,
+            shard_count=args.bank_shard_count,
+            shard_index=args.bank_shard_index,
+            shard_by=args.bank_shard_by,
+        )
+    else:
+        oracle = ShadowOracle.build(
+            env=env,
+            bank_length=args.bank_length,
+            mode=args.bank_mode,
+            samples=args.bank_samples,
+            seed=args.seed + 104729,
+            max_exhaustive=args.max_exhaustive_bank,
+            max_records_per_key=args.max_bank_records_per_key,
+            progress_interval_seconds=args.progress_interval_seconds,
+        )
+        if args.bank_cache_mode in {"build", "auto"} and bank_cache_path is not None:
+            oracle.save_cache(bank_cache_path)
     write_json(output_dir / "oracle_summary.json", oracle.metadata)
     print(json.dumps({"phase": "oracle_ready", **oracle.metadata}, sort_keys=True), flush=True)
 
@@ -606,6 +626,19 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--bank-samples", type=int, default=250_000)
     parser.add_argument("--max-exhaustive-bank", type=int, default=2_000_000)
     parser.add_argument("--max-bank-records-per-key", type=int, default=256)
+    parser.add_argument("--bank-cache-path", default="")
+    parser.add_argument("--bank-cache-mode", choices=["none", "build", "load", "auto"], default="none")
+    parser.add_argument("--bank-shard-count", type=int, default=1)
+    parser.add_argument("--bank-shard-index", type=int, default=0)
+    parser.add_argument(
+        "--bank-shard-by",
+        choices=["none", "record", "key"],
+        default="none",
+        help=(
+            "When loading a shared bank cache, keep only this deterministic shard. "
+            "'key' partitions finite-shadow keys; 'record' partitions raw records."
+        ),
+    )
     parser.add_argument("--prefix-length", type=int, default=24)
     parser.add_argument("--beam-size", type=int, default=25_000)
     parser.add_argument("--per-finite-key-cap", type=int, default=8)
