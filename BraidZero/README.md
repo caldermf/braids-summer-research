@@ -318,6 +318,151 @@ total candidate length = FRONTIER_LENGTH + continuation_depth + BANK_LENGTH
 
 So `CONTINUATION_LENGTH=30` covers the known p=5 length window.
 
+## Direct Frontier Growth Mode
+
+If you want the more literal algorithm:
+
+```text
+BFS/exhaustive prefixes to length 8
+then let many seeds grow those prefixes directly to length 66
+```
+
+use `frontier_grow`. This mode does **not** use the suffix bank and does
+**not** check matrix collisions. It only grows complete positive GNF words and
+exactly tests selected lengths against `identity` and/or `delta`.
+
+First build the frontier:
+
+```bash
+P=5 FRONTIER_LENGTH=8 \
+  sbatch BraidZero/jobs/06_build_frontier_cache_scavenge_cpu.sh
+```
+
+Then run one randomized growth rollout from every length-8 prefix:
+
+```bash
+P=5 FRONTIER_LENGTH=8 TARGET_LENGTH=66 CHECK_LENGTHS=54,63,65,66 \
+  FRONTIER_PATH=results/BraidZero/frontiers/p5_frontier8.jsonl.gz \
+  ROLLOUTS_PER_FRONTIER=1 GROWTH_MODE=random \
+  COMPLETION_TARGETS=identity,delta \
+  RUN_GROUP=p5_frontier8_direct_grow_len66 \
+  sbatch --array=1-16 BraidZero/jobs/08_frontier_grow_array_scavenge_cpu.sh
+```
+
+To run multiple independent growth seeds over the same exhaustive frontier, keep
+`FRONTIER_SHARD_COUNT=16` and increase the array size. For example, this gives
+four independent growth replicas per frontier shard:
+
+```bash
+P=5 FRONTIER_LENGTH=8 TARGET_LENGTH=66 CHECK_LENGTHS=54,63,65,66 \
+  FRONTIER_PATH=results/BraidZero/frontiers/p5_frontier8.jsonl.gz \
+  FRONTIER_SHARD_COUNT=16 ROLLOUTS_PER_FRONTIER=1 GROWTH_MODE=random \
+  COMPLETION_TARGETS=identity,delta \
+  RUN_GROUP=p5_frontier8_direct_grow_len66_x4 \
+  sbatch --array=1-64 BraidZero/jobs/08_frontier_grow_array_scavenge_cpu.sh
+```
+
+Length accounting:
+
+```text
+all prefixes of length 8 are covered exactly once per replica
+each rollout appends factors until total length 66
+exact checks are performed at lengths 54, 63, 65, and 66
+```
+
+For a less blind but more expensive growth rule, use:
+
+```bash
+GROWTH_MODE=softmin ACTION_SAMPLES=3
+```
+
+That samples three legal next factors at each step, scores them by exact target
+defect, and probabilistically chooses the better-looking move. The default
+`GROWTH_MODE=random` is the cleanest test of the literal BFS-plus-seeds idea.
+
+## Frontier Population Beam Mode
+
+This is the stronger version of the BFS-to-8 idea:
+
+```text
+BFS/exhaustive prefixes to length 8
+each seed chooses a large population of good/diverse prefixes
+expand that population at each depth
+keep a large population of good/diverse braids
+continue until length 66
+```
+
+This mode also uses no suffix bank and no collision oracle. It differs from
+`frontier_grow` because a seed is not one path. A seed is a large population.
+
+Build the frontier:
+
+```bash
+P=5 FRONTIER_LENGTH=8 \
+  sbatch BraidZero/jobs/06_build_frontier_cache_scavenge_cpu.sh
+```
+
+Run one population beam over the full frontier:
+
+```bash
+P=5 FRONTIER_LENGTH=8 TARGET_LENGTH=66 CHECK_LENGTHS=54,63,65,66 \
+  FRONTIER_PATH=results/BraidZero/frontiers/p5_frontier8.jsonl.gz \
+  HEURISTICS=target,identity,projlen,scalar_shape,random \
+  BEAM_SIZE=50000 MAX_ACTIONS_PER_STATE=0 SELECTION_TEMPERATURE=25 \
+  COMPLETION_TARGETS=identity,delta \
+  RUN_GROUP=p5_frontier8_population_beam_len66 \
+  sbatch --array=1-16 BraidZero/jobs/09_frontier_beam_array_scavenge_cpu.sh
+```
+
+Run four independent seeded population beams over the same frontier coverage:
+
+```bash
+P=5 FRONTIER_LENGTH=8 TARGET_LENGTH=66 CHECK_LENGTHS=54,63,65,66 \
+  FRONTIER_PATH=results/BraidZero/frontiers/p5_frontier8.jsonl.gz \
+  FRONTIER_SHARD_COUNT=16 \
+  HEURISTICS=target,identity,projlen,scalar_shape,random \
+  BEAM_SIZE=50000 MAX_ACTIONS_PER_STATE=0 SELECTION_TEMPERATURE=25 \
+  COMPLETION_TARGETS=identity,delta \
+  RUN_GROUP=p5_frontier8_population_beam_len66_x4 \
+  sbatch --array=1-64 BraidZero/jobs/09_frontier_beam_array_scavenge_cpu.sh
+```
+
+Important parameters:
+
+```text
+BEAM_SIZE
+  Number of live braids each task keeps per heuristic after every growth depth.
+  With 5 heuristics and BEAM_SIZE=50000, a task can keep up to 250000 live
+  braid states.
+
+HEURISTICS
+  Separate populations grown by different selection rules. Default:
+  target, identity, projlen, scalar_shape, random.
+
+MAX_ACTIONS_PER_STATE=0
+  Expand every legal next factor from every live braid.
+
+SELECTION_TEMPERATURE=25
+  Adds seeded stochasticity to selection, so multiple seeds keep different
+  good braids instead of identical greedy survivors.
+
+PER_FINITE_KEY_CAP=8
+  Prevents one finite-shadow class from taking over the population.
+
+DIVERSITY_BUCKET_CAP=64
+  Preserves many target-defect/projlen/last-factor regions.
+```
+
+The score used for keeping braids is:
+
+```text
+target_defect + 0.25 * identity_defect + 0.05 * projlen
+```
+
+for the `target` heuristic. Other heuristic beams optimize different scores,
+such as identity defect, projlen, scalar-shape terms, or random diversity. Exact
+target checks are recorded at the requested `CHECK_LENGTHS`.
+
 Useful overrides:
 
 ```bash
