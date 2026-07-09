@@ -453,15 +453,70 @@ DIVERSITY_BUCKET_CAP=64
   Preserves many target-defect/projlen/last-factor regions.
 ```
 
-The score used for keeping braids is:
+Each heuristic beam has its own objective:
 
 ```text
-target_defect + 0.25 * identity_defect + 0.05 * projlen
+target          target_defect
+identity        identity_defect
+projlen         projlen
+scalar_shape    off_diagonal_terms + diagonal_mismatch_terms + scalar_extra_degrees
+terms           nonzero_terms
+random          seeded random priority
 ```
 
-for the `target` heuristic. Other heuristic beams optimize different scores,
-such as identity defect, projlen, scalar-shape terms, or random diversity. Exact
-target checks are recorded at the requested `CHECK_LENGTHS`.
+`identity_target` and `delta_target` optimize the corresponding target defect
+directly. `SELECTION_TEMPERATURE` controls how greedily each objective is sampled:
+`0` is deterministic greedy selection, while larger values keep more stochastic
+diversity. Exact target checks are recorded at the requested `CHECK_LENGTHS`.
+
+## Frontier Bucketed-Reservoir Ensemble Mode
+
+This mode keeps the BFS-to-8 structure but changes population management from
+individual beams to paper-style reservoirs.
+
+For each heuristic and each length, states are grouped into score buckets:
+
+```text
+projlen       bucket key = (length, projlen)
+identity      bucket key = (length, identity_defect)
+target        bucket key = (length, best_target_defect, best_target_label)
+scalar_shape  bucket key = (length, scalar_shape_score)
+terms         bucket key = (length, nonzero_terms)
+random        one uniform random reservoir
+```
+
+Each bucket keeps up to `BUCKET_SIZE` states by uniform reservoir sampling. At
+each depth, each heuristic selects whole buckets in increasing score order until
+`USE_BEST` parents have been chosen, then expands those parents by legal GNF
+successors. The `projlen` branch is therefore the closest BraidZero analogue of
+the paper reservoir search, while the other branches apply the same survival
+mechanism to different statistics.
+
+Run four seeded p=5 recovery replicas over the length-8 frontier:
+
+```bash
+P=5 FRONTIER_LENGTH=8 TARGET_LENGTH=66 CHECK_LENGTHS=54,63,65,66 \
+  FRONTIER_PATH=results/BraidZero/frontiers/p5_frontier8.jsonl.gz \
+  FRONTIER_SHARD_COUNT=16 \
+  HEURISTICS=target,identity,projlen,scalar_shape,random \
+  BUCKET_SIZE=3000 USE_BEST=50000 MAX_ACTIONS_PER_STATE=0 \
+  COMPLETION_TARGETS=identity,delta \
+  RUN_GROUP=p5_frontier8_bucket_reservoir_len66_x4 \
+  sbatch --array=1-64 BraidZero/jobs/10_frontier_bucket_reservoir_array_scavenge_cpu.sh
+```
+
+Operational interpretation:
+
+```text
+BUCKET_SIZE
+  How many random states survive inside each heuristic bucket.
+
+USE_BEST
+  How many parents each heuristic expands per depth.
+
+MAX_ACTIONS_PER_STATE=0
+  Expand every legal next factor from each selected parent.
+```
 
 Useful overrides:
 
