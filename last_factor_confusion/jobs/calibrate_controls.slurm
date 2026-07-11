@@ -8,11 +8,11 @@
 #SBATCH --error=slurm_logs/%x-%j.err
 
 set -euo pipefail
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+ROOT="${LFC_ROOT:-${SLURM_SUBMIT_DIR:-$PWD}}"
+ROOT="$(cd "$ROOT" && pwd)"
 PYTHON="${PYTHON:-/home/com36/.conda/envs/burau_gpu/bin/python}"
 SCORED="${SCORED:?Set SCORED to scores from an ordinary calibration split}"
 OUT="${OUT:?Set OUT}"
 mkdir -p "$ROOT/slurm_logs" "$(dirname "$OUT")"
 export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
 "$PYTHON" -m last_factor_confusion.calibrate --scored-calibration "$SCORED" --output "$OUT"
-
