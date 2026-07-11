@@ -106,6 +106,7 @@ def _load_frontier_cache_into_tracker(
     batch_size: int,
     progress_interval_seconds: float,
     ledger: RunLedger,
+    verbose_frontier_progress: bool,
 ) -> dict:
     from peyl.braidsearch import evaluate_braids_of_same_length  # type: ignore
 
@@ -151,11 +152,12 @@ def _load_frontier_cache_into_tracker(
                 "elapsed_seconds": round(now - start, 2),
             }
             ledger.progress(progress)
-            print(
-                f"Loaded {loaded:,} frontier braids into {len(stats):,} buckets "
-                f"({progress['live_braids']:,} live reservoir entries)...",
-                flush=True,
-            )
+            if verbose_frontier_progress:
+                print(
+                    f"Loaded {loaded:,} frontier braids into {len(stats):,} buckets "
+                    f"({progress['live_braids']:,} live reservoir entries)...",
+                    flush=True,
+                )
             last_progress = now
 
     flush_batch()
@@ -280,6 +282,7 @@ def run_frontier_paper_reservoir(args: argparse.Namespace) -> dict:
                 batch_size=args.frontier_batch_size,
                 progress_interval_seconds=args.progress_interval_seconds,
                 ledger=ledger,
+                verbose_frontier_progress=args.verbose_frontier_progress,
             )
         print(f"Bootstrapping took {bootstrap_timer.time:.2f} seconds", flush=True)
     else:
@@ -405,8 +408,9 @@ def run_frontier_paper_reservoir(args: argparse.Namespace) -> dict:
             conn.close()
 
     final_stats = track.stats().sort_values(["length", "projlen"])
-    print("\nFinal buckets:", flush=True)
-    print(final_stats, flush=True)
+    if args.print_final_buckets:
+        print("\nFinal buckets:", flush=True)
+        print(final_stats, flush=True)
 
     elapsed_seconds = time.time() - start_time
     final_best = _best_projlen_by_length(final_stats)
@@ -460,7 +464,8 @@ def run_frontier_paper_reservoir(args: argparse.Namespace) -> dict:
         },
     )
     write_json(output_dir / "final_bucket_stats.json", {"buckets": _stats_records(final_stats)})
-    print(f"Search finished in {elapsed_seconds:.2f} seconds.", flush=True)
+    if args.print_final_buckets:
+        print(f"Search finished in {elapsed_seconds:.2f} seconds.", flush=True)
     return summary
 
 
@@ -490,6 +495,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--database", default="")
     parser.add_argument("--stop-at-projlen-1", action="store_true")
     parser.add_argument("--progress-interval-seconds", type=float, default=30.0)
+    parser.add_argument(
+        "--verbose-frontier-progress",
+        action="store_true",
+        help="Print frontier-loading progress to stdout. By default it is only written to progress.jsonl.",
+    )
+    parser.add_argument(
+        "--print-final-buckets",
+        action="store_true",
+        help="Print final buckets after the target length. The paper-style stdout default leaves this off.",
+    )
     return parser
 
 

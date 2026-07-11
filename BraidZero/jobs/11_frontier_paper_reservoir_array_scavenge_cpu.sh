@@ -72,6 +72,8 @@ STEP_SIZE="${STEP_SIZE:-1}"
 DATABASE="${DATABASE:-}"
 PROGRESS_INTERVAL_SECONDS="${PROGRESS_INTERVAL_SECONDS:-30}"
 STOP_AT_PROJLEN_1="${STOP_AT_PROJLEN_1:-0}"
+VERBOSE_FRONTIER_PROGRESS="${VERBOSE_FRONTIER_PROGRESS:-0}"
+PRINT_FINAL_BUCKETS="${PRINT_FINAL_BUCKETS:-0}"
 
 RUN_GROUP="${RUN_GROUP:-p${P}_frontier${FRONTIER_LENGTH}_paper_reservoir_len${TARGET_LENGTH}}"
 RUN_NAME="${RUN_NAME:-${RUN_GROUP}/replica${REPLICA_INDEX}_shard${FRONTIER_SHARD_INDEX}_task${SLURM_ARRAY_TASK_ID}}"
@@ -115,6 +117,12 @@ if [[ -n "$DATABASE" ]]; then
 fi
 if [[ "$STOP_AT_PROJLEN_1" == "1" ]]; then
   EXTRA_ARGS+=(--stop-at-projlen-1)
+fi
+if [[ "$VERBOSE_FRONTIER_PROGRESS" == "1" ]]; then
+  EXTRA_ARGS+=(--verbose-frontier-progress)
+fi
+if [[ "$PRINT_FINAL_BUCKETS" == "1" ]]; then
+  EXTRA_ARGS+=(--print-final-buckets)
 fi
 
 "$PYTHON_PATH" -u -m braidzero.frontier_paper_reservoir \
