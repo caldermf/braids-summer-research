@@ -1,0 +1,32 @@
+{
+  "author_repo": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/hybrid_of_reservoir_crispr_mcts_suffix/third_party/braids_project",
+  "bucket_size": 10000,
+  "database": "",
+  "frontier_batch_size": 10000,
+  "frontier_length": 9,
+  "frontier_max_records": 0,
+  "frontier_path": "results/BraidZero/frontiers/p7_frontier9.jsonl.gz",
+  "frontier_shard_by": "record",
+  "frontier_shard_count": 96,
+  "frontier_shard_index": 11,
+  "n": 4,
+  "output_dir": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/BraidZero/p7_frontier9_paper_reservoir_len300_fat_shards96/replica0_shard11_task12",
+  "p": 7,
+  "progress_interval_seconds": 30.0,
+  "r": 1,
+  "representation": "two-rowed (3,1) of B_4 over F_7",
+  "save_best": 500,
+  "seed": 7011,
+  "step_size": 1,
+  "stop_at_projlen_1": false,
+  "t_values": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "target_length": 300,
+  "use_best": 200000
+}

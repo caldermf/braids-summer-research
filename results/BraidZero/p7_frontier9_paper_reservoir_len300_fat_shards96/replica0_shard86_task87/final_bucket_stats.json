@@ -1,0 +1,284 @@
+{
+  "buckets": [
+    {
+      "bucket": [
+        300,
+        143
+      ],
+      "count": 3,
+      "length": 300,
+      "projlen": 143,
+      "reservoir_count": 3
+    },
+    {
+      "bucket": [
+        300,
+        144
+      ],
+      "count": 18,
+      "length": 300,
+      "projlen": 144,
+      "reservoir_count": 18
+    },
+    {
+      "bucket": [
+        300,
+        145
+      ],
+      "count": 34,
+      "length": 300,
+      "projlen": 145,
+      "reservoir_count": 34
+    },
+    {
+      "bucket": [
+        300,
+        146
+      ],
+      "count": 566,
+      "length": 300,
+      "projlen": 146,
+      "reservoir_count": 566
+    },
+    {
+      "bucket": [
+        300,
+        147
+      ],
+      "count": 556,
+      "length": 300,
+      "projlen": 147,
+      "reservoir_count": 556
+    },
+    {
+      "bucket": [
+        300,
+        148
+      ],
+      "count": 3224,
+      "length": 300,
+      "projlen": 148,
+      "reservoir_count": 3224
+    },
+    {
+      "bucket": [
+        300,
+        149
+      ],
+      "count": 3602,
+      "length": 300,
+      "projlen": 149,
+      "reservoir_count": 3602
+    },
+    {
+      "bucket": [
+        300,
+        150
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 150,
+      "reservoir_count": 25777
+    },
+    {
+      "bucket": [
+        300,
+        151
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 151,
+      "reservoir_count": 24771
+    },
+    {
+      "bucket": [
+        300,
+        152
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 152,
+      "reservoir_count": 55078
+    },
+    {
+      "bucket": [
+        300,
+        153
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 153,
+      "reservoir_count": 49724
+    },
+    {
+      "bucket": [
+        300,
+        154
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 154,
+      "reservoir_count": 61553
+    },
+    {
+      "bucket": [
+        300,
+        155
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 155,
+      "reservoir_count": 49280
+    },
+    {
+      "bucket": [
+        300,
+        156
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 156,
+      "reservoir_count": 59466
+    },
+    {
+      "bucket": [
+        300,
+        157
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 157,
+      "reservoir_count": 50514
+    },
+    {
+      "bucket": [
+        300,
+        158
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 158,
+      "reservoir_count": 58342
+    },
+    {
+      "bucket": [
+        300,
+        159
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 159,
+      "reservoir_count": 50838
+    },
+    {
+      "bucket": [
+        300,
+        160
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 160,
+      "reservoir_count": 57900
+    },
+    {
+      "bucket": [
+        300,
+        161
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 161,
+      "reservoir_count": 50475
+    },
+    {
+      "bucket": [
+        300,
+        162
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 162,
+      "reservoir_count": 57497
+    },
+    {
+      "bucket": [
+        300,
+        163
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 163,
+      "reservoir_count": 50940
+    },
+    {
+      "bucket": [
+        300,
+        164
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 164,
+      "reservoir_count": 57316
+    },
+    {
+      "bucket": [
+        300,
+        165
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 165,
+      "reservoir_count": 51005
+    },
+    {
+      "bucket": [
+        300,
+        166
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 166,
+      "reservoir_count": 56766
+    },
+    {
+      "bucket": [
+        300,
+        167
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 167,
+      "reservoir_count": 51788
+    },
+    {
+      "bucket": [
+        300,
+        168
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 168,
+      "reservoir_count": 55238
+    },
+    {
+      "bucket": [
+        300,
+        169
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 169,
+      "reservoir_count": 49893
+    },
+    {
+      "bucket": [
+        300,
+        170
+      ],
+      "count": 10000,
+      "length": 300,
+      "projlen": 170,
+      "reservoir_count": 20028
+    }
+  ]
+}

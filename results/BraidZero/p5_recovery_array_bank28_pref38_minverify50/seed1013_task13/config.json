@@ -1,0 +1,39 @@
+{
+  "author_repo": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/hybrid_of_reservoir_crispr_mcts_suffix/third_party/braids_project",
+  "bank_length": 28,
+  "bank_mode": "random",
+  "bank_samples": 150000,
+  "beam_size": 8000,
+  "completion_targets": [
+    "identity",
+    "delta"
+  ],
+  "include_all_legal_with_model": false,
+  "max_actions_per_state": 0,
+  "max_bank_records_per_key": 256,
+  "max_collision_partners_per_prefix": 4,
+  "max_exhaustive_bank": 2000000,
+  "max_scalar_suffixes_per_prefix": 4,
+  "min_verify_total_length": 50,
+  "model_random_extra": 2,
+  "model_top_k": 8,
+  "n": 4,
+  "output_dir": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/BraidZero/p5_recovery_array_bank28_pref38_minverify50/seed1013_task13",
+  "p": 5,
+  "per_finite_key_cap": 8,
+  "policy_checkpoint": "",
+  "policy_device": "cpu",
+  "prefix_length": 38,
+  "progress_interval_seconds": 30.0,
+  "r": 1,
+  "representation": "two-rowed (3,1) of B_4 over F_5",
+  "seed": 1013,
+  "stop_after_scalar_identity": false,
+  "stop_after_verified_kernel": false,
+  "t_values": [
+    1,
+    2,
+    3,
+    4
+  ]
+}

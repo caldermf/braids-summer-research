@@ -1,0 +1,16 @@
+{
+  "bucket_keys": [
+    "length",
+    "projlen"
+  ],
+  "bucket_size": 10000,
+  "frontier_path": "results/BraidZero/frontiers/p7_frontier9.jsonl.gz",
+  "frontier_shard_by": "record",
+  "frontier_shard_count": 96,
+  "frontier_shard_index": 53,
+  "mode": "frontier_plus_paper_tracker_reservoir",
+  "use_best": 200000,
+  "uses_collision_oracle": false,
+  "uses_paper_tracker": true,
+  "uses_suffix_bank": false
+}
