@@ -1,0 +1,45 @@
+{
+  "author_repo": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/hybrid_of_reservoir_crispr_mcts_suffix/third_party/braids_project",
+  "bucket_size": 3000,
+  "check_lengths": [
+    54,
+    63,
+    65,
+    66
+  ],
+  "completion_targets": [
+    "identity",
+    "delta"
+  ],
+  "frontier_length": 8,
+  "frontier_max_records": 0,
+  "frontier_path": "results/BraidZero/frontiers/p5_frontier8.jsonl.gz",
+  "frontier_shard_by": "record",
+  "frontier_shard_count": 16,
+  "frontier_shard_index": 14,
+  "heuristics": [
+    "target",
+    "identity",
+    "projlen",
+    "scalar_shape",
+    "random"
+  ],
+  "max_actions_per_state": 0,
+  "n": 4,
+  "output_dir": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/BraidZero/p5_frontier8_bucket_reservoir_len66_x4/replica1_shard14_task31",
+  "p": 5,
+  "progress_interval_seconds": 30.0,
+  "r": 1,
+  "random_bucket_size": 0,
+  "representation": "two-rowed (3,1) of B_4 over F_5",
+  "seed": 105014,
+  "stop_after_scalar_identity": false,
+  "t_values": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "target_length": 66,
+  "use_best": 50000
+}

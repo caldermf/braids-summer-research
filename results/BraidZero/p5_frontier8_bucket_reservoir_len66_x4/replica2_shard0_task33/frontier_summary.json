@@ -1,0 +1,336 @@
+{
+  "bucket_count_per_heuristic": {
+    "identity": 71,
+    "projlen": 12,
+    "random": 1,
+    "scalar_shape": 69,
+    "target": 133
+  },
+  "bucket_size": 3000,
+  "bucket_summaries": {
+    "identity": {
+      "best_keys": [
+        {
+          "key": [
+            8,
+            10
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            12
+          ],
+          "seen": 2,
+          "states": 2
+        },
+        {
+          "key": [
+            8,
+            13
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            14
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            16
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            17
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            18
+          ],
+          "seen": 3,
+          "states": 3
+        },
+        {
+          "key": [
+            8,
+            19
+          ],
+          "seen": 4,
+          "states": 4
+        }
+      ],
+      "buckets": 71,
+      "states": 102275
+    },
+    "projlen": {
+      "best_keys": [
+        {
+          "key": [
+            8,
+            14
+          ],
+          "seen": 6,
+          "states": 6
+        },
+        {
+          "key": [
+            8,
+            15
+          ],
+          "seen": 56,
+          "states": 56
+        },
+        {
+          "key": [
+            8,
+            16
+          ],
+          "seen": 398,
+          "states": 398
+        },
+        {
+          "key": [
+            8,
+            17
+          ],
+          "seen": 36002,
+          "states": 3000
+        },
+        {
+          "key": [
+            8,
+            18
+          ],
+          "seen": 46783,
+          "states": 3000
+        },
+        {
+          "key": [
+            8,
+            19
+          ],
+          "seen": 86751,
+          "states": 3000
+        },
+        {
+          "key": [
+            8,
+            20
+          ],
+          "seen": 66573,
+          "states": 3000
+        },
+        {
+          "key": [
+            8,
+            21
+          ],
+          "seen": 48490,
+          "states": 3000
+        }
+      ],
+      "buckets": 12,
+      "states": 22290
+    },
+    "random": {
+      "best_keys": [
+        {
+          "key": [
+            8,
+            0
+          ],
+          "seen": 310241,
+          "states": 50000
+        }
+      ],
+      "buckets": 1,
+      "states": 50000
+    },
+    "scalar_shape": {
+      "best_keys": [
+        {
+          "key": [
+            8,
+            10
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            11
+          ],
+          "seen": 2,
+          "states": 2
+        },
+        {
+          "key": [
+            8,
+            13
+          ],
+          "seen": 2,
+          "states": 2
+        },
+        {
+          "key": [
+            8,
+            16
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            17
+          ],
+          "seen": 4,
+          "states": 4
+        },
+        {
+          "key": [
+            8,
+            19
+          ],
+          "seen": 7,
+          "states": 7
+        },
+        {
+          "key": [
+            8,
+            20
+          ],
+          "seen": 9,
+          "states": 9
+        },
+        {
+          "key": [
+            8,
+            21
+          ],
+          "seen": 13,
+          "states": 13
+        }
+      ],
+      "buckets": 69,
+      "states": 102383
+    },
+    "target": {
+      "best_keys": [
+        {
+          "key": [
+            8,
+            10,
+            "identity"
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            12,
+            "identity"
+          ],
+          "seen": 2,
+          "states": 2
+        },
+        {
+          "key": [
+            8,
+            13,
+            "identity"
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            14,
+            "identity"
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            16,
+            "identity"
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            17,
+            "identity"
+          ],
+          "seen": 1,
+          "states": 1
+        },
+        {
+          "key": [
+            8,
+            18,
+            "identity"
+          ],
+          "seen": 3,
+          "states": 3
+        },
+        {
+          "key": [
+            8,
+            19,
+            "identity"
+          ],
+          "seen": 4,
+          "states": 4
+        }
+      ],
+      "buckets": 133,
+      "states": 170581
+    }
+  },
+  "elapsed_seconds": 231.86,
+  "frontier_loaded": 310241,
+  "frontier_max_records": 0,
+  "frontier_path": "results/BraidZero/frontiers/p5_frontier8.jsonl.gz",
+  "frontier_shard_by": "record",
+  "frontier_shard_count": 16,
+  "frontier_shard_index": 0,
+  "heuristics": [
+    "target",
+    "identity",
+    "projlen",
+    "scalar_shape",
+    "random"
+  ],
+  "population_size_per_heuristic": {
+    "identity": 102275,
+    "projlen": 22290,
+    "random": 50000,
+    "scalar_shape": 102383,
+    "target": 170581
+  },
+  "use_best": 50000
+}

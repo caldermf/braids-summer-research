@@ -1,0 +1,11 @@
+{
+  "bucket_size": 3000,
+  "frontier_path": "results/BraidZero/frontiers/p5_frontier8.jsonl.gz",
+  "frontier_shard_by": "record",
+  "frontier_shard_count": 16,
+  "frontier_shard_index": 6,
+  "mode": "frontier_bucketed_reservoir_ensemble",
+  "use_best": 50000,
+  "uses_collision_oracle": false,
+  "uses_suffix_bank": false
+}

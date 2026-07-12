@@ -1,0 +1,704 @@
+{
+  "completion_targets": [
+    "identity",
+    "delta"
+  ],
+  "format": "braidzero-frontier-bucket-reservoir-summary-v1",
+  "frontier": {
+    "bucket_count_per_heuristic": {
+      "identity": 68,
+      "projlen": 12,
+      "random": 1,
+      "scalar_shape": 68,
+      "target": 128
+    },
+    "bucket_size": 3000,
+    "bucket_summaries": {
+      "identity": {
+        "best_keys": [
+          {
+            "key": [
+              8,
+              14
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              15
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              17
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              18
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              19
+            ],
+            "seen": 4,
+            "states": 4
+          },
+          {
+            "key": [
+              8,
+              20
+            ],
+            "seen": 9,
+            "states": 9
+          },
+          {
+            "key": [
+              8,
+              21
+            ],
+            "seen": 7,
+            "states": 7
+          },
+          {
+            "key": [
+              8,
+              22
+            ],
+            "seen": 15,
+            "states": 15
+          }
+        ],
+        "buckets": 68,
+        "states": 102338
+      },
+      "projlen": {
+        "best_keys": [
+          {
+            "key": [
+              8,
+              14
+            ],
+            "seen": 6,
+            "states": 6
+          },
+          {
+            "key": [
+              8,
+              15
+            ],
+            "seen": 52,
+            "states": 52
+          },
+          {
+            "key": [
+              8,
+              16
+            ],
+            "seen": 408,
+            "states": 408
+          },
+          {
+            "key": [
+              8,
+              17
+            ],
+            "seen": 35803,
+            "states": 3000
+          },
+          {
+            "key": [
+              8,
+              18
+            ],
+            "seen": 47131,
+            "states": 3000
+          },
+          {
+            "key": [
+              8,
+              19
+            ],
+            "seen": 86506,
+            "states": 3000
+          },
+          {
+            "key": [
+              8,
+              20
+            ],
+            "seen": 66719,
+            "states": 3000
+          },
+          {
+            "key": [
+              8,
+              21
+            ],
+            "seen": 48492,
+            "states": 3000
+          }
+        ],
+        "buckets": 12,
+        "states": 22285
+      },
+      "random": {
+        "best_keys": [
+          {
+            "key": [
+              8,
+              0
+            ],
+            "seen": 310241,
+            "states": 50000
+          }
+        ],
+        "buckets": 1,
+        "states": 50000
+      },
+      "scalar_shape": {
+        "best_keys": [
+          {
+            "key": [
+              8,
+              14
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              15
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              17
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              18
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              19
+            ],
+            "seen": 4,
+            "states": 4
+          },
+          {
+            "key": [
+              8,
+              20
+            ],
+            "seen": 10,
+            "states": 10
+          },
+          {
+            "key": [
+              8,
+              21
+            ],
+            "seen": 8,
+            "states": 8
+          },
+          {
+            "key": [
+              8,
+              22
+            ],
+            "seen": 16,
+            "states": 16
+          }
+        ],
+        "buckets": 68,
+        "states": 102433
+      },
+      "target": {
+        "best_keys": [
+          {
+            "key": [
+              8,
+              14,
+              "identity"
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              15,
+              "identity"
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              17,
+              "identity"
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              18,
+              "identity"
+            ],
+            "seen": 2,
+            "states": 2
+          },
+          {
+            "key": [
+              8,
+              19,
+              "identity"
+            ],
+            "seen": 4,
+            "states": 4
+          },
+          {
+            "key": [
+              8,
+              20,
+              "delta"
+            ],
+            "seen": 1,
+            "states": 1
+          },
+          {
+            "key": [
+              8,
+              20,
+              "identity"
+            ],
+            "seen": 9,
+            "states": 9
+          },
+          {
+            "key": [
+              8,
+              21,
+              "identity"
+            ],
+            "seen": 6,
+            "states": 6
+          }
+        ],
+        "buckets": 128,
+        "states": 170869
+      }
+    },
+    "elapsed_seconds": 234.21,
+    "frontier_loaded": 310241,
+    "frontier_max_records": 0,
+    "frontier_path": "results/BraidZero/frontiers/p5_frontier8.jsonl.gz",
+    "frontier_shard_by": "record",
+    "frontier_shard_count": 16,
+    "frontier_shard_index": 6,
+    "heuristics": [
+      "target",
+      "identity",
+      "projlen",
+      "scalar_shape",
+      "random"
+    ],
+    "population_size_per_heuristic": {
+      "identity": 102338,
+      "projlen": 22285,
+      "random": 50000,
+      "scalar_shape": 102433,
+      "target": 170869
+    },
+    "use_best": 50000
+  },
+  "length_range": {
+    "bucket_size": 3000,
+    "check_lengths": [
+      54,
+      63,
+      65,
+      66
+    ],
+    "frontier_length": 8,
+    "heuristics": [
+      "target",
+      "identity",
+      "projlen",
+      "scalar_shape",
+      "random"
+    ],
+    "target_length": 66,
+    "use_best": 50000
+  },
+  "method": "braidzero_exhaustive_frontier_bucketed_reservoir_ensemble",
+  "prime": 5,
+  "representation": "two-rowed (3,1) of B_4 over F_5",
+  "search": {
+    "best_identity_defect": 0,
+    "best_prefix_candidate": {
+      "factor_ids": [
+        2,
+        16,
+        13,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        7,
+        7,
+        21
+      ],
+      "heuristic": "projlen",
+      "kind": "frontier_bucket_reservoir_prefix",
+      "length": 65,
+      "metrics": {
+        "best_target_label": "identity",
+        "delta_target_defect": 5,
+        "diagonal_mismatch_terms": 0,
+        "identity_defect": 0,
+        "identity_target_defect": 0,
+        "nonzero_terms": 3,
+        "off_diagonal_terms": 0,
+        "projlen": 1,
+        "scalar_extra_degrees": 0,
+        "scalar_identity": true,
+        "scalar_nonzero_degrees": 1,
+        "target_defect": 0,
+        "target_defects": {
+          "delta": 5,
+          "identity": 0
+        },
+        "target_label": "identity",
+        "target_match": true
+      },
+      "power": 0,
+      "total_length": 65,
+      "word_digest": "abe81a74ba8bbba77bd98ac9b142154436c4aa55"
+    },
+    "best_projlen": 1,
+    "best_scalar_identity_candidate": {
+      "factor_ids": [
+        2,
+        2,
+        13,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        7,
+        21,
+        21
+      ],
+      "frontier_length": 8,
+      "kind": "frontier_bucket_reservoir_target_check",
+      "length": 65,
+      "matrix_digest": "2533ccfbfac9635a828b9e8c7fe8a709795d9f6a",
+      "metrics": {
+        "diagonal_mismatch_terms": 0,
+        "identity_defect": 0,
+        "nonzero_terms": 3,
+        "off_diagonal_terms": 0,
+        "projlen": 1,
+        "scalar_extra_degrees": 0,
+        "scalar_identity": true,
+        "scalar_nonzero_degrees": 1,
+        "target_defect": 5,
+        "target_label": "delta",
+        "target_match": false,
+        "target_projlen": 1
+      },
+      "power": 0,
+      "source": "expanded_child:projlen",
+      "target_label": "delta",
+      "word_digest": "dad70b942c430fc902bf9ab989ecd0a7a52d7680"
+    },
+    "best_target_candidate": {
+      "factor_ids": [
+        2,
+        16,
+        13,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        21,
+        11,
+        13,
+        11,
+        13,
+        10,
+        2,
+        13,
+        8,
+        13,
+        8,
+        13,
+        7,
+        7,
+        21
+      ],
+      "heuristic": "projlen",
+      "kind": "frontier_bucket_reservoir_prefix",
+      "length": 65,
+      "metrics": {
+        "best_target_label": "identity",
+        "delta_target_defect": 5,
+        "diagonal_mismatch_terms": 0,
+        "identity_defect": 0,
+        "identity_target_defect": 0,
+        "nonzero_terms": 3,
+        "off_diagonal_terms": 0,
+        "projlen": 1,
+        "scalar_extra_degrees": 0,
+        "scalar_identity": true,
+        "scalar_nonzero_degrees": 1,
+        "target_defect": 0,
+        "target_defects": {
+          "delta": 5,
+          "identity": 0
+        },
+        "target_label": "identity",
+        "target_match": true
+      },
+      "power": 0,
+      "total_length": 65,
+      "word_digest": "abe81a74ba8bbba77bd98ac9b142154436c4aa55"
+    },
+    "best_target_defect": 0,
+    "checked_states": 7173558,
+    "elapsed_seconds": 34542.61,
+    "exact_evaluations": 65364622,
+    "expanded_states": 65054381,
+    "final_bucket_count_per_heuristic": {
+      "identity": 344,
+      "projlen": 34,
+      "random": 1,
+      "scalar_shape": 337,
+      "target": 597
+    },
+    "final_population_size_per_heuristic": {
+      "identity": 185654,
+      "projlen": 66474,
+      "random": 50000,
+      "scalar_shape": 184680,
+      "target": 182604
+    },
+    "frontier_loaded": 310241,
+    "per_length_counts": {
+      "54": {
+        "checked": 1832242,
+        "scalar_identities": 0,
+        "target_matches": 0
+      },
+      "63": {
+        "checked": 1788180,
+        "scalar_identities": 0,
+        "target_matches": 0
+      },
+      "65": {
+        "checked": 1778162,
+        "scalar_identities": 4,
+        "target_matches": 2
+      },
+      "66": {
+        "checked": 1774974,
+        "scalar_identities": 0,
+        "target_matches": 0
+      }
+    },
+    "scalar_identity_candidates": 4,
+    "symbolic_factor_multiplications": 67536309,
+    "target_match_candidates": 2,
+    "verified_kernel_quotients": 4
+  },
+  "seed": 5006,
+  "status": "clean",
+  "t_values": [
+    1,
+    2,
+    3,
+    4
+  ]
+}
