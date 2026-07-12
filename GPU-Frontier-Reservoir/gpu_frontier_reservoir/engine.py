@@ -142,14 +142,22 @@ class FFTMultiplier:
         self.simple_fft = torch.fft.rfft(simples.float().to(device), n=self.fft_size, dim=-1)
 
     def multiply(self, parents: torch.Tensor, suffixes: torch.Tensor, p: int, chunk: int):
-        outputs = []
+        # Do not accumulate int32 chunk results in a Python list and concatenate:
+        # for wide windows that temporarily doubles peak memory.  Coefficients
+        # are reduced modulo p, so compact int16 is sufficient for storage.
+        output = torch.empty(
+            len(parents), self.dim, self.dim, self.D,
+            dtype=torch.int16, device=self.device,
+        )
         for start in range(0, len(parents), chunk):
-            A = torch.fft.rfft(parents[start:start + chunk].float(), n=self.fft_size, dim=-1)
-            B = self.simple_fft[suffixes[start:start + chunk].long()]
+            end = min(start + chunk, len(parents))
+            A = torch.fft.rfft(parents[start:end].float(), n=self.fft_size, dim=-1)
+            B = self.simple_fft[suffixes[start:end].long()]
             C = torch.einsum("nikf,nkjf->nijf", A, B)
             real = torch.fft.irfft(C, n=self.fft_size, dim=-1)[..., :self.D]
-            outputs.append(torch.round(real).to(torch.int32).remainder_(p))
-        return torch.cat(outputs)
+            output[start:end] = torch.round(real).to(torch.int32).remainder_(p).to(torch.int16)
+            del A, B, C, real
+        return output
 
 
 class Reservoir:
@@ -182,7 +190,9 @@ class Reservoir:
             mats.append(m); words.append(w); used += len(m)
         if not mats:
             raise RuntimeError("use_best is smaller than the lowest complete bucket")
-        return torch.cat(mats).to(torch.int32), torch.cat(words), used
+        # Reservoir matrices are already reduced modulo p. Keep int16 here;
+        # promoting a large use_best selection to int32 can consume tens of GB.
+        return torch.cat(mats), torch.cat(words), used
 
 
 class Search:

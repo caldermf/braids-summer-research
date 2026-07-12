@@ -15,11 +15,12 @@ TABLE=/nfs/roberts/project/pi_com36/as4843/burau-experiments/beta/precomputed_ta
 N=6 R=2 P=3 FRONTIER_LENGTH=3 TARGET_LENGTH=300 \
 BUCKET_SIZE=10000 USE_BEST=200000 SAVE_BEST=10000 \
 DEGREE_WINDOW=901 SHARD_COUNT=16 BASE_SEED=30000 \
+EXPANSION_CHUNK=5000 MATMUL_CHUNK=1500 \
 RUN_GROUP=B6_r2_p3_frontier3_gpu_reservoir_len300 \
 sbatch --array=1-16%4 GPU-Frontier-Reservoir/jobs/run_array_scavenge_gpu.sh
 ```
 
-Start with 16 shards and at most four simultaneous GPUs. Increase concurrency only if appropriate for the cluster. On a 44GB GPU, reduce `MATMUL_CHUNK` first after an OOM. Reducing `BUCKET_SIZE` or `USE_BEST` changes the search.
+Start with 16 shards and at most four simultaneous GPUs. Increase concurrency only if appropriate for the cluster. `EXPANSION_CHUNK` controls the retained result tensor and is intentionally much smaller than beta's narrow-window setting. On a 44GB GPU, reduce `MATMUL_CHUNK` first after an FFT OOM and `EXPANSION_CHUNK` after a result-tensor OOM. Reducing `BUCKET_SIZE` or `USE_BEST` changes the search.
 
 Outputs per shard include `config.json`, `progress.jsonl`, `good_braids.sqlite`, `kernel_candidates.jsonl` when applicable, and `status.json`.
 

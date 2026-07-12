@@ -28,4 +28,4 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
   --bucket-size "$BUCKET_SIZE" --use-best "$USE_BEST" --save-best "$SAVE_BEST" \
   --degree-window "$DEGREE_WINDOW" --boundary-margin "${BOUNDARY_MARGIN:-16}" \
   --shard-count "$SHARDS" --shard-index "$TASK" --seed "$((BASE_SEED+TASK))" \
-  --expansion-chunk "${EXPANSION_CHUNK:-50000}" --matmul-chunk "${MATMUL_CHUNK:-2500}"
+  --expansion-chunk "${EXPANSION_CHUNK:-5000}" --matmul-chunk "${MATMUL_CHUNK:-1500}"
