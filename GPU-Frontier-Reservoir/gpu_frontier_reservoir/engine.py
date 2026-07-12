@@ -162,13 +162,19 @@ class FFTMultiplier:
 
 class Reservoir:
     """One uniform priority reservoir per projlen bucket."""
-    def __init__(self, capacity: int, generator: torch.Generator, device: torch.device):
-        self.capacity, self.generator, self.device = capacity, generator, device
+    def __init__(self, capacity: int, generator: torch.Generator):
+        self.capacity, self.generator = capacity, generator
         self.data: dict[int, tuple[torch.Tensor, torch.Tensor, torch.Tensor]] = {}
         self.seen: dict[int, int] = {}
 
     def add(self, mats, words, projlens):
-        priorities = torch.rand(len(mats), generator=self.generator, device=self.device)
+        # Reservoir state belongs in CPU RAM. Keeping both the selected parent
+        # generation and growing child generation on a 44GB GPU is impossible
+        # for wide 9x9 polynomial matrices and large paper-style buckets.
+        mats = mats.to(device="cpu", dtype=torch.int16)
+        words = words.to(device="cpu", dtype=torch.int32)
+        projlens = projlens.to(device="cpu")
+        priorities = torch.rand(len(mats), generator=self.generator)
         for pl in torch.unique(projlens).tolist():
             mask = projlens == pl
             nm, nw, np = mats[mask].to(torch.int16), words[mask].to(torch.int32), priorities[mask]
@@ -205,7 +211,7 @@ class Search:
             raise RuntimeError("CUDA requested but unavailable")
         torch.manual_seed(cfg.seed)
         if torch.cuda.is_available(): torch.cuda.manual_seed_all(cfg.seed)
-        self.rng = torch.Generator(device=self.device).manual_seed(cfg.seed)
+        self.rng = torch.Generator(device="cpu").manual_seed(cfg.seed)
         simple, valid, counts = load_tables(table_path, cfg)
         self.simple = simple.to(self.device)
         self.valid, self.counts = valid.to(self.device), counts.to(self.device)
@@ -227,7 +233,7 @@ class Search:
         return mats
 
     def build_frontier(self):
-        reservoir = Reservoir(self.cfg.bucket_size, self.rng, self.device)
+        reservoir = Reservoir(self.cfg.bucket_size, self.rng)
         batch = []
         total = assigned = 0
         for word in iter_frontier(self.valid_cpu, self.counts_cpu, self.cfg.frontier_length):
@@ -261,28 +267,35 @@ class Search:
         return saved
 
     def _expand(self, current: Reservoir, length: int):
+        # Selection is assembled in CPU RAM. Only each expansion chunk is sent
+        # to CUDA, leaving device memory for FFT workspaces and results.
         parents, words, selected = current.select(self.cfg.use_best)
+        current.data.clear()
         last = words[:, -1].long()
-        counts = self.counts[last].long()
-        parent_idx = torch.repeat_interleave(torch.arange(len(words), device=self.device), counts)
+        counts = self.counts_cpu[last].long()
+        parent_idx = torch.repeat_interleave(torch.arange(len(words)), counts)
         ends = torch.cumsum(counts, 0); starts = ends - counts
-        local = torch.arange(int(ends[-1]), device=self.device) - starts[parent_idx]
-        suffix = self.valid[last[parent_idx], local].long()
-        nxt = Reservoir(self.cfg.bucket_size, self.rng, self.device)
+        local = torch.arange(int(ends[-1])) - starts[parent_idx]
+        suffix = self.valid_cpu[last[parent_idx], local].long()
+        nxt = Reservoir(self.cfg.bucket_size, self.rng)
         boundary = kernels = candidates = 0
         for start in range(0, len(parent_idx), self.cfg.expansion_chunk):
-            idx, suf = parent_idx[start:start+self.cfg.expansion_chunk], suffix[start:start+self.cfg.expansion_chunk]
-            mats = self.multiplier.multiply(parents[idx], suf, self.cfg.p, self.cfg.matmul_chunk)
+            idx = parent_idx[start:start+self.cfg.expansion_chunk]
+            suf_cpu = suffix[start:start+self.cfg.expansion_chunk]
+            parent_gpu = parents[idx].to(self.device, non_blocking=True)
+            suf = suf_cpu.to(self.device, non_blocking=True)
+            mats = self.multiplier.multiply(parent_gpu, suf, self.cfg.p, self.cfg.matmul_chunk)
             mats, pls, raw_ends = projectivize_batch(mats, self.cfg.degree_window)
             boundary += int((pls >= self.cfg.degree_window - self.cfg.boundary_margin).sum())
             kmask = scalar_identity_mask(mats)
             kernels += int(kmask.sum())
-            child_words = torch.cat((words[idx], suf[:, None].to(torch.int32)), 1)
+            child_words = torch.cat((words[idx], suf_cpu[:, None].to(torch.int32)), 1)
             if kmask.any():
                 with (self.output / "kernel_candidates.jsonl").open("a") as f:
-                    for w in child_words[kmask].cpu().tolist():
+                    for w in child_words[kmask.cpu()].tolist():
                         f.write(json.dumps({"length": length, "factors": w, "gpu_scalar_identity": True}) + "\n")
             nxt.add(mats, child_words, pls); candidates += len(mats)
+            del parent_gpu, suf, mats, pls
         if boundary:
             raise RuntimeError(f"{boundary} candidates entered degree-window safety margin; increase --degree-window")
         return nxt, selected, candidates, kernels
