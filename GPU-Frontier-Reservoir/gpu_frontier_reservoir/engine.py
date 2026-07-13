@@ -82,7 +82,12 @@ def load_tables(path: Path, cfg: SearchConfig):
     identity = int(tables["id_index"])
     valid[identity] = valid[delta]
     counts[identity] = counts[delta]
-    return simple, valid, counts
+    # Keep only the global support needed by an individual simple. Search
+    # matrices grow dynamically from this compact base instead of paying for
+    # the final safety cap at every early level.
+    support = simple.ne(0).any(dim=(0, 1, 2))
+    simple_width = int(torch.where(support)[0][-1]) + 1
+    return simple[..., :simple_width].contiguous(), valid, counts
 
 
 def iter_frontier(valid: torch.Tensor, counts: torch.Tensor, depth: int) -> Iterator[tuple[int, ...]]:
@@ -134,27 +139,43 @@ def scalar_identity_mask(mats: torch.Tensor) -> torch.Tensor:
 
 
 class FFTMultiplier:
-    def __init__(self, simples: torch.Tensor, device: torch.device):
+    def __init__(self, simples: torch.Tensor, device: torch.device, max_D: int):
         self.device = device
-        self.D = simples.shape[-1]
+        self.simple_D = simples.shape[-1]
+        self.max_D = max_D
         self.dim = simples.shape[1]
-        self.fft_size = 1 << (2 * self.D - 2).bit_length()
-        self.simple_fft = torch.fft.rfft(simples.float().to(device), n=self.fft_size, dim=-1)
+        self.simples = simples.to(device)
+        self._fft_cache: dict[int, torch.Tensor] = {}
+
+    def _simple_fft(self, fft_size: int):
+        if fft_size not in self._fft_cache:
+            self._fft_cache[fft_size] = torch.fft.rfft(
+                self.simples.float(), n=fft_size, dim=-1
+            )
+        return self._fft_cache[fft_size]
+
+    @property
+    def cache_bytes(self) -> int:
+        return sum(x.numel() * x.element_size() for x in self._fft_cache.values())
 
     def multiply(self, parents: torch.Tensor, suffixes: torch.Tensor, p: int, chunk: int):
         # Do not accumulate int32 chunk results in a Python list and concatenate:
         # for wide windows that temporarily doubles peak memory.  Coefficients
         # are reduced modulo p, so compact int16 is sufficient for storage.
+        natural_D = parents.shape[-1] + self.simple_D - 1
+        out_D = min(natural_D, self.max_D)
+        fft_size = 1 << (natural_D - 1).bit_length()
+        simple_fft = self._simple_fft(fft_size)
         output = torch.empty(
-            len(parents), self.dim, self.dim, self.D,
+            len(parents), self.dim, self.dim, out_D,
             dtype=torch.int16, device=self.device,
         )
         for start in range(0, len(parents), chunk):
             end = min(start + chunk, len(parents))
-            A = torch.fft.rfft(parents[start:end].float(), n=self.fft_size, dim=-1)
-            B = self.simple_fft[suffixes[start:end].long()]
+            A = torch.fft.rfft(parents[start:end].float(), n=fft_size, dim=-1)
+            B = simple_fft[suffixes[start:end].long()]
             C = torch.einsum("nikf,nkjf->nijf", A, B)
-            real = torch.fft.irfft(C, n=self.fft_size, dim=-1)[..., :self.D]
+            real = torch.fft.irfft(C, n=fft_size, dim=-1)[..., :out_D]
             output[start:end] = torch.round(real).to(torch.int32).remainder_(p).to(torch.int16)
             del A, B, C, real
         return output
@@ -177,7 +198,11 @@ class Reservoir:
         priorities = torch.rand(len(mats), generator=self.generator)
         for pl in torch.unique(projlens).tolist():
             mask = projlens == pl
-            nm, nw, np = mats[mask].to(torch.int16), words[mask].to(torch.int32), priorities[mask]
+            # A paper bucket stores projectivized matrices at precisely its
+            # projlen. This is the main memory and speed win over fixed width.
+            width = max(1, int(pl))
+            nm = mats[mask, ..., :width].to(torch.int16)
+            nw, np = words[mask].to(torch.int32), priorities[mask]
             self.seen[pl] = self.seen.get(pl, 0) + len(nm)
             if pl in self.data:
                 om, ow, op = self.data[pl]
@@ -198,7 +223,17 @@ class Reservoir:
             raise RuntimeError("use_best is smaller than the lowest complete bucket")
         # Reservoir matrices are already reduced modulo p. Keep int16 here;
         # promoting a large use_best selection to int32 can consume tens of GB.
-        return torch.cat(mats), torch.cat(words), used
+        max_width = max(x.shape[-1] for x in mats)
+        total = sum(len(x) for x in mats)
+        packed = torch.zeros(
+            total, mats[0].shape[1], mats[0].shape[2], max_width,
+            dtype=torch.int16,
+        )
+        offset = 0
+        for item in mats:
+            packed[offset:offset+len(item), ..., :item.shape[-1]] = item
+            offset += len(item)
+        return packed, torch.cat(words), used
 
 
 class Search:
@@ -216,7 +251,7 @@ class Search:
         self.simple = simple.to(self.device)
         self.valid, self.counts = valid.to(self.device), counts.to(self.device)
         self.valid_cpu, self.counts_cpu = valid, counts
-        self.multiplier = FFTMultiplier(simple, self.device)
+        self.multiplier = FFTMultiplier(simple, self.device, cfg.degree_window)
         self.db = sqlite3.connect(output / "good_braids.sqlite")
         self.db.execute("CREATE TABLE IF NOT EXISTS good_braids(length INT, projlen INT, factors TEXT, matrix_sha256 TEXT)")
         (output / "config.json").write_text(json.dumps({**asdict(cfg), "table": str(table_path), "table_sha256": sha256_file(table_path)}, indent=2, sort_keys=True))
@@ -253,8 +288,9 @@ class Search:
         print("✓ Identity matrix loaded at degree 0")
         print()
         print("Precomputing FFTs of simple matrices...")
-        print(f"  dim={c.dim}, D={c.degree_window}, out_D={2*c.degree_window-1}, fft_size={self.multiplier.fft_size}")
-        print(f"  FFT cache: {self.multiplier.simple_fft.numel() * self.multiplier.simple_fft.element_size() / 1e6:.1f} MB")
+        print(f"  simple_D={self.multiplier.simple_D}, safety_cap_D={c.degree_window}")
+        print("  FFT size: dynamic (grows with actual projective width)")
+        print("  FFT cache: initialized lazily by transform size")
         print("Storage: reservoir matrices=CPU int16, active chunks=CUDA int16/FFT")
         print("⚡ GPU-accelerated paper reservoir with per-product projectivization", flush=True)
 
@@ -277,13 +313,13 @@ class Search:
         print(f"  ⚡ Timing: matmul={matmul_seconds:.2f}s, sampling={sampling_seconds:.2f}s, total={total_seconds:.2f}s", flush=True)
 
     def _evaluate_words(self, words: torch.Tensor):
-        mats = torch.zeros(len(words), self.cfg.dim, self.cfg.dim, self.cfg.degree_window, dtype=torch.int32, device=self.device)
+        mats = torch.zeros(len(words), self.cfg.dim, self.cfg.dim, 1, dtype=torch.int16, device=self.device)
         eye = torch.arange(self.cfg.dim, device=self.device)
         mats[:, eye, eye, 0] = 1
         for pos in range(words.shape[1]):
             mats = self.multiplier.multiply(mats, words[:, pos], self.cfg.p, self.cfg.matmul_chunk)
-            mats, _, ends = projectivize_batch(mats, self.cfg.degree_window)
-            if (ends >= self.cfg.degree_window).any():
+            mats, _, ends = projectivize_batch(mats, mats.shape[-1])
+            if mats.shape[-1] >= self.cfg.degree_window and (ends >= self.cfg.degree_window).any():
                 raise RuntimeError("degree window overflow while evaluating frontier")
         return mats
 
@@ -304,7 +340,7 @@ class Search:
     def _add_frontier_batch(self, reservoir, batch):
         words = torch.tensor(batch, dtype=torch.int32, device=self.device)
         mats = self._evaluate_words(words)
-        mats, pls, _ = projectivize_batch(mats, self.cfg.degree_window)
+        mats, pls, _ = projectivize_batch(mats, mats.shape[-1])
         reservoir.add(mats, words, pls)
 
     def _save_best(self, length: int, reservoir: Reservoir):
@@ -352,7 +388,7 @@ class Search:
             suf = suf_cpu.to(self.device, non_blocking=True)
             tick = time.time()
             mats = self.multiplier.multiply(parent_gpu, suf, self.cfg.p, self.cfg.matmul_chunk)
-            mats, pls, raw_ends = projectivize_batch(mats, self.cfg.degree_window)
+            mats, pls, raw_ends = projectivize_batch(mats, mats.shape[-1])
             matmul_seconds += time.time() - tick
             boundary += int((pls >= self.cfg.degree_window - self.cfg.boundary_margin).sum())
             kmask = scalar_identity_mask(mats)
