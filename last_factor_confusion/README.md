@@ -21,6 +21,19 @@ arithmetic. The historical `braidmod` implementation is unchanged.
 Known-kernel/control construction and reservoir integration deliberately remain separate stages.
 They should be connected only after the base predictor passes held-out and sampler-shift tests.
 
+## Exact-degree v3 architecture
+
+`model_v3.py` is an experimental successor to the frozen v2 baseline. It removes learned degree
+and gap lookup tables. Its global attention uses exact polynomial degrees in RoPE, continuous gap
+and boundary features, QK RMS normalization, SwiGLU feed-forward blocks, and fused scaled-dot-product
+attention. It pools the matrix token, learned attention pool, and both degree boundaries. The primary
+target remains the 22-way final simple-factor class; the six descent bits are a low-weight auxiliary
+target already present in the dataset. Existing v2 checkpoints continue to use `model.py`.
+
+The v3 trainer uses BF16 on CUDA, AdamW, warmup plus cosine decay, EMA validation/checkpoints, gradient
+clipping, atomic epoch checkpoints, and complete epoch-level resume. Train seed 101 first; do not launch
+additional seeds until its in-range and extrapolation evaluations pass the agreed gates.
+
 ## Local smoke test
 
 Use Python 3.10 or newer:

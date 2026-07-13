@@ -94,3 +94,36 @@ class ShardShuffleSampler(Sampler):
         for shard in shard_order:
             start, stop = self.dataset.cumulative[shard:shard + 2]
             yield from (int(start + x) for x in rng.permutation(stop - start))
+
+
+class ShardBucketBatchSampler(Sampler):
+    """Shuffle shards, then batch examples of similar polynomial depth."""
+    def __init__(self, dataset: ShardedPrefixDataset, batch_size: int, seed: int, bucket_multiplier: int = 8):
+        self.dataset = dataset
+        self.batch_size = batch_size
+        self.seed = seed
+        self.bucket_multiplier = bucket_multiplier
+        self.epoch = 0
+
+    def __len__(self):
+        shard_sizes = np.diff(self.dataset.cumulative)
+        return int(sum(np.ceil(size / self.batch_size) for size in shard_sizes))
+
+    def __iter__(self):
+        rng = np.random.default_rng(self.seed + self.epoch)
+        self.epoch += 1
+        for shard_index in rng.permutation(len(self.dataset.paths)):
+            with np.load(self.dataset.paths[shard_index], allow_pickle=False) as shard:
+                lengths = np.diff(shard["offsets"])
+            local_indices = rng.permutation(len(lengths))
+            bucket_size = self.batch_size * self.bucket_multiplier
+            shard_batches = []
+            for start in range(0, len(local_indices), bucket_size):
+                bucket = local_indices[start:start + bucket_size]
+                bucket = bucket[np.argsort(lengths[bucket], kind="stable")]
+                for batch_start in range(0, len(bucket), self.batch_size):
+                    local_batch = bucket[batch_start:batch_start + self.batch_size]
+                    global_start = self.dataset.cumulative[shard_index]
+                    shard_batches.append([int(global_start + index) for index in local_batch])
+            rng.shuffle(shard_batches)
+            yield from shard_batches

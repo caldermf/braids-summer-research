@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 
 from last_factor_confusion.generate_sharded import stratified_lengths
-from last_factor_confusion.shards import write_shard
+from last_factor_confusion.shards import ShardBucketBatchSampler, ShardedPrefixDataset, write_shard
 
 
 def test_stratified_lengths_cover_range():
@@ -26,3 +26,9 @@ def test_atomic_ragged_shard(tmp_path: Path):
     with np.load(path,allow_pickle=False) as z:
         assert z["offsets"].tolist()==[0,1,3]
         assert z["coefficients"].shape==(3,3,3)
+
+    manifest = {"splits": {"train": {"shards": [{"path": "x.npz", "records": 2}]}}}
+    (tmp_path / "manifest.json").write_text(json.dumps(manifest))
+    dataset = ShardedPrefixDataset(tmp_path, "train")
+    batches = list(ShardBucketBatchSampler(dataset, batch_size=1, seed=7))
+    assert sorted(index for batch in batches for index in batch) == [0, 1]
