@@ -221,6 +221,61 @@ class Search:
         self.db.execute("CREATE TABLE IF NOT EXISTS good_braids(length INT, projlen INT, factors TEXT, matrix_sha256 TEXT)")
         (output / "config.json").write_text(json.dumps({**asdict(cfg), "table": str(table_path), "table_sha256": sha256_file(table_path)}, indent=2, sort_keys=True))
 
+    def _print_banner(self):
+        c = self.cfg
+        print("=" * 60)
+        print("SEARCHING FOR KERNEL ELEMENTS")
+        print("=" * 60)
+        print(f"Braid group: B_{c.n}")
+        print(f"Representation: ({c.n-c.r}, {c.r})")
+        print(f"Dimension: {c.dim}")
+        print(f"Number of simples: {math.factorial(c.n):,}")
+        print(f"Prime: {c.p}")
+        print(f"Device: {self.device}")
+        print(f"Bucket size: {c.bucket_size}")
+        print(f"Target length: {c.target_length}")
+        print(f"BFS frontier length: {c.frontier_length}")
+        print(f"Frontier shard: {c.shard_index + 1}/{c.shard_count}")
+        print(f"Degree window: [0, {c.degree_window-1}] ({c.degree_window} coeffs)")
+        print(f"Boundary margin: {c.boundary_margin}")
+        print(f"Use best: {c.use_best}")
+        print(f"Save best: {c.save_best}")
+        print(f"Expansion chunk size: {c.expansion_chunk}")
+        print(f"Matmul chunk size: {c.matmul_chunk}")
+        print(f"Seed: {c.seed}")
+        print()
+        print(f"Loaded tables from {self.table_path}")
+        print(f"  Braid group: B_{c.n}")
+        print(f"  Representation: ({c.n-c.r}, {c.r}), dimension {c.dim}")
+        print(f"  Number of simples: {math.factorial(c.n)}")
+        print(f"  Degree window: [0, {c.degree_window-1}] ({c.degree_window} coefficients)")
+        print(f"  Table checksum: {sha256_file(self.table_path)}")
+        print("✓ Identity matrix loaded at degree 0")
+        print()
+        print("Precomputing FFTs of simple matrices...")
+        print(f"  dim={c.dim}, D={c.degree_window}, out_D={2*c.degree_window-1}, fft_size={self.multiplier.fft_size}")
+        print(f"  FFT cache: {self.multiplier.simple_fft.numel() * self.multiplier.simple_fft.element_size() / 1e6:.1f} MB")
+        print("Storage: reservoir matrices=CPU int16, active chunks=CUDA int16/FFT")
+        print("⚡ GPU-accelerated paper reservoir with per-product projectivization", flush=True)
+
+    @staticmethod
+    def _reservoir_bytes(reservoir: Reservoir) -> int:
+        total = 0
+        for mats, words, priorities in reservoir.data.values():
+            total += mats.numel() * mats.element_size()
+            total += words.numel() * words.element_size()
+            total += priorities.numel() * priorities.element_size()
+        return total
+
+    def _print_level_result(self, reservoir: Reservoir, *, matmul_seconds: float, sampling_seconds: float, total_seconds: float):
+        print("  Projlen distribution:")
+        for pl in sorted(reservoir.seen):
+            print(f"    projlen={pl}: {reservoir.seen[pl]} braids")
+        kept = sum(len(value[0]) for value in reservoir.data.values())
+        memory = self._reservoir_bytes(reservoir) / 1e9
+        print(f"  Braids kept: {kept} (in {len(reservoir.data)} buckets, {memory:.2f} GB CPU)")
+        print(f"  ⚡ Timing: matmul={matmul_seconds:.2f}s, sampling={sampling_seconds:.2f}s, total={total_seconds:.2f}s", flush=True)
+
     def _evaluate_words(self, words: torch.Tensor):
         mats = torch.zeros(len(words), self.cfg.dim, self.cfg.dim, self.cfg.degree_window, dtype=torch.int32, device=self.device)
         eye = torch.arange(self.cfg.dim, device=self.device)
@@ -233,6 +288,7 @@ class Search:
         return mats
 
     def build_frontier(self):
+        started = time.time()
         reservoir = Reservoir(self.cfg.bucket_size, self.rng)
         batch = []
         total = assigned = 0
@@ -243,7 +299,7 @@ class Search:
             if len(batch) >= self.cfg.expansion_chunk:
                 self._add_frontier_batch(reservoir, batch); batch = []
         if batch: self._add_frontier_batch(reservoir, batch)
-        return reservoir, total, assigned
+        return reservoir, total, assigned, time.time() - started
 
     def _add_frontier_batch(self, reservoir, batch):
         words = torch.tensor(batch, dtype=torch.int32, device=self.device)
@@ -267,6 +323,7 @@ class Search:
         return saved
 
     def _expand(self, current: Reservoir, length: int):
+        level_start = time.time()
         # Selection is assembled in CPU RAM. Only each expansion chunk is sent
         # to CUDA, leaving device memory for FFT workspaces and results.
         parents, words, selected = current.select(self.cfg.use_best)
@@ -277,15 +334,26 @@ class Search:
         ends = torch.cumsum(counts, 0); starts = ends - counts
         local = torch.arange(int(ends[-1])) - starts[parent_idx]
         suffix = self.valid_cpu[last[parent_idx], local].long()
+        print("=" * 60)
+        print(f"Level {length} - SAMPLING")
+        print("=" * 60)
+        print(f"  Starting braids: {selected}")
+        print(f"  Candidates to generate: {len(parent_idx)}")
+        chunks = (len(parent_idx) + self.cfg.expansion_chunk - 1) // self.cfg.expansion_chunk
+        if chunks > 1:
+            print(f"  Processing in {chunks} chunks...", flush=True)
         nxt = Reservoir(self.cfg.bucket_size, self.rng)
         boundary = kernels = candidates = 0
+        matmul_seconds = sampling_seconds = 0.0
         for start in range(0, len(parent_idx), self.cfg.expansion_chunk):
             idx = parent_idx[start:start+self.cfg.expansion_chunk]
             suf_cpu = suffix[start:start+self.cfg.expansion_chunk]
             parent_gpu = parents[idx].to(self.device, non_blocking=True)
             suf = suf_cpu.to(self.device, non_blocking=True)
+            tick = time.time()
             mats = self.multiplier.multiply(parent_gpu, suf, self.cfg.p, self.cfg.matmul_chunk)
             mats, pls, raw_ends = projectivize_batch(mats, self.cfg.degree_window)
+            matmul_seconds += time.time() - tick
             boundary += int((pls >= self.cfg.degree_window - self.cfg.boundary_margin).sum())
             kmask = scalar_identity_mask(mats)
             kernels += int(kmask.sum())
@@ -294,25 +362,49 @@ class Search:
                 with (self.output / "kernel_candidates.jsonl").open("a") as f:
                     for w in child_words[kmask.cpu()].tolist():
                         f.write(json.dumps({"length": length, "factors": w, "gpu_scalar_identity": True}) + "\n")
-            nxt.add(mats, child_words, pls); candidates += len(mats)
+            tick = time.time()
+            nxt.add(mats, child_words, pls)
+            sampling_seconds += time.time() - tick
+            candidates += len(mats)
             del parent_gpu, suf, mats, pls
         if boundary:
             raise RuntimeError(f"{boundary} candidates entered degree-window safety margin; increase --degree-window")
+        self._print_level_result(
+            nxt,
+            matmul_seconds=matmul_seconds,
+            sampling_seconds=sampling_seconds,
+            total_seconds=time.time() - level_start,
+        )
+        if kernels:
+            print(f"  🎉 GPU scalar-identity candidates: {kernels} (exact verification required)", flush=True)
         return nxt, selected, candidates, kernels
 
     def run(self):
         start = time.time()
         status = "clean"
+        final_length = 0
+        total_kernels = 0
         try:
-            current, total, assigned = self.build_frontier()
+            self._print_banner()
+            print()
+            print("=" * 60)
+            print(f"Level {self.cfg.frontier_length} - BFS FRONTIER")
+            print("=" * 60)
+            print(f"  Exhaustively enumerating all legal GNF words of length {self.cfg.frontier_length}...")
+            current, total, assigned, frontier_seconds = self.build_frontier()
+            print(f"  Full frontier: {total:,} braids")
+            print(f"  Assigned to this shard: {assigned:,} braids")
+            self._print_level_result(current, matmul_seconds=frontier_seconds, sampling_seconds=0.0, total_seconds=frontier_seconds)
             with (self.output / "progress.jsonl").open("a") as progress:
                 for length in range(self.cfg.frontier_length, self.cfg.target_length + 1):
+                    final_length = length
                     saved = self._save_best(length, current)
                     best = min(current.data)
                     row = {"length": length, "best_projlen": best, "bucket_count": len(current.data), "live": sum(len(x[0]) for x in current.data.values()), "saved": saved, "frontier_total": total, "frontier_assigned": assigned, "elapsed_seconds": time.time()-start}
-                    print(json.dumps(row, sort_keys=True), flush=True); progress.write(json.dumps(row, sort_keys=True)+"\n"); progress.flush()
+                    progress.write(json.dumps(row, sort_keys=True)+"\n"); progress.flush()
                     if length == self.cfg.target_length: break
                     current, selected, candidates, kernels = self._expand(current, length + 1)
+                    total_kernels += kernels
                     row.update({"selected": selected, "candidates": candidates, "kernel_candidates": kernels})
         except Exception:
             status = "malformed"
@@ -320,3 +412,12 @@ class Search:
         finally:
             self.db.close()
             (self.output / "status.json").write_text(json.dumps({"status": status, "elapsed_seconds": time.time()-start}, indent=2))
+            print()
+            print("=" * 60)
+            print("SEARCH COMPLETE" if status == "clean" and final_length == self.cfg.target_length else "SEARCH STOPPED")
+            print("=" * 60)
+            print(f"Final level: {final_length}")
+            print(f"Total time: {time.time()-start:.2f}s")
+            print(f"Avg time per level: {(time.time()-start)/max(1, final_length-self.cfg.frontier_length+1):.2f}s")
+            print(f"Total GPU scalar-identity candidates: {total_kernels}")
+            print("Exact peyl verification required for every candidate.", flush=True)
