@@ -20,6 +20,7 @@ def main():
     p.add_argument("--lr",type=float,default=3e-4); p.add_argument("--weight-decay",type=float,default=5e-3); p.add_argument("--device",default="cuda")
     p.add_argument("--d-model",type=int,default=256); p.add_argument("--heads",type=int,default=8); p.add_argument("--local-layers",type=int,default=2)
     p.add_argument("--global-layers",type=int,default=4); p.add_argument("--dropout",type=float,default=.08); p.add_argument("--dense",action="store_true")
+    p.add_argument("--resume",type=Path,help="Resume model, optimizer, history, and RNG state from last_checkpoint.pt")
     a=p.parse_args(); random.seed(a.seed); np.random.seed(a.seed); torch.manual_seed(a.seed)
     manifest=json.loads((a.dataset/"manifest.json").read_text()); cfg=manifest["config"]
     datasets={s:ShardedPrefixDataset(a.dataset,s) for s in ("train","validation","test","extrapolation_test")}
@@ -30,14 +31,31 @@ def main():
                    global_layers=a.global_layers,dropout=a.dropout)
     device=torch.device(a.device); model=LastFactorTransformer(mc).to(device)
     opt=torch.optim.AdamW(model.parameters(),lr=a.lr,weight_decay=a.weight_decay); a.out_dir.mkdir(parents=True,exist_ok=True)
-    best=float("inf"); history=[]
-    for epoch in range(1,a.epochs+1):
+    best=float("inf"); history=[]; start_epoch=1
+    if a.resume:
+        resume=torch.load(a.resume,map_location=device,weights_only=False)
+        model.load_state_dict(resume["state_dict"]); opt.load_state_dict(resume["optimizer_state"])
+        best=float(resume["best_validation_cross_entropy"]); history=list(resume["history"])
+        start_epoch=int(resume["completed_epoch"])+1
+        random.setstate(resume["python_random_state"]); np.random.set_state(resume["numpy_random_state"])
+        torch.set_rng_state(resume["torch_random_state"])
+        if torch.cuda.is_available() and resume.get("cuda_random_state") is not None:
+            torch.cuda.set_rng_state_all(resume["cuda_random_state"])
+        print(json.dumps({"resumed_from":str(a.resume),"start_epoch":start_epoch,"best_validation_cross_entropy":best}),flush=True)
+    for epoch in range(start_epoch,a.epochs+1):
         row={"epoch":epoch,"train":run_epoch(model,loaders["train"],device,opt),"validation":run_epoch(model,loaders["validation"],device)}
         history.append(row); print(json.dumps(row),flush=True)
         if row["validation"]["cross_entropy"]<best:
             best=row["validation"]["cross_entropy"]
             torch.save({"state_dict":model.state_dict(),"model_config":mc.as_dict(),"sparse":not a.dense,"seed":a.seed,
                         "dataset_manifest":str((a.dataset/"manifest.json").resolve())},a.out_dir/"best_model.pt")
+        temporary=a.out_dir/"last_checkpoint.pt.partial"
+        torch.save({"state_dict":model.state_dict(),"optimizer_state":opt.state_dict(),"completed_epoch":epoch,
+                    "best_validation_cross_entropy":best,"history":history,"model_config":mc.as_dict(),
+                    "python_random_state":random.getstate(),"numpy_random_state":np.random.get_state(),
+                    "torch_random_state":torch.get_rng_state(),
+                    "cuda_random_state":torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None},temporary)
+        temporary.replace(a.out_dir/"last_checkpoint.pt")
     (a.out_dir/"history.json").write_text(json.dumps(history,indent=2))
     ck=torch.load(a.out_dir/"best_model.pt",map_location=device,weights_only=False); model.load_state_dict(ck["state_dict"])
     results={s:run_epoch(model,loaders[s],device) for s in ("test","extrapolation_test")}
