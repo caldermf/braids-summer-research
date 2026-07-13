@@ -1,0 +1,15 @@
+{
+  "schema_version": 2,
+  "prime": 5,
+  "n": 4,
+  "r": 1,
+  "base_seed": 20260713,
+  "shard_trajectories": 250,
+  "splits": {
+    "train": {"trajectories": 20000, "prefixes_per_trajectory": 16, "length_min": 5, "length_max": 160},
+    "validation": {"trajectories": 2500, "prefixes_per_trajectory": 16, "length_min": 5, "length_max": 160},
+    "calibration": {"trajectories": 5000, "prefixes_per_trajectory": 16, "length_min": 5, "length_max": 160},
+    "test": {"trajectories": 5000, "prefixes_per_trajectory": 16, "length_min": 5, "length_max": 160},
+    "extrapolation_test": {"trajectories": 2500, "prefixes_per_trajectory": 12, "length_min": 161, "length_max": 220}
+  }
+}
