@@ -29,6 +29,12 @@ def atomic_json(path: Path, payload: dict):
     temporary.replace(path)
 
 
+def atomic_checkpoint(path: Path, payload: dict):
+    temporary = path.with_name(path.name + ".partial")
+    torch.save(payload, temporary)
+    temporary.replace(path)
+
+
 @dataclass
 class Bucket:
     key: int
@@ -85,6 +91,52 @@ class Population:
                          for key in sorted(self.buckets, reverse=reverse)[:8]]}
 
 
+def print_banner(args, env, config):
+    print("=" * 60)
+    print("SEARCHING FOR KERNEL ELEMENTS")
+    print("=" * 60)
+    print(f"Braid group: B_{args.n}")
+    print(f"Representation: ({args.n-args.r}, {args.r})")
+    print(f"Dimension: {env.dim}")
+    print(f"Number of simples: {math.factorial(args.n)}")
+    print(f"Prime: {args.p}")
+    print(f"Device: {args.device}")
+    print(f"Heuristic: {args.heuristic}")
+    print(f"Bucket size: {args.bucket_size}")
+    print(f"Target length: {args.target_length}")
+    print(f"BFS frontier length: {args.frontier_length}")
+    print(f"Frontier shard: {args.frontier_shard_index + 1}/{args.frontier_shard_count}")
+    print(f"Use best: {args.use_best}")
+    print(f"Inference batch size: {args.inference_batch_size}")
+    if args.heuristic == "confusion":
+        print(f"Confusion bin width: {args.confusion_bin_width}")
+        print(f"Maximum bucketed confusion: {args.max_confusion}")
+    print(f"Seed: {args.seed}")
+    print()
+    print(f"Loaded transformer from {args.checkpoint}")
+    print(f"  Checkpoint checksum: {config['checkpoint_checksum']}")
+    print(f"  Calibration checksum: {config['calibration_checksum']}")
+    print("  Model input: exact projectivized polynomial matrix")
+    print("  Target: true final proper Garside factor")
+    print("Storage: exact matrices=CPU NumPy, transformer batches=CUDA BF16")
+    print("GPU-accelerated confusion scoring with exact peyl braid arithmetic", flush=True)
+
+
+def print_population(population):
+    label = "Confusion" if population.heuristic == "confusion" else "Projlen"
+    print(f"  {label} bucket distribution:")
+    reverse = population.heuristic == "confusion"
+    for key in sorted(population.buckets, reverse=reverse):
+        bucket = population.buckets[key]
+        if population.heuristic == "confusion":
+            low = key * population.bin_width
+            high = min(population.max_score, (key + 1) * population.bin_width)
+            print(f"    confusion=[{low:.2f},{high:.2f}): {bucket.seen} seen, {len(bucket.states)} kept")
+        else:
+            print(f"    projlen={key}: {bucket.seen} seen, {len(bucket.states)} kept")
+    print(f"  Braids kept: {population.size()} (in {len(population.buckets)} buckets)", flush=True)
+
+
 class ConfusionScorer:
     def __init__(self, checkpoint, calibration, env, device):
         saved = torch.load(checkpoint, map_location=device, weights_only=False)
@@ -137,8 +189,15 @@ def run(args):
     config.update({"checkpoint_checksum": sha256_file(Path(args.checkpoint)),
                                                "calibration_checksum": sha256_file(Path(args.calibration))})
     atomic_json(output / "config.json", config)
+    print_banner(args, env, config)
     exact_evaluations = expanded = frontier_loaded = kernel_candidates = 0
     best_projlen = None; buffer = []
+    checkpoint_path = output / "checkpoint.pt"
+    candidate_path = output / "kernel_candidates.jsonl"
+    candidate_seen = set()
+    if candidate_path.exists():
+        for line in candidate_path.open():
+            if line.strip(): candidate_seen.add(tuple(json.loads(line)["factors"]))
 
     def flush(states, destination):
         nonlocal exact_evaluations, best_projlen
@@ -150,18 +209,52 @@ def run(args):
             best_projlen = pl if best_projlen is None else min(best_projlen, pl)
         exact_evaluations += len(states); states.clear()
 
-    for record in iter_frontier_cache(env=env, path=Path(args.frontier_path),
-            shard_count=args.frontier_shard_count, shard_index=args.frontier_shard_index,
-            shard_by=args.frontier_shard_by, max_records=args.frontier_max_records):
-        exact = env.exact_evaluate(record.factors)
-        metrics, _ = _best_target_metrics(env, exact, targets)
-        buffer.append(SearchState(record.factors, None, None, exact, metrics, 0.0)); frontier_loaded += 1
-        if len(buffer) >= args.inference_batch_size: flush(buffer, population)
-    flush(buffer, population)
-    atomic_json(output / "frontier_summary.json", {"loaded": frontier_loaded, **population.summary()})
+    completed_length = args.frontier_length
+    if checkpoint_path.exists() and not args.no_resume:
+        saved = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+        if saved["config_fingerprint"] != config:
+            raise ValueError("checkpoint configuration differs from this invocation")
+        population = saved["population"]
+        completed_length = int(saved["completed_length"])
+        exact_evaluations = int(saved["exact_evaluations"]); expanded = int(saved["expanded"])
+        frontier_loaded = int(saved["frontier_loaded"]); kernel_candidates = int(saved["kernel_candidates"])
+        best_projlen = saved["best_projlen"]; rng.setstate(saved["rng_state"])
+        population.rng = rng
+        for bucket in population.buckets.values(): bucket.rng = rng
+        print()
+        print("=" * 60); print("RESUMING SEARCH"); print("=" * 60)
+        print(f"Completed length: {completed_length}")
+        print_population(population)
+    else:
+        frontier_start = time.time()
+        print(); print("=" * 60); print(f"Level {args.frontier_length} - BFS FRONTIER"); print("=" * 60)
+        print(f"  Loading exhaustive frontier cache {args.frontier_path}...")
+        for record in iter_frontier_cache(env=env, path=Path(args.frontier_path),
+                shard_count=args.frontier_shard_count, shard_index=args.frontier_shard_index,
+                shard_by=args.frontier_shard_by, max_records=args.frontier_max_records):
+            exact = env.exact_evaluate(record.factors)
+            metrics, _ = _best_target_metrics(env, exact, targets)
+            buffer.append(SearchState(record.factors, None, None, exact, metrics, 0.0)); frontier_loaded += 1
+            if len(buffer) >= args.inference_batch_size: flush(buffer, population)
+        flush(buffer, population)
+        atomic_json(output / "frontier_summary.json", {"loaded": frontier_loaded, **population.summary()})
+        print(f"  Assigned to this shard: {frontier_loaded:,} braids")
+        print_population(population)
+        print(f"  Timing: total={time.time() - frontier_start:.2f}s", flush=True)
+        atomic_checkpoint(checkpoint_path, {"config_fingerprint": config, "completed_length": completed_length,
+            "population": population, "exact_evaluations": exact_evaluations, "expanded": expanded,
+            "frontier_loaded": frontier_loaded, "kernel_candidates": kernel_candidates,
+            "best_projlen": best_projlen, "rng_state": rng.getstate()})
     progress = output / "progress.jsonl"
-    for length in range(args.frontier_length + 1, args.target_length + 1):
+    for length in range(completed_length + 1, args.target_length + 1):
+        level_start = time.time()
         parents, selected_buckets = population.select(args.use_best)
+        candidate_count = sum(len(env.legal_next(parent.factors)) for parent in parents)
+        print("=" * 60); print(f"Level {length} - SAMPLING"); print("=" * 60)
+        print(f"  Starting braids: {len(parents):,}")
+        print(f"  Candidates to generate: {candidate_count:,}")
+        chunks = math.ceil(candidate_count / args.inference_batch_size)
+        if chunks > 1: print(f"  Processing transformer inference in {chunks:,} batches...", flush=True)
         nxt = Population(args.heuristic, length, args.bucket_size, args.confusion_bin_width, args.max_confusion, rng)
         depth_expanded = 0
         for parent in parents:
@@ -169,9 +262,11 @@ def run(args):
                 factors = parent.factors + (int(action),)
                 exact = env.exact_append(parent.exact, int(action))
                 metrics, by_target = _best_target_metrics(env, exact, targets)
-                if any(item.get("scalar_identity") or item.get("target_match") for item in by_target.values()):
-                    with (output / "kernel_candidates.jsonl").open("a") as handle:
+                if (any(item.get("scalar_identity") or item.get("target_match") for item in by_target.values())
+                        and factors not in candidate_seen):
+                    with candidate_path.open("a") as handle:
                         handle.write(json.dumps({"length": length, "factors": list(factors), "metrics": metrics}) + "\n")
+                    candidate_seen.add(factors)
                     kernel_candidates += 1
                 buffer.append(SearchState(factors, None, None, exact, metrics, 0.0))
                 expanded += 1; depth_expanded += 1
@@ -182,7 +277,14 @@ def run(args):
                "population": population.summary(), "best_projlen": best_projlen,
                "kernel_candidates": kernel_candidates, "elapsed_seconds": time.time() - started}
         with progress.open("a") as handle: handle.write(json.dumps(row) + "\n")
-        print(json.dumps(row), flush=True)
+        print_population(population)
+        print(f"  Best projlen observed: {best_projlen}")
+        print(f"  Kernel/target candidates: {kernel_candidates}")
+        print(f"  Timing: total={time.time() - level_start:.2f}s", flush=True)
+        atomic_checkpoint(checkpoint_path, {"config_fingerprint": config, "completed_length": length,
+            "population": population, "exact_evaluations": exact_evaluations, "expanded": expanded,
+            "frontier_loaded": frontier_loaded, "kernel_candidates": kernel_candidates,
+            "best_projlen": best_projlen, "rng_state": rng.getstate()})
         if args.stop_after_candidate and kernel_candidates: break
     summary = {"schema_version": 1, "status": "clean", "method": "heuristic_gpu_frontier_reservoir",
                "heuristic": args.heuristic, "prime": args.p, "seed": args.seed,
@@ -192,7 +294,13 @@ def run(args):
                "kernel_candidates": kernel_candidates, "elapsed_seconds": time.time() - started,
                "artifact_path": str(output.resolve()), "verifier_version": env.verifier_version}
     atomic_json(output / "summary.json", summary); atomic_json(status_path, summary)
-    print(json.dumps(summary, indent=2)); return summary
+    print(); print("=" * 60); print("SEARCH COMPLETE"); print("=" * 60)
+    print(f"Final level: {min(args.target_length, length if 'length' in locals() else completed_length)}")
+    print(f"Total time: {time.time() - started:.2f}s")
+    print(f"Best projlen observed: {best_projlen}")
+    print(f"Kernel/target candidates: {kernel_candidates}")
+    print(f"Summary: {output / 'summary.json'}", flush=True)
+    return summary
 
 
 def parser():
@@ -211,6 +319,7 @@ def parser():
     p.add_argument("--confusion-bin-width", type=float, default=.25); p.add_argument("--max-confusion", type=float, default=20.)
     p.add_argument("--completion-targets", default="identity,delta"); p.add_argument("--device", default="cuda")
     p.add_argument("--stop-after-candidate", action="store_true")
+    p.add_argument("--no-resume", action="store_true")
     return p
 
 
