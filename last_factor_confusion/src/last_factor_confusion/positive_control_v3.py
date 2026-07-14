@@ -52,6 +52,8 @@ def main():
     args = parser.parse_args()
     install_peyl(args.author_repo)
     from peyl.braid import GNF
+    from peyl.braidsearch import symmetric_table
+    from peyl.permutations import SymmetricGroup
 
     calibration = json.loads(args.calibration.read_text())
     matching = calibration["matching"]
@@ -73,6 +75,9 @@ def main():
     adapter = JonesAdapter(args.author_repo, JonesSpec(p=5))
     factor_table = FactorTable.from_peyl(4)
     identity = adapter.normalize_image(adapter.rep.id())
+    representation_table = symmetric_table(adapter.rep)
+    delta_permutation = SymmetricGroup(4).longest_element()
+    delta_image = adapter.normalize_image(representation_table[delta_permutation])
     records, verification = [], {}
     for kernel_id, word in load_words(args.kernel_db).items():
         braid = GNF(n=4, power=0, factors=tuple(word))
@@ -80,11 +85,20 @@ def main():
         canonical_ids_unchanged = tuple(braid.factors) == tuple(word)
         images = adapter.evaluate_prefixes([braid])
         final_image = adapter.normalize_image(images[-1][0])
-        is_kernel = bool(np.array_equal(final_image, identity))
+        is_identity = bool(np.array_equal(final_image, identity))
+        is_delta = bool(np.array_equal(final_image, delta_image))
+        final_projlen = adapter.projlen(images[-1][0])
+        is_projective_collapse = final_projlen == 0
+        terminal_type = "identity" if is_identity else "delta" if is_delta else "other_monomial"
         verification[kernel_id] = {"length": len(word), "power": int(power),
                                    "canonical_ids_unchanged": canonical_ids_unchanged,
-                                   "nontrivial": len(word) > 0, "exact_projective_identity": is_kernel,
-                                   "status": "clean" if canonical_ids_unchanged and is_kernel else "malformed"}
+                                   "nontrivial": len(word) > 0,
+                                   "exact_projective_identity": is_identity,
+                                   "exact_projective_delta": is_delta,
+                                   "terminal_projlen": final_projlen,
+                                   "projective_collapse": is_projective_collapse,
+                                   "terminal_type": terminal_type,
+                                   "status": "clean" if canonical_ids_unchanged and is_projective_collapse else "malformed"}
         if verification[kernel_id]["status"] != "clean": continue
         for length in range(5, len(factors) + 1):
             image = images[length][0]
@@ -137,14 +151,15 @@ def main():
         "late_confusion_beats_projlen": sum(row["confusion_rank"] < row["projlen_rank"] for row in late),
         "max_matched_percentile": max(row["matched_percentile"] for row in scored),
     }
-    payload = {"schema_version": 1, "status": "clean", "prime": 5,
+    overall_status = "clean" if all(row["status"] == "clean" for row in verification.values()) else "malformed"
+    payload = {"schema_version": 2, "status": overall_status, "prime": 5,
                "method": "known_kernel_planted_positive_control_v3", "verification": verification,
                "model_checksum": sha256_file(args.checkpoint),
                "calibration_checksum": sha256_file(args.calibration), "summary": summary, "prefixes": scored}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     temporary = args.output.with_name(args.output.name + ".partial")
     temporary.write_text(json.dumps(payload, indent=2)); temporary.replace(args.output)
-    print(json.dumps({"status": "clean", "verification": verification, "summary": summary,
+    print(json.dumps({"status": overall_status, "verification": verification, "summary": summary,
                       "output": str(args.output.resolve())}, indent=2))
 
 
