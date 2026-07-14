@@ -1,0 +1,217 @@
+from __future__ import annotations
+
+import argparse
+import json
+import math
+import random
+import time
+from dataclasses import dataclass, field
+from functools import partial
+from pathlib import Path
+
+import numpy as np
+import torch
+import torch.nn.functional as F
+
+from braidzero.core import BraidEnvironment, parse_int_list, sha256_file
+from braidzero.frontier import iter_frontier_cache
+from braidzero.frontier_bucket_reservoir import _best_target_metrics
+from braidzero.search import SearchState, parse_completion_targets
+from last_factor_confusion.data import collate_prefixes
+from last_factor_confusion.factors import FactorTable
+from last_factor_confusion.model_v3 import LastFactorTransformerV3, ModelV3Config
+
+
+def atomic_json(path: Path, payload: dict):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + ".partial")
+    temporary.write_text(json.dumps(payload, indent=2, sort_keys=True))
+    temporary.replace(path)
+
+
+@dataclass
+class Bucket:
+    key: int
+    capacity: int
+    rng: random.Random
+    states: list[SearchState] = field(default_factory=list)
+    seen: int = 0
+
+    def add(self, state):
+        self.seen += 1
+        if len(self.states) < self.capacity:
+            self.states.append(state)
+        else:
+            replacement = self.rng.randint(1, self.seen)
+            if replacement <= self.capacity:
+                self.states[replacement - 1] = state
+
+
+class Population:
+    def __init__(self, heuristic, length, bucket_size, bin_width, max_score, rng):
+        self.heuristic, self.length, self.bucket_size = heuristic, length, bucket_size
+        self.bin_width, self.max_score, self.rng = bin_width, max_score, rng
+        self.buckets = {}
+
+    def key(self, state):
+        if self.heuristic == "projlen":
+            return int(state.metrics["projlen"])
+        score = min(self.max_score, max(0.0, float(state.score)))
+        return int(math.floor(score / self.bin_width))
+
+    def add(self, state):
+        key = self.key(state)
+        self.buckets.setdefault(key, Bucket(key, self.bucket_size, self.rng)).add(state)
+
+    def size(self): return sum(len(bucket.states) for bucket in self.buckets.values())
+
+    def select(self, limit):
+        reverse = self.heuristic == "confusion"
+        selected, rows = [], []
+        for key in sorted(self.buckets, reverse=reverse):
+            bucket = self.buckets[key]
+            remaining = limit - len(selected)
+            if remaining <= 0: break
+            count = min(remaining, len(bucket.states))
+            chosen = bucket.states if count == len(bucket.states) else self.rng.sample(bucket.states, count)
+            selected.extend(chosen)
+            rows.append({"key": key, "seen": bucket.seen, "states": len(bucket.states), "selected": count})
+        return selected, rows
+
+    def summary(self):
+        reverse = self.heuristic == "confusion"
+        return {"states": self.size(), "buckets": len(self.buckets),
+                "best": [{"key": key, "states": len(self.buckets[key].states), "seen": self.buckets[key].seen}
+                         for key in sorted(self.buckets, reverse=reverse)[:8]]}
+
+
+class ConfusionScorer:
+    def __init__(self, checkpoint, calibration, env, device):
+        saved = torch.load(checkpoint, map_location=device, weights_only=False)
+        if saved.get("architecture") != LastFactorTransformerV3.architecture:
+            raise ValueError("checkpoint is not exact-degree v3")
+        if int(saved["model_config"]["p"]) != env.p:
+            raise ValueError("model prime does not match search prime")
+        self.model = LastFactorTransformerV3(ModelV3Config(**saved["model_config"])).to(device).eval()
+        self.model.load_state_dict(saved["state_dict"])
+        self.temperature = float(json.loads(Path(calibration).read_text())["temperature"])
+        self.env, self.device = env, device
+        table = FactorTable.from_peyl(env.n)
+        self.factor_class = {}
+        for factor_id in range(math.factorial(env.n)):
+            try:
+                _, factors = env.GNF(env.n, 0, (factor_id,)).canonical_decomposition()
+                if len(factors) == 1:
+                    self.factor_class[factor_id] = table.class_id(factors[0])
+            except (ValueError, IndexError):
+                pass
+
+    def matrix(self, image):
+        normalized = self.env.polymat.projectivise(np.asarray(image)) % self.env.p
+        return np.moveaxis(normalized, -1, 0).tolist()
+
+    @torch.no_grad()
+    def score(self, states):
+        records = [{"matrix": self.matrix(state.exact), "target_class": self.factor_class[state.factors[-1]],
+                    "target_descents": [0] * 6, "trajectory_id": "search", "status": "clean"} for state in states]
+        x, mask, degrees, targets, _, _ = collate_prefixes(records, sparse=True)
+        with torch.autocast("cuda", dtype=torch.bfloat16, enabled=self.device.type == "cuda"):
+            logits, _ = self.model(x.to(self.device), mask.to(self.device), degrees.to(self.device))
+        return F.cross_entropy(logits.float() / self.temperature, targets.to(self.device), reduction="none").cpu().tolist()
+
+
+def run(args):
+    started = time.time(); rng = random.Random(args.seed); output = Path(args.output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    status_path = output / "status.json"
+    atomic_json(status_path, {"status": "truncated", "reason": "search has not completed"})
+    env = BraidEnvironment(author_repo=Path(args.author_repo), n=args.n, r=args.r, p=args.p,
+                           t_values=parse_int_list(args.t_values, default=tuple(range(1, args.p))))
+    targets = parse_completion_targets(args.completion_targets)
+    device = torch.device(args.device)
+    scorer = ConfusionScorer(Path(args.checkpoint), Path(args.calibration), env, device) if args.heuristic == "confusion" else None
+    population = Population(args.heuristic, args.frontier_length, args.bucket_size,
+                            args.confusion_bin_width, args.max_confusion, rng)
+    config = {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()}
+    config.update({"checkpoint_checksum": sha256_file(Path(args.checkpoint)),
+                                               "calibration_checksum": sha256_file(Path(args.calibration))})
+    atomic_json(output / "config.json", config)
+    exact_evaluations = expanded = frontier_loaded = kernel_candidates = 0
+    best_projlen = None; buffer = []
+
+    def flush(states, destination):
+        nonlocal exact_evaluations, best_projlen
+        if not states: return
+        scores = scorer.score(states) if scorer else [-float(state.metrics["projlen"]) for state in states]
+        for state, score in zip(states, scores):
+            state.score = float(score); destination.add(state)
+            pl = int(state.metrics["projlen"])
+            best_projlen = pl if best_projlen is None else min(best_projlen, pl)
+        exact_evaluations += len(states); states.clear()
+
+    for record in iter_frontier_cache(env=env, path=Path(args.frontier_path),
+            shard_count=args.frontier_shard_count, shard_index=args.frontier_shard_index,
+            shard_by=args.frontier_shard_by, max_records=args.frontier_max_records):
+        exact = env.exact_evaluate(record.factors)
+        metrics, _ = _best_target_metrics(env, exact, targets)
+        buffer.append(SearchState(record.factors, None, None, exact, metrics, 0.0)); frontier_loaded += 1
+        if len(buffer) >= args.inference_batch_size: flush(buffer, population)
+    flush(buffer, population)
+    atomic_json(output / "frontier_summary.json", {"loaded": frontier_loaded, **population.summary()})
+    progress = output / "progress.jsonl"
+    for length in range(args.frontier_length + 1, args.target_length + 1):
+        parents, selected_buckets = population.select(args.use_best)
+        nxt = Population(args.heuristic, length, args.bucket_size, args.confusion_bin_width, args.max_confusion, rng)
+        depth_expanded = 0
+        for parent in parents:
+            for action in env.legal_next(parent.factors):
+                factors = parent.factors + (int(action),)
+                exact = env.exact_append(parent.exact, int(action))
+                metrics, by_target = _best_target_metrics(env, exact, targets)
+                if any(item.get("scalar_identity") or item.get("target_match") for item in by_target.values()):
+                    with (output / "kernel_candidates.jsonl").open("a") as handle:
+                        handle.write(json.dumps({"length": length, "factors": list(factors), "metrics": metrics}) + "\n")
+                    kernel_candidates += 1
+                buffer.append(SearchState(factors, None, None, exact, metrics, 0.0))
+                expanded += 1; depth_expanded += 1
+                if len(buffer) >= args.inference_batch_size: flush(buffer, nxt)
+        flush(buffer, nxt); population = nxt
+        row = {"length": length, "heuristic": args.heuristic, "selected_parents": len(parents),
+               "selected_buckets": selected_buckets, "expanded": depth_expanded,
+               "population": population.summary(), "best_projlen": best_projlen,
+               "kernel_candidates": kernel_candidates, "elapsed_seconds": time.time() - started}
+        with progress.open("a") as handle: handle.write(json.dumps(row) + "\n")
+        print(json.dumps(row), flush=True)
+        if args.stop_after_candidate and kernel_candidates: break
+    summary = {"schema_version": 1, "status": "clean", "method": "heuristic_gpu_frontier_reservoir",
+               "heuristic": args.heuristic, "prime": args.p, "seed": args.seed,
+               "frontier_length": args.frontier_length, "target_length": args.target_length,
+               "frontier_loaded": frontier_loaded, "expanded_states": expanded,
+               "exact_evaluations": exact_evaluations, "best_projlen": best_projlen,
+               "kernel_candidates": kernel_candidates, "elapsed_seconds": time.time() - started,
+               "artifact_path": str(output.resolve()), "verifier_version": env.verifier_version}
+    atomic_json(output / "summary.json", summary); atomic_json(status_path, summary)
+    print(json.dumps(summary, indent=2)); return summary
+
+
+def parser():
+    p = argparse.ArgumentParser()
+    p.add_argument("--heuristic", choices=("confusion", "projlen"), required=True)
+    p.add_argument("--author-repo", required=True); p.add_argument("--frontier-path", required=True)
+    p.add_argument("--checkpoint", required=True); p.add_argument("--calibration", required=True)
+    p.add_argument("--output-dir", required=True); p.add_argument("--n", type=int, default=4)
+    p.add_argument("--r", type=int, default=1); p.add_argument("--p", type=int, default=5)
+    p.add_argument("--t-values", default=""); p.add_argument("--seed", type=int, default=1)
+    p.add_argument("--frontier-length", type=int, default=8); p.add_argument("--target-length", type=int, default=66)
+    p.add_argument("--frontier-shard-count", type=int, default=16); p.add_argument("--frontier-shard-index", type=int, default=0)
+    p.add_argument("--frontier-shard-by", choices=("record", "key", "none"), default="record")
+    p.add_argument("--frontier-max-records", type=int, default=0); p.add_argument("--bucket-size", type=int, default=3000)
+    p.add_argument("--use-best", type=int, default=50000); p.add_argument("--inference-batch-size", type=int, default=256)
+    p.add_argument("--confusion-bin-width", type=float, default=.25); p.add_argument("--max-confusion", type=float, default=20.)
+    p.add_argument("--completion-targets", default="identity,delta"); p.add_argument("--device", default="cuda")
+    p.add_argument("--stop-after-candidate", action="store_true")
+    return p
+
+
+def main(): run(parser().parse_args())
+if __name__ == "__main__": main()
