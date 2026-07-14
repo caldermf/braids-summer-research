@@ -98,13 +98,14 @@ class ConfusionScorer:
         self.env, self.device = env, device
         table = FactorTable.from_peyl(env.n)
         self.factor_class = {}
-        for factor_id in range(math.factorial(env.n)):
+        for factor_id, permutation in enumerate(env.nf_table.divs):
             try:
-                _, factors = env.GNF(env.n, 0, (factor_id,)).canonical_decomposition()
-                if len(factors) == 1:
-                    self.factor_class[factor_id] = table.class_id(factors[0])
-            except (ValueError, IndexError):
+                self.factor_class[factor_id] = table.class_id(permutation)
+            except ValueError:
+                # Identity and Delta are not among the 22 proper-factor targets.
                 pass
+        if len(self.factor_class) != 22:
+            raise RuntimeError(f"expected 22 proper factor classes, found {len(self.factor_class)}")
 
     def matrix(self, image):
         normalized = self.env.polymat.projectivise(np.asarray(image)) % self.env.p
