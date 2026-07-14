@@ -1,0 +1,49 @@
+============================================================
+SEARCHING FOR KERNEL ELEMENTS
+============================================================
+Braid group: B_4
+Representation: (3, 1)
+Dimension: 3
+Number of simples: 24
+Prime: 7
+Device: cuda
+Bucket size: 50000
+Target length: 300
+BFS frontier length: 8
+Frontier shard: 53/64
+Degree window: [0, 900] (901 coeffs)
+Boundary margin: 16
+Use best: 1000000
+Save best: 50000
+Expansion chunk size: 100000
+Matmul chunk size: 8000
+Seed: 70052
+
+Loaded tables from /nfs/roberts/project/pi_com36/as4843/burau-experiments/precomputed_tables/tables_B4_r1_p7.pt
+  Braid group: B_4
+  Representation: (3, 1), dimension 3
+  Number of simples: 24
+  Degree window: [0, 900] (901 coefficients)
+  Table checksum: 812f436d5d2d17cd22ee17ad7df33b681151037863def03032587a5c5ef7a9e4
+✓ Identity matrix loaded at degree 0
+
+Precomputing FFTs of simple matrices...
+  simple_D=4, safety_cap_D=901
+  FFT size: dynamic (grows with actual projective width)
+  FFT cache: initialized lazily by transform size
+Storage: reservoir matrices=CPU int16, active chunks=CUDA int16/FFT
+⚡ GPU-accelerated paper reservoir with per-product projectivization
+
+============================================================
+Level 8 - BFS FRONTIER
+============================================================
+  Exhaustively enumerating all legal GNF words of length 8...
+
+============================================================
+SEARCH STOPPED
+============================================================
+Final level: 0
+Total time: 3.75s
+Avg time per level: 3.75s
+Total GPU scalar-identity candidates: 0
+Exact peyl verification required for every candidate.

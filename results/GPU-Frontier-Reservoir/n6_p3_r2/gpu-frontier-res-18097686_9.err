@@ -1,0 +1,40 @@
+/home/as4843/braids-torch/lib/python3.10/site-packages/torch/cuda/__init__.py:384: UserWarning: Found GPU0 NVIDIA B200 which is of compute capability (CC) 10.0.
+The following list shows the CCs this version of PyTorch was built for and the hardware CCs it supports:
+- 5.0 which supports hardware CC >=5.0,<6.0 except {5.3}
+- 6.0 which supports hardware CC >=6.0,<7.0 except {6.2}
+- 7.0 which supports hardware CC >=7.0,<8.0 except {7.2}
+- 7.5 which supports hardware CC >=7.5,<8.0
+- 8.0 which supports hardware CC >=8.0,<9.0 except {8.7}
+- 8.6 which supports hardware CC >=8.6,<9.0 except {8.7}
+- 9.0 which supports hardware CC >=9.0,<10.0
+Please follow the instructions at https://pytorch.org/get-started/locally/ to install a PyTorch release that supports one of these CUDA versions: 13.0, 13.2
+  _warn_unsupported_code(d, device_cc, code_ccs)
+/home/as4843/braids-torch/lib/python3.10/site-packages/torch/cuda/__init__.py:502: UserWarning: 
+NVIDIA B200 with CUDA capability sm_100 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_50 sm_60 sm_70 sm_75 sm_80 sm_86 sm_90.
+If you want to use the NVIDIA B200 GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  queued_call()
+Traceback (most recent call last):
+  File "/home/as4843/braids-torch/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/as4843/braids-torch/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/GPU-Frontier-Reservoir/gpu_frontier_reservoir/cli.py", line 21, in <module>
+    if __name__ == "__main__": main()
+  File "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/GPU-Frontier-Reservoir/gpu_frontier_reservoir/cli.py", line 18, in main
+    Search(cfg, Path(a.table), Path(a.output_dir)).run()
+  File "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/GPU-Frontier-Reservoir/gpu_frontier_reservoir/engine.py", line 430, in run
+    current, total, assigned, frontier_seconds = self.build_frontier()
+  File "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/GPU-Frontier-Reservoir/gpu_frontier_reservoir/engine.py", line 336, in build_frontier
+    self._add_frontier_batch(reservoir, batch); batch = []
+  File "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/GPU-Frontier-Reservoir/gpu_frontier_reservoir/engine.py", line 342, in _add_frontier_batch
+    mats = self._evaluate_words(words)
+  File "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/GPU-Frontier-Reservoir/gpu_frontier_reservoir/engine.py", line 316, in _evaluate_words
+    mats = torch.zeros(len(words), self.cfg.dim, self.cfg.dim, 1, dtype=torch.int16, device=self.device)
+torch.AcceleratorError: CUDA error: no kernel image is available for execution on the device
+Search for `cudaErrorNoKernelImageForDevice' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
