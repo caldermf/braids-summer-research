@@ -20,6 +20,7 @@ class ModelV3Config:
     dropout: float = 0.06
     auxiliary_descents: bool = True
     rope_base: float = 10000.0
+    local_chunk_size: int = 32768
 
     def __post_init__(self):
         if self.d_model % self.heads:
@@ -185,7 +186,12 @@ class LastFactorTransformerV3(nn.Module):
         entries = self.value_embedding(flat)
         entries = entries + self.row_embedding(self.rows)[None] + self.column_embedding(self.cols)[None]
         summary = self.local_summary.expand(b * depth, -1, -1)
-        local = self.local_encoder(torch.cat((summary, entries), dim=1))[:, 0].reshape(b, depth, -1)
+        local_input = torch.cat((summary, entries), dim=1)
+        chunk_size = self.config.local_chunk_size
+        local = torch.cat([
+            self.local_encoder(local_input[start:start + chunk_size])[:, 0]
+            for start in range(0, len(local_input), chunk_size)
+        ]).reshape(b, depth, -1)
         degree_tokens = local + self.degree_features(degrees, degree_mask)
         special = self.matrix_token.expand(b, -1, -1)
         x = torch.cat((special, degree_tokens), dim=1)

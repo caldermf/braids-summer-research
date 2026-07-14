@@ -14,4 +14,4 @@ mkdir -p "$ROOT/slurm_logs" "$(dirname "$OUTPUT")"
 export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
 "$PYTHON" -m last_factor_confusion.evaluate_v3 \
   --dataset "$DATASET" --checkpoint "$CHECKPOINT" --output "$OUTPUT" \
-  --device cuda --batch-size "${BATCH_SIZE:-192}"
+  --device cuda --batch-size "${BATCH_SIZE:-32}"

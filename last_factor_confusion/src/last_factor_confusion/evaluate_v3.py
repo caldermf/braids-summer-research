@@ -19,7 +19,7 @@ def main():
     parser.add_argument("--dataset", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--batch-size", type=int, default=192)
+    parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--device", default="cuda")
     args = parser.parse_args()
     device = torch.device(args.device)
