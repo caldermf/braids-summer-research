@@ -191,7 +191,7 @@ def run(args):
     atomic_json(output / "config.json", config)
     print_banner(args, env, config)
     exact_evaluations = expanded = frontier_loaded = kernel_candidates = 0
-    best_projlen = None; buffer = []
+    best_projlen = None; best_projlen_by_length = {}; level_best_projlen = None; buffer = []
     checkpoint_path = output / "checkpoint.pt"
     candidate_path = output / "kernel_candidates.jsonl"
     candidate_seen = set()
@@ -200,13 +200,14 @@ def run(args):
             if line.strip(): candidate_seen.add(tuple(json.loads(line)["factors"]))
 
     def flush(states, destination):
-        nonlocal exact_evaluations, best_projlen
+        nonlocal exact_evaluations, best_projlen, level_best_projlen
         if not states: return
         scores = scorer.score(states) if scorer else [-float(state.metrics["projlen"]) for state in states]
         for state, score in zip(states, scores):
             state.score = float(score); destination.add(state)
             pl = int(state.metrics["projlen"])
             best_projlen = pl if best_projlen is None else min(best_projlen, pl)
+            level_best_projlen = pl if level_best_projlen is None else min(level_best_projlen, pl)
         exact_evaluations += len(states); states.clear()
 
     completed_length = args.frontier_length
@@ -219,6 +220,7 @@ def run(args):
         exact_evaluations = int(saved["exact_evaluations"]); expanded = int(saved["expanded"])
         frontier_loaded = int(saved["frontier_loaded"]); kernel_candidates = int(saved["kernel_candidates"])
         best_projlen = saved["best_projlen"]; rng.setstate(saved["rng_state"])
+        best_projlen_by_length = {int(key): int(value) for key, value in saved.get("best_projlen_by_length", {}).items()}
         population.rng = rng
         for bucket in population.buckets.values(): bucket.rng = rng
         print()
@@ -227,6 +229,7 @@ def run(args):
         print_population(population)
     else:
         frontier_start = time.time()
+        level_best_projlen = None
         print(); print("=" * 60); print(f"Level {args.frontier_length} - BFS FRONTIER"); print("=" * 60)
         print(f"  Loading exhaustive frontier cache {args.frontier_path}...")
         for record in iter_frontier_cache(env=env, path=Path(args.frontier_path),
@@ -237,17 +240,21 @@ def run(args):
             buffer.append(SearchState(record.factors, None, None, exact, metrics, 0.0)); frontier_loaded += 1
             if len(buffer) >= args.inference_batch_size: flush(buffer, population)
         flush(buffer, population)
+        best_projlen_by_length[args.frontier_length] = level_best_projlen
         atomic_json(output / "frontier_summary.json", {"loaded": frontier_loaded, **population.summary()})
         print(f"  Assigned to this shard: {frontier_loaded:,} braids")
         print_population(population)
+        print(f"  Best projlen at length {args.frontier_length}: {level_best_projlen}")
         print(f"  Timing: total={time.time() - frontier_start:.2f}s", flush=True)
         atomic_checkpoint(checkpoint_path, {"config_fingerprint": config, "completed_length": completed_length,
             "population": population, "exact_evaluations": exact_evaluations, "expanded": expanded,
             "frontier_loaded": frontier_loaded, "kernel_candidates": kernel_candidates,
-            "best_projlen": best_projlen, "rng_state": rng.getstate()})
+            "best_projlen": best_projlen, "best_projlen_by_length": best_projlen_by_length,
+            "rng_state": rng.getstate()})
     progress = output / "progress.jsonl"
     for length in range(completed_length + 1, args.target_length + 1):
         level_start = time.time()
+        level_best_projlen = None
         parents, selected_buckets = population.select(args.use_best)
         candidate_count = sum(len(env.legal_next(parent.factors)) for parent in parents)
         print("=" * 60); print(f"Level {length} - SAMPLING"); print("=" * 60)
@@ -275,22 +282,29 @@ def run(args):
         row = {"length": length, "heuristic": args.heuristic, "selected_parents": len(parents),
                "selected_buckets": selected_buckets, "expanded": depth_expanded,
                "population": population.summary(), "best_projlen": best_projlen,
+               "level_best_projlen": level_best_projlen,
+               "best_projlen_by_length": best_projlen_by_length,
                "kernel_candidates": kernel_candidates, "elapsed_seconds": time.time() - started}
+        best_projlen_by_length[length] = level_best_projlen
+        row["best_projlen_by_length"] = dict(best_projlen_by_length)
         with progress.open("a") as handle: handle.write(json.dumps(row) + "\n")
         print_population(population)
-        print(f"  Best projlen observed: {best_projlen}")
+        print(f"  Best projlen at length {length}: {level_best_projlen}")
+        print(f"  Best projlen over all processed lengths: {best_projlen}")
         print(f"  Kernel/target candidates: {kernel_candidates}")
         print(f"  Timing: total={time.time() - level_start:.2f}s", flush=True)
         atomic_checkpoint(checkpoint_path, {"config_fingerprint": config, "completed_length": length,
             "population": population, "exact_evaluations": exact_evaluations, "expanded": expanded,
             "frontier_loaded": frontier_loaded, "kernel_candidates": kernel_candidates,
-            "best_projlen": best_projlen, "rng_state": rng.getstate()})
+            "best_projlen": best_projlen, "best_projlen_by_length": best_projlen_by_length,
+            "rng_state": rng.getstate()})
         if args.stop_after_candidate and kernel_candidates: break
     summary = {"schema_version": 1, "status": "clean", "method": "heuristic_gpu_frontier_reservoir",
                "heuristic": args.heuristic, "prime": args.p, "seed": args.seed,
                "frontier_length": args.frontier_length, "target_length": args.target_length,
                "frontier_loaded": frontier_loaded, "expanded_states": expanded,
                "exact_evaluations": exact_evaluations, "best_projlen": best_projlen,
+               "best_projlen_by_length": best_projlen_by_length,
                "kernel_candidates": kernel_candidates, "elapsed_seconds": time.time() - started,
                "artifact_path": str(output.resolve()), "verifier_version": env.verifier_version}
     atomic_json(output / "summary.json", summary); atomic_json(status_path, summary)
