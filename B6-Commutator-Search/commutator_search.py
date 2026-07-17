@@ -23,7 +23,13 @@ import torch
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 GPU_PROJECT = REPO / "GPU-Frontier-Reservoir"
-PEYL_ROOT = REPO.parent / "burau-experiments" / "beta"
+# This vendored copy treats pandas-dependent braidsearch as optional.  That is
+# important on the CUDA-13 environment, whose pandas installation is not
+# usable; the commutator engine only needs braid, jonesrep, and polymat.
+PEYL_ROOT = (
+    REPO / "Tried_algorithms" / "structural-kernel-experiments"
+    / "third_party" / "braids_project"
+)
 for path in (GPU_PROJECT, PEYL_ROOT):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))

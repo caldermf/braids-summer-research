@@ -26,7 +26,7 @@ if [[ ! -f "$CACHE" ]]; then
   echo "Missing $CACHE; submit prepare_twisted_all_scavenge_cpu.sh first" >&2
   exit 2
 fi
-export PYTHONPATH="$REPO_ROOT/GPU-Frontier-Reservoir:$REPO_ROOT/../burau-experiments/beta:${PYTHONPATH:-}"
+export PYTHONPATH="$REPO_ROOT/Tried_algorithms/structural-kernel-experiments/third_party/braids_project:$REPO_ROOT/GPU-Frontier-Reservoir:${PYTHONPATH:-}"
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 "$PYTHON" -u "$PROJECT/commutator_search.py" \

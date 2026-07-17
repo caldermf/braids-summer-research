@@ -17,7 +17,7 @@ GEN="${SLURM_ARRAY_TASK_ID}"
 CACHE="$PROJECT/cache/twisted_B6_r2_p3_g${GEN}.pt"
 
 mkdir -p "$PROJECT/cache" "$REPO_ROOT/slurm_logs" "$REPO_ROOT/results/B6-Commutator-Search/cache-preparation/generator_${GEN}"
-export PYTHONPATH="$REPO_ROOT/GPU-Frontier-Reservoir:$REPO_ROOT/../burau-experiments/beta:${PYTHONPATH:-}"
+export PYTHONPATH="$REPO_ROOT/Tried_algorithms/structural-kernel-experiments/third_party/braids_project:$REPO_ROOT/GPU-Frontier-Reservoir:${PYTHONPATH:-}"
 
 "$PYTHON" -u "$PROJECT/commutator_search.py" \
   --table "$TABLE" --twisted-cache "$CACHE" \
