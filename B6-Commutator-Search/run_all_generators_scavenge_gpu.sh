@@ -12,7 +12,9 @@ set -euo pipefail
 
 REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-$(pwd)}}"
 PROJECT="$REPO_ROOT/B6-Commutator-Search"
-PYTHON="${PYTHON_PATH:-/home/as4843/braids-torch/bin/python}"
+# The ordinary braids-torch build only contains kernels through sm_90. Bouchet
+# B200 nodes are sm_100 and require the CUDA-13 PyTorch environment.
+PYTHON="${PYTHON_PATH:-/home/as4843/braids-torch-cu130/bin/python}"
 TABLE="${TABLE:-/nfs/roberts/project/pi_com36/as4843/burau-experiments/beta/precomputed_tables/tables_B6_r2_p3.pt}"
 GEN="${SLURM_ARRAY_TASK_ID}"
 RUN_GROUP="${RUN_GROUP:-B6_r2_p3_commutator_all_generators}"

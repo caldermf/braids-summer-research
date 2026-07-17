@@ -141,7 +141,14 @@ class TwoSidedFFT:
         self.twisted = twisted.to(device)
         self.device, self.max_D = device, max_D
         self.dim = simple.shape[1]
+        # Compatibility with the shared reservoir banner. Here this is the
+        # compact support width of the positive-simple table.
+        self.simple_D = simple.shape[-1]
         self.cache: dict[tuple[str, int], torch.Tensor] = {}
+
+    @property
+    def cache_bytes(self) -> int:
+        return sum(value.numel() * value.element_size() for value in self.cache.values())
 
     def _fft(self, which: str, size: int) -> torch.Tensor:
         key = (which, size)
