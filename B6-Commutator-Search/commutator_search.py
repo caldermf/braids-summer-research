@@ -267,7 +267,13 @@ class CommutatorSearch(Search):
         kernel_mask = scalar_identity_mask(mats)
         if kernel_mask.any():
             self._record_candidates(words[kernel_mask].cpu(), words.shape[1])
-        reservoir.add(mats, words, projlens)
+            # This matches the original B4 commutator engine: every scalar
+            # identity is a terminal state. Genuine kernels have already been
+            # saved, while trivial commutators must not monopolize projlen=1.
+            keep = ~kernel_mask
+            mats, words, projlens = mats[keep], words[keep], projlens[keep]
+        if len(mats):
+            reservoir.add(mats, words, projlens)
 
     def build_frontier(self):
         started = time.time()
@@ -303,18 +309,35 @@ class CommutatorSearch(Search):
         }
 
     def _record_candidates(self, words: torch.Tensor, length: int):
-        path = self.output / "kernel_candidates.jsonl"
-        with path.open("a") as handle:
+        counts = {"gpu_candidates": len(words), "verified": 0,
+                  "trivial_commutators": 0, "gpu_false_positives": 0}
+        verified_path = self.output / "verified_kernels.jsonl"
+        with verified_path.open("a") as verified_handle:
             for factors in words.tolist():
-                record = {
-                    "n": self.cfg.n, "r": self.cfg.r, "p": self.cfg.p,
-                    "representation": [self.cfg.n-self.cfg.r, self.cfg.r],
-                    "generator": self.generator, "length": length,
-                    "factors": factors, "projlen": 1,
-                    **self._verify(factors),
-                }
-                handle.write(json.dumps(record, sort_keys=True) + "\n")
-                print(f"  candidate sigma_{self.generator}: {record['reason']}", flush=True)
+                result = self._verify(factors)
+                if result["verified"]:
+                    counts["verified"] += 1
+                    record = {
+                        "n": self.cfg.n, "r": self.cfg.r, "p": self.cfg.p,
+                        "representation": [self.cfg.n-self.cfg.r, self.cfg.r],
+                        "generator": self.generator, "length": length,
+                        "factors": factors, "projlen": 1, **result,
+                    }
+                    verified_handle.write(json.dumps(record, sort_keys=True) + "\n")
+                elif result["reason"] == "trivial_commutator":
+                    counts["trivial_commutators"] += 1
+                else:
+                    counts["gpu_false_positives"] += 1
+        with (self.output / "candidate_summary.jsonl").open("a") as handle:
+            handle.write(json.dumps({"length": length, **counts}, sort_keys=True) + "\n")
+        print(
+            f"  Scalar candidates: {counts['gpu_candidates']}; "
+            f"verified kernels: {counts['verified']}; "
+            f"trivial: {counts['trivial_commutators']}; "
+            f"GPU false positives: {counts['gpu_false_positives']}",
+            flush=True,
+        )
+        return counts
 
     def _expand(self, current: Reservoir, length: int):
         level_start = time.time()
@@ -351,8 +374,15 @@ class CommutatorSearch(Search):
                 hit_words = child_words[kmask.cpu()]
                 kernels += len(hit_words)
                 self._record_candidates(hit_words, length)
+                # Scalar identities are terminal, exactly as in the original
+                # B4 search. Do not let trivial centralizer states refill the
+                # lowest reservoir bucket at every subsequent level.
+                keep = ~kmask
+                mats, pls = mats[keep], pls[keep]
+                child_words = child_words[keep.cpu()]
             tick = time.time()
-            nxt.add(mats, child_words, pls)
+            if len(mats):
+                nxt.add(mats, child_words, pls)
             sampling_seconds += time.time() - tick
             candidates += len(mats)
             del parent_gpu, suf, mats, pls
