@@ -97,6 +97,8 @@ def compact_pack(matrices: list[np.ndarray], p: int) -> torch.Tensor:
 def build_twisted_cache(table_path: Path, cache_path: Path, generator: int) -> dict:
     table = torch.load(table_path, map_location="cpu", weights_only=True)
     n, r, p = (int(table[key]) for key in ("n", "r", "p"))
+    identity = int(table["id_index"])
+    delta = int(table["delta_index"])
     if not 1 <= generator < n:
         raise ValueError(f"generator must be in 1..{n-1}")
     rep = JonesCellRep(n=n, r=r, p=p)
@@ -105,7 +107,15 @@ def build_twisted_cache(table_path: Path, cache_path: Path, generator: int) -> d
     twisted = []
     started = time.time()
     for factor in range(math.factorial(n)):
-        b = GNF(n=n, power=0, factors=(factor,))
+        # Identity and Delta are distinguished entries in the permutation
+        # table, but neither is a legal canonical factor in a GNF factors
+        # tuple.  Represent them by their canonical GNF forms instead.
+        if factor == identity:
+            b = GNF.identity(n)
+        elif factor == delta:
+            b = GNF(n=n, power=1, factors=())
+        else:
+            b = GNF(n=n, power=0, factors=(factor,))
         braid = sigma * b.inv() * sigma.inv()
         twisted.append(rep.polymat_evaluate_braid(braid))
         if factor and factor % 100 == 0:
