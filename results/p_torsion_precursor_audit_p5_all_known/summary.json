@@ -1,0 +1,63 @@
+{
+  "artifact_checksums": {
+    "all_prefix_power_hits.jsonl": "26e6df4afa761307db1192da9caec39b933278a22167cf888146e06c0a4b7911",
+    "proper_precursors.csv": "83e7397f61ed7b5195bb8e37c39a0f3113dd0f8ca9fd96884d0d274512045516",
+    "proper_precursors.jsonl": "eb8f9cfd490fec8db0788b7eac8ddfde692e4b894b7dfee41034fb110a0deb3d",
+    "raw_records.jsonl": "f54e41555727f390f2be999fda9e444c15044877b1088cd6e1606cb430daa236",
+    "summary.json": "b0d424101115055c55abb15da54f479374c3f487a9b89652ea317293c73b859e",
+    "word_classification.csv": "c271cf3e5ab250a1caace45066e3dec107ec26525454b62933d83116851a7821",
+    "words.jsonl": "d192fd2a6c7330fd28bbfca03ff6a610db0872b6af78b1f99eb731dd8d3bc0cf"
+  },
+  "criterion": "for each parseable known p=5 kernel/target word and each prefix c, exact-check whether rho(c^5) is scalar",
+  "format": "p5-all-known-p-torsion-precursor-audit-v1",
+  "full_type_counts": {
+    "delta_match": 18,
+    "neither": 1,
+    "scalar_identity": 20
+  },
+  "generated_at_unix": 1784658837.612649,
+  "kernel_length_distribution": {
+    "54": 4,
+    "55": 3,
+    "60": 1,
+    "63": 1,
+    "65": 11,
+    "75": 1,
+    "105": 1,
+    "132": 1,
+    "197": 2,
+    "199": 2,
+    "203": 2,
+    "270": 2,
+    "335": 1,
+    "387": 1,
+    "400": 3,
+    "402": 1,
+    "467": 2
+  },
+  "min_proper_prefix_length_distribution_by_word": {
+    "12": 1,
+    "13": 1,
+    "27": 1,
+    "29": 2,
+    "40": 2
+  },
+  "prime": 5,
+  "raw_records_collected": 176,
+  "representation": "two-rowed (3,1) of B_4",
+  "source_class_distribution": {
+    "BraidZero": 11,
+    "CRISPR": 2,
+    "braidmod_len60": 5,
+    "other": 1,
+    "paper_bank": 20
+  },
+  "strict_visible_x5_words": 1,
+  "total_prefix_power_hits": 35,
+  "total_proper_non_scalar_prefix_power_hits": 12,
+  "unique_words": 39,
+  "words_with_any_prefix_power_hit": 24,
+  "words_with_proper_non_scalar_precursor": 7,
+  "words_without_any_prefix_power_hit": 15,
+  "words_without_proper_non_scalar_precursor": 32
+}
