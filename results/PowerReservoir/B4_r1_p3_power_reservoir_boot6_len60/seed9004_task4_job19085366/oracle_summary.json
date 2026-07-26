@@ -1,0 +1,12 @@
+{
+  "bucket_keys": [
+    "length",
+    "power_projlen"
+  ],
+  "bucket_size": 3000,
+  "candidate_variable": "x",
+  "mode": "paper_style_reservoir_scored_by_pth_power_projlen",
+  "power": 3,
+  "score": "projlen(rho(x)^power)",
+  "use_best": 50000
+}

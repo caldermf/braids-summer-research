@@ -1,0 +1,58 @@
+{
+  "artifact_checksum": "b6e0cbeb15a6e4461a20d125139a8b18245062b3db5ecea2ff05e655f3414de8",
+  "artifact_path": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/PowerReservoir/B4_r1_p5_power_reservoir_boot6_len30/seed9003_task3_job19125372",
+  "elapsed_seconds": 16897.71,
+  "format": "power-reservoir-summary-v1",
+  "length_range": {
+    "bootstrap_length": 6,
+    "processed_lengths": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "step_size": 1,
+    "target_length": 30
+  },
+  "method": "paper_style_reservoir_optimizing_projlen_of_x_power_p",
+  "power": 5,
+  "prime": 5,
+  "representation": "two-rowed (3,1) of B_4 over F_5",
+  "search": {
+    "best_power_projlen_by_length": {
+      "30": 35
+    },
+    "bucket_size": 3000,
+    "exact_evaluations": 6148785,
+    "final_bucket_count": 167,
+    "final_live_braids": 106699,
+    "generated_children": 5944815,
+    "power_evaluations": 6148785,
+    "save_best": 500,
+    "use_best": 50000,
+    "verified_power_scalars": 1
+  },
+  "seed": 9003,
+  "status": "clean",
+  "verifier_version": "power-reservoir-v1:BraidZero-exact-metrics:peyl-symbolic"
+}
