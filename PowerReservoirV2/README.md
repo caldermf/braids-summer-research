@@ -47,6 +47,17 @@ random
 ```
 
 Whenever `rho(x^p)` is exactly scalar, V2 writes a row to `candidates.jsonl`.
+Candidate rows include both:
+
+```text
+reservoir_memberships
+  heuristic reservoir families whose buckets contain the candidate after evaluation
+
+parent_selected_by
+  heuristic reservoir families that selected the parent which generated the candidate
+```
+
+Use `parent_selected_by` for causal heuristic attribution.
 
 ## Bouchet Setup
 

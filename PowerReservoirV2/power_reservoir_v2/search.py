@@ -141,12 +141,21 @@ def make_record(env: BraidEnvironment, braid, base_image: np.ndarray, power_imag
     )
 
 
-def candidate_row(env: BraidEnvironment, record: StateRecord, *, power: int, source: str, reservoir_memberships: Sequence[str]) -> dict:
+def candidate_row(
+    env: BraidEnvironment,
+    record: StateRecord,
+    *,
+    power: int,
+    source: str,
+    reservoir_memberships: Sequence[str],
+    parent_selected_by: Sequence[str],
+) -> dict:
     inf, perms = record.braid.canonical_decomposition()
     return {
         "kind": "power_reservoir_v2_verified_power_scalar",
         "source": source,
         "reservoir_memberships": list(reservoir_memberships),
+        "parent_selected_by": list(parent_selected_by),
         "n": int(env.n),
         "r": int(env.r),
         "p": int(env.p),
@@ -371,14 +380,22 @@ class MultiHeuristicTracker:
         self.total_children_generated = 0
         self.total_verified_power_scalars = 0
         self.candidate_memberships: dict[str, int] = defaultdict(int)
+        self.candidates_by_parent_heuristic: dict[str, int] = defaultdict(int)
 
     def progress(self, row: dict) -> None:
         append_jsonl(self.progress_path, row)
 
-    def add_records(self, records: Sequence[StateRecord], *, source: str) -> None:
+    def add_records(
+        self,
+        records: Sequence[StateRecord],
+        *,
+        source: str,
+        parent_sources: dict[tuple[int, ...], set[str]] | None = None,
+    ) -> None:
         if not records:
             return
         for record in records:
+            parent_selected_by = sorted((parent_sources or {}).get(record.factors, set()))
             for reservoir in self.reservoirs.values():
                 reservoir.add(record)
             if record.power_projlen == 1 and record.power_scalar_identity:
@@ -394,12 +411,15 @@ class MultiHeuristicTracker:
                 self.total_verified_power_scalars += 1
                 for name in memberships:
                     self.candidate_memberships[name] += 1
+                for name in parent_selected_by:
+                    self.candidates_by_parent_heuristic[name] += 1
                 row = candidate_row(
                     self.env,
                     record,
                     power=self.power,
                     source=source,
                     reservoir_memberships=memberships,
+                    parent_selected_by=parent_selected_by,
                 )
                 append_jsonl(self.candidate_path, row)
                 print(
@@ -413,7 +433,14 @@ class MultiHeuristicTracker:
                     flush=True,
                 )
 
-    def add_braids_images(self, braids: Sequence, images: np.ndarray, *, source: str) -> None:
+    def add_braids_images(
+        self,
+        braids: Sequence,
+        images: np.ndarray,
+        *,
+        source: str,
+        parent_sources: dict[tuple[int, ...], set[str]] | None = None,
+    ) -> None:
         if not braids:
             return
         self.total_exact_evaluations += int(len(braids))
@@ -423,9 +450,15 @@ class MultiHeuristicTracker:
             make_record(self.env, braid, images[i], pimgs[i], self.power)
             for i, braid in enumerate(braids)
         ]
-        self.add_records(records, source=source)
+        self.add_records(records, source=source, parent_sources=parent_sources)
 
-    def add_braids_evaluated(self, braids: Sequence, *, source: str) -> None:
+    def add_braids_evaluated(
+        self,
+        braids: Sequence,
+        *,
+        source: str,
+        parent_sources: dict[tuple[int, ...], set[str]] | None = None,
+    ) -> None:
         from peyl.braidsearch import evaluate_braids_of_same_length  # type: ignore
 
         if not braids:
@@ -437,7 +470,12 @@ class MultiHeuristicTracker:
             for start in range(0, len(same_length), self.eval_batch_size):
                 batch = same_length[start : start + self.eval_batch_size]
                 images = evaluate_braids_of_same_length(self.env.rep, batch)
-                self.add_braids_images(batch, images, source=f"{source}:length_{length}")
+                self.add_braids_images(
+                    batch,
+                    images,
+                    source=f"{source}:length_{length}",
+                    parent_sources=parent_sources,
+                )
 
     def bootstrap_exhaustive(self, upto_length: int, batch_size: int) -> dict:
         from peyl.braidsearch import batched, evaluate_braids_of_same_length  # type: ignore
@@ -496,30 +534,46 @@ class MultiHeuristicTracker:
             }
         return out
 
-    def select_parent_records(self, length: int) -> tuple[list[StateRecord], dict]:
+    def select_parent_records(self, length: int) -> tuple[list[StateRecord], dict, dict[tuple[int, ...], set[str]]]:
         selected_by_digest: dict[tuple[int, ...], StateRecord] = {}
+        selected_sources: dict[tuple[int, ...], set[str]] = defaultdict(set)
         summaries = {}
         for name, reservoir in self.reservoirs.items():
             selected, summary = reservoir.select_records(length, self.use_best_per_heuristic)
             summaries[name] = summary
             for record in selected:
                 selected_by_digest.setdefault(record.factors, record)
-        return list(selected_by_digest.values()), summaries
+                selected_sources[record.factors].add(name)
+        return list(selected_by_digest.values()), summaries, dict(selected_sources)
 
-    def expand_records(self, records: Sequence[StateRecord], step_size: int, expansion_batch_size: int) -> int:
+    def expand_records(
+        self,
+        records: Sequence[StateRecord],
+        *,
+        parent_sources: dict[tuple[int, ...], set[str]],
+        step_size: int,
+        expansion_batch_size: int,
+    ) -> int:
         child_batch = []
+        child_sources: dict[tuple[int, ...], set[str]] = {}
         generated = 0
         seen_children: set[tuple[int, ...]] = set()
 
         def flush() -> None:
-            nonlocal child_batch
+            nonlocal child_batch, child_sources
             if not child_batch:
                 return
-            self.add_braids_evaluated(child_batch, source="expanded_child")
+            self.add_braids_evaluated(
+                child_batch,
+                source="expanded_child",
+                parent_sources=child_sources,
+            )
             child_batch = []
+            child_sources = {}
 
         for record in records:
             braid = record.braid
+            sources = parent_sources.get(record.factors, set())
             for suffix in braid.nf_suffixes(step_size):
                 for i in range(1, step_size + 1):
                     child = braid * suffix.substring(0, i)
@@ -528,6 +582,7 @@ class MultiHeuristicTracker:
                         continue
                     seen_children.add(factors)
                     child_batch.append(child)
+                    child_sources[factors] = set(sources)
                     generated += 1
                     if len(child_batch) >= expansion_batch_size:
                         flush()
@@ -633,7 +688,7 @@ def run(args: argparse.Namespace) -> dict:
         if process_length >= args.target_length:
             break
 
-        parents, selected_parent_summaries = tracker.select_parent_records(process_length)
+        parents, selected_parent_summaries, parent_sources = tracker.select_parent_records(process_length)
         print(
             f"Selected {len(parents)} unique parent braids of length {process_length} "
             f"from {len(heuristics)} heuristic reservoirs.",
@@ -644,6 +699,7 @@ def run(args: argparse.Namespace) -> dict:
         with elapsed() as move_timer:
             generated = tracker.expand_records(
                 parents,
+                parent_sources=parent_sources,
                 step_size=args.step_size,
                 expansion_batch_size=args.expansion_batch_size,
             )
@@ -664,6 +720,7 @@ def run(args: argparse.Namespace) -> dict:
             "power_evaluations": int(tracker.total_power_evaluations),
             "verified_power_scalars": int(tracker.total_verified_power_scalars),
             "candidate_memberships": dict(tracker.candidate_memberships),
+            "candidates_by_parent_heuristic": dict(tracker.candidates_by_parent_heuristic),
             "elapsed_seconds": round(time.time() - start_time, 2),
         }
         tracker.progress(progress)
@@ -721,6 +778,7 @@ def run(args: argparse.Namespace) -> dict:
             "generated_children": int(tracker.total_children_generated),
             "verified_power_scalars": int(tracker.total_verified_power_scalars),
             "candidate_memberships": dict(tracker.candidate_memberships),
+            "candidates_by_parent_heuristic": dict(tracker.candidates_by_parent_heuristic),
             "heuristic_bucket_counts": tracker.bucket_counts(),
             "heuristic_population_sizes": tracker.population_sizes(),
             "best_metrics_by_heuristic": tracker.best_metrics_by_heuristic(),
