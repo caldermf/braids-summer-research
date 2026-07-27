@@ -20,9 +20,10 @@ as a novelty tie-breaker, not to forbid whole motifs.
 
 ## What It Imports
 
-The importer scans JSON, JSONL, and CSV artifacts under `results/` and extracts real braid factor
-lists when present. Supported patterns include:
+The importer scans JSON, JSONL, compressed JSON/JSONL, CSV, and JSON-line stdout/stderr artifacts
+under `results/` and extracts real braid factor lists when present. Supported patterns include:
 
+- `factors`
 - `factor_ids`
 - `child_factors` / `parent_factors`
 - `precursor_factor_ids` / `power_factor_ids_raw`
@@ -95,11 +96,15 @@ cd /nfs/roberts/project/pi_com36/as4843/braids-summer-research
 mkdir -p slurm_logs results/BraidExperienceDB
 
 PYTHON=/home/as4843/braids-torch/bin/python \
-RESULTS_ROOT=results \
+RESULTS_ROOTS="results:../burau-experiments/src/kernel_db.json:../braidmod" \
 OUT_DIR=results/BraidExperienceDB \
 PRIMES=2,3,5,7 \
+FORCE=1 \
 sbatch BraidExperienceDB/jobs/import_all_scavenge_cpu.sh
 ```
+
+`RESULTS_ROOTS` is colon-separated. `FORCE=1` is recommended after importer changes because it
+rescans already-imported files and inserts only newly recognized/deduped observations.
 
 ## Summaries
 
@@ -133,4 +138,3 @@ PYTHONPATH="$PWD/BraidExperienceDB" \
 
 Future searches should load these files at startup and use them to avoid exact repeats or favor
 globally novel states.
-

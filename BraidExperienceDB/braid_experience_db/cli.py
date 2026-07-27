@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import ast
 import csv
+import gzip
 import hashlib
 import json
 import re
@@ -10,13 +11,16 @@ import sqlite3
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Sequence, Tuple
 
 
 SCHEMA_VERSION = 1
-SUPPORTED_SUFFIXES = {".json", ".jsonl", ".csv"}
+SUPPORTED_SUFFIXES = {".json", ".jsonl", ".csv", ".out", ".txt", ".log", ".err"}
+SUPPORTED_COMPRESSED_NAMES = (".jsonl.gz", ".json.gz")
 FACTOR_KEYS = {
+    "factors",
     "factor_ids",
     "child_factors",
     "parent_factors",
@@ -44,6 +48,17 @@ def sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def is_supported_path(path: Path) -> bool:
+    name = path.name
+    return name.endswith(SUPPORTED_COMPRESSED_NAMES) or path.suffix in SUPPORTED_SUFFIXES
+
+
+def open_text(path: Path):
+    if path.name.endswith(".gz"):
+        return gzip.open(path, "rt", encoding="utf-8", errors="replace")
+    return path.open("r", encoding="utf-8", errors="replace")
 
 
 def compact_json(value: Any) -> str:
@@ -95,6 +110,20 @@ def infer_prime_from_text(text: str) -> Optional[int]:
 
 def infer_int_from_path(path: Path, prefix: str) -> Optional[int]:
     match = re.search(rf"{re.escape(prefix)}(\d+)", str(path))
+    return int(match.group(1)) if match else None
+
+
+def infer_braid_n_from_path(path: Path) -> Optional[int]:
+    text = str(path)
+    for pattern in (r"(?:^|[_/\-])n(\d+)(?:[_/\-]|$)", r"(?:^|[_/\-])B(\d+)(?:[_/\-]|$)"):
+        match = re.search(pattern, text)
+        if match:
+            return int(match.group(1))
+    return None
+
+
+def infer_r_from_path(path: Path) -> Optional[int]:
+    match = re.search(r"(?:^|[_/\-])r(\d+)(?:[_/\-]|$)", str(path))
     return int(match.group(1)) if match else None
 
 
@@ -470,6 +499,7 @@ class ExperienceDB:
         self.conn.commit()
 
 
+@lru_cache(maxsize=4096)
 def load_json_if_exists(path: Path) -> Optional[Dict[str, Any]]:
     if not path.is_file():
         return None
@@ -507,8 +537,8 @@ def make_context(path: Path, row: Optional[Dict[str, Any]] = None, forced_prime:
         summary_config.get("p"),
         infer_prime_from_text(str(path)),
     )
-    n = first_int(row.get("n"), config.get("n"), summary.get("n"), summary_config.get("n"), 4)
-    r = first_int(row.get("r"), config.get("r"), summary.get("r"), summary_config.get("r"), 1)
+    n = first_int(row.get("n"), config.get("n"), summary.get("n"), summary_config.get("n"), infer_braid_n_from_path(path), 4)
+    r = first_int(row.get("r"), config.get("r"), summary.get("r"), summary_config.get("r"), infer_r_from_path(path), 1)
     method = first_str(
         row.get("method"),
         row.get("kind"),
@@ -824,24 +854,33 @@ def iter_kernel_db_records(obj: Dict[str, Any]) -> Iterator[Tuple[int, Dict[str,
 
 
 def read_jsonl(path: Path) -> Iterator[Tuple[int, Optional[Dict[str, Any]], Optional[str]]]:
-    with path.open("r", encoding="utf-8", errors="replace") as handle:
-        for line_number, line in enumerate(handle, start=1):
-            stripped = line.strip()
-            if not stripped:
-                continue
-            try:
-                value = json.loads(stripped)
-            except json.JSONDecodeError:
-                yield line_number, None, stripped
-                continue
-            if isinstance(value, dict):
-                yield line_number, value, None
-            else:
-                yield line_number, {"value": value}, None
+    line_number = 0
+    with open_text(path) as handle:
+        try:
+            for line_number, line in enumerate(handle, start=1):
+                stripped = line.strip()
+                if not stripped:
+                    continue
+                try:
+                    value = json.loads(stripped)
+                except json.JSONDecodeError:
+                    yield line_number, None, stripped
+                    continue
+                if isinstance(value, dict):
+                    yield line_number, value, None
+                else:
+                    yield line_number, {"value": value}, None
+        except EOFError as exc:
+            yield line_number + 1, None, f"compressed file ended early: {exc}"
 
 
 def read_json(path: Path) -> Iterator[Tuple[int, Optional[Dict[str, Any]], Optional[str]]]:
-    text = path.read_text(encoding="utf-8", errors="replace")
+    try:
+        with open_text(path) as handle:
+            text = handle.read()
+    except EOFError as exc:
+        yield 0, None, f"compressed file ended early: {exc}"
+        return
     try:
         value = json.loads(text)
     except json.JSONDecodeError as exc:
@@ -855,6 +894,28 @@ def read_json(path: Path) -> Iterator[Tuple[int, Optional[Dict[str, Any]], Optio
         yield 0, row, None
 
 
+def read_text_json_records(path: Path) -> Iterator[Tuple[int, Optional[Dict[str, Any]], Optional[str]]]:
+    with open_text(path) as handle:
+        for line_number, line in enumerate(handle, start=1):
+            stripped = line.strip()
+            if not stripped or stripped[0] not in "{[":
+                continue
+            try:
+                value = json.loads(stripped)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(value, dict):
+                yielded = False
+                for row in iter_json_records(value):
+                    yielded = True
+                    yield line_number, row, None
+                if not yielded:
+                    yield line_number, value, None
+            elif isinstance(value, list):
+                for row in iter_json_records(value):
+                    yield line_number, row, None
+
+
 def read_csv_rows(path: Path) -> Iterator[Tuple[int, Optional[Dict[str, Any]], Optional[str]]]:
     with path.open("r", encoding="utf-8", errors="replace", newline="") as handle:
         reader = csv.DictReader(handle)
@@ -866,9 +927,12 @@ def read_csv_rows(path: Path) -> Iterator[Tuple[int, Optional[Dict[str, Any]], O
 
 
 def read_records(path: Path) -> Iterator[Tuple[int, Optional[Dict[str, Any]], Optional[str]]]:
-    if path.suffix == ".jsonl":
+    name = path.name
+    if path.suffix in {".out", ".txt", ".log", ".err"}:
+        yield from read_text_json_records(path)
+    elif name.endswith(".jsonl.gz") or path.suffix == ".jsonl":
         yield from read_jsonl(path)
-    elif path.suffix == ".json":
+    elif name.endswith(".json.gz") or path.suffix == ".json":
         yield from read_json(path)
     elif path.suffix == ".csv":
         yield from read_csv_rows(path)
@@ -897,7 +961,12 @@ class ImportManager:
             self.dbs[prime] = ExperienceDB(self.out_dir / f"p{prime}.sqlite", prime)
         return self.dbs[prime]
 
-    def import_file(self, path: Path, force: bool = False) -> Dict[str, int]:
+    def import_file(
+        self,
+        path: Path,
+        force: bool = False,
+        record_progress_every: Optional[int] = None,
+    ) -> Dict[str, int]:
         path = path.resolve()
         source_file = str(path)
         checksum = sha256_file(path)
@@ -971,6 +1040,23 @@ class ImportManager:
                     counts["malformed_records"] += int(malformed_inserted)
                     per_prime[prime]["malformed"] += int(malformed_inserted)
 
+            if record_progress_every and counts["records_seen"] % record_progress_every == 0:
+                print(
+                    json.dumps(
+                        {
+                            "phase": "file_progress",
+                            "source_file": source_file,
+                            "records_seen": counts["records_seen"],
+                            "observations_inserted": counts["observations_inserted"],
+                            "aggregate_records": counts["aggregate_records"],
+                            "malformed_records": counts["malformed_records"],
+                            "skipped_prime": counts["skipped_prime"],
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
+
         for prime, local in per_prime.items():
             self.db(prime).finish_import(
                 source_file=source_file,
@@ -986,10 +1072,10 @@ class ImportManager:
 
 def find_supported_files(root: Path) -> List[Path]:
     if root.is_file():
-        return [root] if root.suffix in SUPPORTED_SUFFIXES else []
+        return [root] if is_supported_path(root) else []
     files: List[Path] = []
     for path in root.rglob("*"):
-        if path.is_file() and path.suffix in SUPPORTED_SUFFIXES:
+        if path.is_file() and is_supported_path(path):
             if ".git" in path.parts:
                 continue
             if path.name.startswith("."):
@@ -1002,75 +1088,103 @@ def parse_primes(text: str) -> List[int]:
     return [int(item) for item in text.split(",") if item.strip()]
 
 
-def summarize_db(path: Path) -> Dict[str, Any]:
+def sql_filter(alias: str, n: Optional[int], r: Optional[int], min_length: Optional[int], max_length: Optional[int]) -> Tuple[str, List[Any]]:
+    clauses: List[str] = []
+    params: List[Any] = []
+    prefix = f"{alias}." if alias else ""
+    if n is not None:
+        clauses.append(f"{prefix}n = ?")
+        params.append(n)
+    if r is not None:
+        clauses.append(f"{prefix}r = ?")
+        params.append(r)
+    if min_length is not None:
+        clauses.append(f"{prefix}length >= ?")
+        params.append(min_length)
+    if max_length is not None:
+        clauses.append(f"{prefix}length <= ?")
+        params.append(max_length)
+    return ((" WHERE " + " AND ".join(clauses)) if clauses else ""), params
+
+
+def summarize_db(path: Path, n: Optional[int] = None, r: Optional[int] = None,
+                 min_length: Optional[int] = None, max_length: Optional[int] = None) -> Dict[str, Any]:
     conn = sqlite3.connect(str(path))
     conn.row_factory = sqlite3.Row
     out: Dict[str, Any] = {"db": str(path)}
-    for table in ("runs", "braids", "observations", "malformed_records", "imports"):
-        out[table] = conn.execute(f"SELECT COUNT(*) AS n FROM {table}").fetchone()["n"]
+    where_b, params_b = sql_filter("", n, None, min_length, max_length)
+    where_o, params_o = sql_filter("", n, r, min_length, max_length)
+    out["runs"] = conn.execute("SELECT COUNT(*) AS n FROM runs").fetchone()["n"]
+    out["braids"] = conn.execute(f"SELECT COUNT(*) AS n FROM braids{where_b}", params_b).fetchone()["n"]
+    out["observations"] = conn.execute(f"SELECT COUNT(*) AS n FROM observations{where_o}", params_o).fetchone()["n"]
+    out["malformed_records"] = conn.execute("SELECT COUNT(*) AS n FROM malformed_records").fetchone()["n"]
+    out["imports"] = conn.execute("SELECT COUNT(*) AS n FROM imports").fetchone()["n"]
+    out["filters"] = {"n": n, "r": r, "min_length": min_length, "max_length": max_length}
     out["by_method"] = [
         dict(row)
         for row in conn.execute(
-            """
+            f"""
             SELECT method, COUNT(*) AS observations, COUNT(DISTINCT braid_digest) AS unique_braids,
                    MIN(projlen) AS min_projlen, MAX(length) AS max_length
             FROM observations
+            {where_o}
             GROUP BY method
             ORDER BY observations DESC
             LIMIT 40
-            """
+            """,
+            params_o,
         )
     ]
     out["by_length"] = [
         dict(row)
         for row in conn.execute(
-            """
+            f"""
             SELECT length, COUNT(DISTINCT braid_digest) AS unique_braids,
                    MIN(projlen) AS min_projlen
             FROM observations
+            {where_o}
             GROUP BY length
             ORDER BY length
-            """
+            """,
+            params_o,
         )
     ]
+    verified_where = where_o + (" AND verified_kernel=1" if where_o else " WHERE verified_kernel=1")
     out["verified"] = [
         dict(row)
         for row in conn.execute(
-            """
-            SELECT braid_digest, length, MIN(projlen) AS min_projlen, COUNT(*) AS observations
+            f"""
+            SELECT braid_digest, length, MIN(projlen) AS min_projlen,
+                   COUNT(*) AS observations,
+                   GROUP_CONCAT(DISTINCT method) AS methods,
+                   MIN(source_file) AS sample_source_file
             FROM observations
-            WHERE verified_kernel=1
+            {verified_where}
             GROUP BY braid_digest, length
             ORDER BY length, braid_digest
             LIMIT 50
-            """
+            """,
+            params_o,
         )
     ]
     conn.close()
     return out
 
 
-def export_seen(db_path: Path, out_path: Path, kind: str, min_length: Optional[int], max_length: Optional[int]) -> int:
+def export_seen(db_path: Path, out_path: Path, kind: str, min_length: Optional[int],
+                max_length: Optional[int], n: Optional[int], r: Optional[int]) -> int:
     conn = sqlite3.connect(str(db_path))
-    clauses: List[str] = []
-    params: List[Any] = []
-    if min_length is not None:
-        clauses.append("length >= ?")
-        params.append(min_length)
-    if max_length is not None:
-        clauses.append("length <= ?")
-        params.append(max_length)
-    where = (" WHERE " + " AND ".join(clauses)) if clauses else ""
     out_path.parent.mkdir(parents=True, exist_ok=True)
     if kind == "braid":
+        where, params = sql_filter("", n, None, min_length, max_length)
         query = f"SELECT braid_digest AS digest FROM braids{where} ORDER BY braid_digest"
     elif kind == "matrix":
-        query = (
-            "SELECT DISTINCT matrix_digest AS digest FROM observations "
-            "WHERE matrix_digest IS NOT NULL"
-        )
-        if clauses:
-            query += " AND " + " AND ".join(clauses)
+        where, params = sql_filter("", n, r, min_length, max_length)
+        query = "SELECT DISTINCT matrix_digest AS digest FROM observations"
+        if where:
+            query += where + " AND matrix_digest IS NOT NULL"
+        else:
+            query += " WHERE matrix_digest IS NOT NULL"
         query += " ORDER BY matrix_digest"
     else:
         raise ValueError(f"Unknown export kind {kind}")
@@ -1107,7 +1221,11 @@ def cmd_import_root(args: argparse.Namespace) -> None:
         if args.limit_files is not None:
             files = files[: args.limit_files]
         for index, path in enumerate(files, start=1):
-            result = manager.import_file(path, force=args.force)
+            result = manager.import_file(
+                path,
+                force=args.force,
+                record_progress_every=args.record_progress_every,
+            )
             for key, value in result.items():
                 totals[key] = totals.get(key, 0) + value
             if args.progress_every and (index % args.progress_every == 0 or index == len(files)):
@@ -1118,11 +1236,11 @@ def cmd_import_root(args: argparse.Namespace) -> None:
 
 
 def cmd_summarize(args: argparse.Namespace) -> None:
-    print(json.dumps(summarize_db(Path(args.db)), indent=2, sort_keys=True))
+    print(json.dumps(summarize_db(Path(args.db), args.n, args.r, args.min_length, args.max_length), indent=2, sort_keys=True))
 
 
 def cmd_export_seen(args: argparse.Namespace) -> None:
-    count = export_seen(Path(args.db), Path(args.out), args.kind, args.min_length, args.max_length)
+    count = export_seen(Path(args.db), Path(args.out), args.kind, args.min_length, args.max_length, args.n, args.r)
     print(json.dumps({"status": "clean", "kind": args.kind, "out": args.out, "digests": count}, indent=2))
 
 
@@ -1139,16 +1257,24 @@ def build_parser() -> argparse.ArgumentParser:
     import_root.add_argument("--force", action="store_true", help="Re-import even if checksum is already clean")
     import_root.add_argument("--limit-files", type=int)
     import_root.add_argument("--progress-every", type=int, default=100)
+    import_root.add_argument("--record-progress-every", type=int,
+                             help="Print progress every N records inside a single large file")
     import_root.set_defaults(func=cmd_import_root)
 
     summarize = sub.add_parser("summarize", help="Print coverage summary for one prime DB")
     summarize.add_argument("--db", required=True)
+    summarize.add_argument("--n", type=int)
+    summarize.add_argument("--r", type=int)
+    summarize.add_argument("--min-length", type=int)
+    summarize.add_argument("--max-length", type=int)
     summarize.set_defaults(func=cmd_summarize)
 
     export = sub.add_parser("export-seen", help="Export seen braid or matrix digests")
     export.add_argument("--db", required=True)
     export.add_argument("--kind", choices=["braid", "matrix"], required=True)
     export.add_argument("--out", required=True)
+    export.add_argument("--n", type=int)
+    export.add_argument("--r", type=int)
     export.add_argument("--min-length", type=int)
     export.add_argument("--max-length", type=int)
     export.set_defaults(func=cmd_export_seen)
