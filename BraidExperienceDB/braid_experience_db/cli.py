@@ -9,6 +9,7 @@ import json
 import re
 import sqlite3
 import sys
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import lru_cache
@@ -1198,6 +1199,404 @@ def export_seen(db_path: Path, out_path: Path, kind: str, min_length: Optional[i
     return count
 
 
+def create_projlen_schema(conn: sqlite3.Connection) -> None:
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS metadata (
+          key TEXT PRIMARY KEY,
+          value TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS braids (
+          braid_digest TEXT PRIMARY KEY,
+          n INTEGER,
+          infimum INTEGER NOT NULL,
+          garside_power INTEGER NOT NULL,
+          length INTEGER NOT NULL,
+          factor_ids_json TEXT NOT NULL,
+          factor_ids_text TEXT NOT NULL,
+          first_seen_at TEXT NOT NULL,
+          source_db TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS projlen_images (
+          braid_digest TEXT NOT NULL,
+          p INTEGER NOT NULL,
+          n INTEGER NOT NULL,
+          r INTEGER NOT NULL,
+          representation TEXT,
+          projlen INTEGER NOT NULL,
+          identity_defect INTEGER,
+          scalar_identity INTEGER,
+          verifier_version TEXT NOT NULL,
+          source TEXT,
+          observed_at TEXT NOT NULL,
+          PRIMARY KEY (braid_digest, p, n, r, verifier_version),
+          FOREIGN KEY(braid_digest) REFERENCES braids(braid_digest)
+        );
+
+        CREATE TABLE IF NOT EXISTS projlen_imports (
+          source_db TEXT PRIMARY KEY,
+          source_checksum TEXT,
+          imported_at TEXT NOT NULL,
+          braids_inserted INTEGER NOT NULL,
+          image_rows_inserted INTEGER NOT NULL
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_cross_braids_length ON braids(n, length);
+        CREATE INDEX IF NOT EXISTS idx_cross_images_pnr ON projlen_images(p, n, r, projlen);
+        CREATE INDEX IF NOT EXISTS idx_cross_images_braid ON projlen_images(braid_digest);
+        """
+    )
+    conn.execute(
+        "INSERT OR REPLACE INTO metadata(key,value) VALUES(?,?)",
+        ("schema_version", "cross-prime-projlen-v1"),
+    )
+
+
+def build_projlen_db(
+    *,
+    out_db: Path,
+    source_dbs: Sequence[Path],
+    n: Optional[int],
+    r: Optional[int],
+    force: bool,
+) -> Dict[str, Any]:
+    out_db.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(out_db))
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA synchronous=NORMAL")
+    conn.execute("PRAGMA busy_timeout=60000")
+    create_projlen_schema(conn)
+    totals = {
+        "source_dbs": 0,
+        "braids_inserted": 0,
+        "image_rows_inserted": 0,
+        "skipped_existing": 0,
+    }
+
+    for source in source_dbs:
+        source = Path(source).resolve()
+        if not source.is_file():
+            raise FileNotFoundError(source)
+        checksum = sha256_file(source)
+        source_text = str(source)
+        if not force:
+            row = conn.execute(
+                "SELECT source_checksum FROM projlen_imports WHERE source_db=?",
+                (source_text,),
+            ).fetchone()
+            if row and row[0] == checksum:
+                totals["skipped_existing"] += 1
+                continue
+
+        src = sqlite3.connect(str(source))
+        src.row_factory = sqlite3.Row
+        braid_sql = """
+            SELECT braid_digest, n, infimum, garside_power, length,
+                   factor_ids_json, factor_ids_text
+            FROM braids
+        """
+        params: List[Any] = []
+        if n is not None:
+            braid_sql += " WHERE n=?"
+            params.append(n)
+
+        braids_inserted = 0
+        for row in src.execute(braid_sql, params):
+            cur = conn.execute(
+                """
+                INSERT OR IGNORE INTO braids
+                (braid_digest, n, infimum, garside_power, length, factor_ids_json,
+                 factor_ids_text, first_seen_at, source_db)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    row["braid_digest"],
+                    row["n"],
+                    row["infimum"],
+                    row["garside_power"],
+                    row["length"],
+                    row["factor_ids_json"],
+                    row["factor_ids_text"],
+                    utc_now(),
+                    source_text,
+                ),
+            )
+            braids_inserted += int(cur.rowcount)
+
+        obs_where = ["projlen IS NOT NULL"]
+        obs_params: List[Any] = []
+        if n is not None:
+            obs_where.append("n=?")
+            obs_params.append(n)
+        if r is not None:
+            obs_where.append("r=?")
+            obs_params.append(r)
+        obs_sql = f"""
+            SELECT braid_digest, prime AS p, n, r,
+                   MIN(projlen) AS projlen,
+                   MIN(identity_defect) AS identity_defect,
+                   MAX(COALESCE(scalar_identity, 0)) AS scalar_identity
+            FROM observations
+            WHERE {' AND '.join(obs_where)}
+            GROUP BY braid_digest, prime, n, r
+        """
+
+        image_rows_inserted = 0
+        for row in src.execute(obs_sql, obs_params):
+            if row["n"] is None or row["r"] is None:
+                continue
+            cur = conn.execute(
+                """
+                INSERT OR REPLACE INTO projlen_images
+                (braid_digest, p, n, r, representation, projlen, identity_defect,
+                 scalar_identity, verifier_version, source, observed_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    row["braid_digest"],
+                    row["p"],
+                    row["n"],
+                    row["r"],
+                    f"JonesSummand(n={row['n']},r={row['r']})",
+                    row["projlen"],
+                    row["identity_defect"],
+                    row["scalar_identity"],
+                    "observed-imported-v1",
+                    source_text,
+                    utc_now(),
+                ),
+            )
+            image_rows_inserted += int(cur.rowcount)
+
+        src.close()
+        conn.execute(
+            """
+            INSERT OR REPLACE INTO projlen_imports
+            (source_db, source_checksum, imported_at, braids_inserted, image_rows_inserted)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (source_text, checksum, utc_now(), braids_inserted, image_rows_inserted),
+        )
+        conn.commit()
+        totals["source_dbs"] += 1
+        totals["braids_inserted"] += braids_inserted
+        totals["image_rows_inserted"] += image_rows_inserted
+
+    totals["total_braids"] = conn.execute("SELECT COUNT(*) FROM braids").fetchone()[0]
+    totals["total_projlen_images"] = conn.execute("SELECT COUNT(*) FROM projlen_images").fetchone()[0]
+    conn.close()
+    return {"status": "clean", "out_db": str(out_db), **totals}
+
+
+def parse_prime_list(text: str) -> List[int]:
+    return [int(item) for item in text.split(",") if item.strip()]
+
+
+def fill_projlen_images(
+    *,
+    db_path: Path,
+    author_repo: Path,
+    primes: Sequence[int],
+    n: int,
+    r: int,
+    min_length: Optional[int],
+    max_length: Optional[int],
+    limit: Optional[int],
+    shard_count: int,
+    shard_index: int,
+    only_missing: bool,
+    commit_every: int,
+    progress_every: int,
+) -> Dict[str, Any]:
+    import sys as _sys
+
+    root = Path(__file__).resolve().parents[2]
+    braidzero_root = root / "BraidZero"
+    for candidate in (braidzero_root, Path.cwd() / "BraidZero"):
+        if (candidate / "braidzero" / "core.py").is_file():
+            _sys.path.insert(0, str(candidate))
+            break
+    from braidzero.core import BraidEnvironment  # type: ignore
+
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(db_path))
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA synchronous=NORMAL")
+    conn.execute("PRAGMA busy_timeout=60000")
+    create_projlen_schema(conn)
+
+    if shard_count < 1:
+        raise ValueError("shard_count must be positive")
+    if shard_index < 0 or shard_index >= shard_count:
+        raise ValueError("shard_index must be in [0, shard_count)")
+
+    where = ["n=?", "(rowid % ?) = ?"]
+    params: List[Any] = [int(n), int(shard_count), int(shard_index)]
+    if min_length is not None:
+        where.append("length >= ?")
+        params.append(int(min_length))
+    if max_length is not None:
+        where.append("length <= ?")
+        params.append(int(max_length))
+    base_sql = f"""
+        SELECT braid_digest, length, factor_ids_json
+        FROM braids
+        WHERE {' AND '.join(where)}
+        ORDER BY length, braid_digest
+    """
+    if limit is not None:
+        base_sql += " LIMIT ?"
+        params.append(int(limit))
+
+    rows = conn.execute(base_sql, params).fetchall()
+    total = len(rows)
+    summary: Dict[str, Any] = {
+        "status": "clean",
+        "db": str(db_path),
+        "n": int(n),
+        "r": int(r),
+        "primes": list(map(int, primes)),
+        "selected_braids": total,
+        "computed": 0,
+        "skipped_existing": 0,
+        "failed": 0,
+    }
+
+    for p in primes:
+        env = BraidEnvironment(author_repo=Path(author_repo), n=int(n), r=int(r), p=int(p))
+        verifier = env.verifier_version
+        computed_for_prime = 0
+        skipped_for_prime = 0
+        failed_for_prime = 0
+        start = time.time()
+        for idx, row in enumerate(rows, start=1):
+            braid_digest = row[0]
+            if only_missing:
+                existing = conn.execute(
+                    """
+                    SELECT 1 FROM projlen_images
+                    WHERE braid_digest=? AND p=? AND n=? AND r=? AND verifier_version=?
+                    """,
+                    (braid_digest, int(p), int(n), int(r), verifier),
+                ).fetchone()
+                if existing:
+                    skipped_for_prime += 1
+                    summary["skipped_existing"] += 1
+                    continue
+            try:
+                factors = [int(x) for x in json.loads(row[2])]
+                image = env.exact_evaluate(factors)
+                metrics = env.exact_metrics(image)
+                conn.execute(
+                    """
+                    INSERT OR REPLACE INTO projlen_images
+                    (braid_digest, p, n, r, representation, projlen, identity_defect,
+                     scalar_identity, verifier_version, source, observed_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        braid_digest,
+                        int(p),
+                        int(n),
+                        int(r),
+                        env.representation_label,
+                        int(metrics["projlen"]),
+                        int(metrics["identity_defect"]),
+                        int(bool(metrics["scalar_identity"])),
+                        verifier,
+                        "computed-exact",
+                        utc_now(),
+                    ),
+                )
+                computed_for_prime += 1
+                summary["computed"] += 1
+            except Exception as exc:
+                failed_for_prime += 1
+                summary["failed"] += 1
+                conn.execute(
+                    """
+                    INSERT OR IGNORE INTO metadata(key,value) VALUES(?,?)
+                    """,
+                    (
+                        f"last_projlen_failure_{p}_{braid_digest}",
+                        str(exc)[:1000],
+                    ),
+                )
+            if idx % max(1, commit_every) == 0:
+                conn.commit()
+            if progress_every and idx % progress_every == 0:
+                print(
+                    json.dumps(
+                        {
+                            "phase": "projlen_fill_progress",
+                            "p": int(p),
+                            "processed_for_prime": idx,
+                            "selected_braids": total,
+                            "computed_for_prime": computed_for_prime,
+                            "skipped_for_prime": skipped_for_prime,
+                            "failed_for_prime": failed_for_prime,
+                            "elapsed_seconds": round(time.time() - start, 2),
+                        },
+                        sort_keys=True,
+                    ),
+                    flush=True,
+                )
+        conn.commit()
+        summary[f"p{p}"] = {
+            "computed": computed_for_prime,
+            "skipped_existing": skipped_for_prime,
+            "failed": failed_for_prime,
+            "verifier_version": verifier,
+        }
+    conn.close()
+    return summary
+
+
+def summarize_projlen_db(path: Path, n: Optional[int], r: Optional[int]) -> Dict[str, Any]:
+    conn = sqlite3.connect(str(path))
+    conn.row_factory = sqlite3.Row
+    where_b, params_b = sql_filter("", n, None, None, None)
+    where_i, params_i = sql_filter("", n, r, None, None)
+    where_i_alias, params_i_alias = sql_filter("i", n, r, None, None)
+    out: Dict[str, Any] = {
+        "db": str(path),
+        "filters": {"n": n, "r": r},
+        "braids": conn.execute(f"SELECT COUNT(*) AS n FROM braids{where_b}", params_b).fetchone()["n"],
+        "projlen_images": conn.execute(f"SELECT COUNT(*) AS n FROM projlen_images{where_i}", params_i).fetchone()["n"],
+    }
+    out["by_prime"] = [
+        dict(row)
+        for row in conn.execute(
+            f"""
+            SELECT p, COUNT(*) AS images, COUNT(DISTINCT braid_digest) AS unique_braids,
+                   MIN(projlen) AS min_projlen, MAX(projlen) AS max_projlen
+            FROM projlen_images
+            {where_i}
+            GROUP BY p
+            ORDER BY p
+            """,
+            params_i,
+        )
+    ]
+    out["by_length_prime"] = [
+        dict(row)
+        for row in conn.execute(
+            f"""
+            SELECT b.length, i.p, COUNT(*) AS images, MIN(i.projlen) AS min_projlen
+            FROM projlen_images i JOIN braids b ON b.braid_digest = i.braid_digest
+            {where_i_alias}
+            GROUP BY b.length, i.p
+            ORDER BY b.length, i.p
+            """,
+            params_i_alias,
+        )
+    ]
+    conn.close()
+    return out
+
+
 def cmd_import_root(args: argparse.Namespace) -> None:
     roots = [Path(item) for item in args.results_root]
     manager = ImportManager(
@@ -1244,6 +1643,50 @@ def cmd_export_seen(args: argparse.Namespace) -> None:
     print(json.dumps({"status": "clean", "kind": args.kind, "out": args.out, "digests": count}, indent=2))
 
 
+def cmd_build_projlen_db(args: argparse.Namespace) -> None:
+    print(
+        json.dumps(
+            build_projlen_db(
+                out_db=Path(args.out_db),
+                source_dbs=[Path(item) for item in args.source_db],
+                n=args.n,
+                r=args.r,
+                force=args.force,
+            ),
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+def cmd_fill_projlen(args: argparse.Namespace) -> None:
+    print(
+        json.dumps(
+            fill_projlen_images(
+                db_path=Path(args.db),
+                author_repo=Path(args.author_repo),
+                primes=parse_prime_list(args.primes),
+                n=args.n,
+                r=args.r,
+                min_length=args.min_length,
+                max_length=args.max_length,
+                limit=args.limit,
+                shard_count=args.shard_count,
+                shard_index=args.shard_index,
+                only_missing=not args.recompute,
+                commit_every=args.commit_every,
+                progress_every=args.progress_every,
+            ),
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+def cmd_summarize_projlen_db(args: argparse.Namespace) -> None:
+    print(json.dumps(summarize_projlen_db(Path(args.db), args.n, args.r), indent=2, sort_keys=True))
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Build and query per-prime braid experience databases")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1278,6 +1721,37 @@ def build_parser() -> argparse.ArgumentParser:
     export.add_argument("--min-length", type=int)
     export.add_argument("--max-length", type=int)
     export.set_defaults(func=cmd_export_seen)
+
+    build_projlen = sub.add_parser("build-projlen-db", help="Build a cross-prime braid/projlen database")
+    build_projlen.add_argument("--out-db", required=True)
+    build_projlen.add_argument("--source-db", action="append", required=True,
+                               help="Per-prime BraidExperienceDB sqlite file. Pass more than once.")
+    build_projlen.add_argument("--n", type=int)
+    build_projlen.add_argument("--r", type=int)
+    build_projlen.add_argument("--force", action="store_true")
+    build_projlen.set_defaults(func=cmd_build_projlen_db)
+
+    fill_projlen = sub.add_parser("fill-projlen", help="Compute missing exact projlen rows in a cross-prime database")
+    fill_projlen.add_argument("--db", required=True)
+    fill_projlen.add_argument("--author-repo", required=True)
+    fill_projlen.add_argument("--primes", default="2,3,5,7")
+    fill_projlen.add_argument("--n", type=int, default=4)
+    fill_projlen.add_argument("--r", type=int, default=1)
+    fill_projlen.add_argument("--min-length", type=int)
+    fill_projlen.add_argument("--max-length", type=int)
+    fill_projlen.add_argument("--limit", type=int)
+    fill_projlen.add_argument("--shard-count", type=int, default=1)
+    fill_projlen.add_argument("--shard-index", type=int, default=0)
+    fill_projlen.add_argument("--recompute", action="store_true")
+    fill_projlen.add_argument("--commit-every", type=int, default=1000)
+    fill_projlen.add_argument("--progress-every", type=int, default=1000)
+    fill_projlen.set_defaults(func=cmd_fill_projlen)
+
+    summarize_projlen = sub.add_parser("summarize-projlen-db", help="Summarize cross-prime projlen coverage")
+    summarize_projlen.add_argument("--db", required=True)
+    summarize_projlen.add_argument("--n", type=int)
+    summarize_projlen.add_argument("--r", type=int)
+    summarize_projlen.set_defaults(func=cmd_summarize_projlen_db)
     return parser
 
 
