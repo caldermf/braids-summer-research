@@ -1290,40 +1290,49 @@ def build_projlen_db(
                 totals["skipped_existing"] += 1
                 continue
 
-        src = sqlite3.connect(str(source))
-        src.row_factory = sqlite3.Row
-        braid_sql = """
-            SELECT braid_digest, n, infimum, garside_power, length,
-                   factor_ids_json, factor_ids_text
-            FROM braids
-        """
-        params: List[Any] = []
+        conn.execute("ATTACH DATABASE ? AS src", (source_text,))
+        obs_match_where: List[str] = []
+        obs_match_params: List[Any] = []
         if n is not None:
-            braid_sql += " WHERE n=?"
-            params.append(n)
+            obs_match_where.append("n=?")
+            obs_match_params.append(n)
+        if r is not None:
+            obs_match_where.append("r=?")
+            obs_match_params.append(r)
 
-        braids_inserted = 0
-        for row in src.execute(braid_sql, params):
-            cur = conn.execute(
+        before = conn.total_changes
+        if obs_match_where:
+            conn.execute(
+                f"""
+                INSERT OR IGNORE INTO braids
+                (braid_digest, n, infimum, garside_power, length, factor_ids_json,
+                 factor_ids_text, first_seen_at, source_db)
+                SELECT b.braid_digest, COALESCE(b.n, obs.obs_n), b.infimum,
+                       b.garside_power, b.length, b.factor_ids_json, b.factor_ids_text,
+                       ?, ?
+                FROM src.braids b
+                JOIN (
+                  SELECT braid_digest, MIN(n) AS obs_n
+                  FROM src.observations
+                  WHERE {' AND '.join(obs_match_where)}
+                  GROUP BY braid_digest
+                ) obs ON obs.braid_digest = b.braid_digest
+                """,
+                [utc_now(), source_text, *obs_match_params],
+            )
+        else:
+            conn.execute(
                 """
                 INSERT OR IGNORE INTO braids
                 (braid_digest, n, infimum, garside_power, length, factor_ids_json,
                  factor_ids_text, first_seen_at, source_db)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                SELECT braid_digest, n, infimum, garside_power, length,
+                       factor_ids_json, factor_ids_text, ?, ?
+                FROM src.braids
                 """,
-                (
-                    row["braid_digest"],
-                    row["n"],
-                    row["infimum"],
-                    row["garside_power"],
-                    row["length"],
-                    row["factor_ids_json"],
-                    row["factor_ids_text"],
-                    utc_now(),
-                    source_text,
-                ),
+                (utc_now(), source_text),
             )
-            braids_inserted += int(cur.rowcount)
+        braids_inserted = conn.total_changes - before
 
         obs_where = ["projlen IS NOT NULL"]
         obs_params: List[Any] = []
@@ -1333,44 +1342,33 @@ def build_projlen_db(
         if r is not None:
             obs_where.append("r=?")
             obs_params.append(r)
-        obs_sql = f"""
+
+        before = conn.total_changes
+        conn.execute(
+            f"""
+            INSERT OR REPLACE INTO projlen_images
+            (braid_digest, p, n, r, representation, projlen, identity_defect,
+             scalar_identity, verifier_version, source, observed_at)
             SELECT braid_digest, prime AS p, n, r,
+                   'JonesSummand(n=' || n || ',r=' || r || ')' AS representation,
                    MIN(projlen) AS projlen,
                    MIN(identity_defect) AS identity_defect,
-                   MAX(COALESCE(scalar_identity, 0)) AS scalar_identity
-            FROM observations
+                   MAX(COALESCE(scalar_identity, 0)) AS scalar_identity,
+                   'observed-imported-v1' AS verifier_version,
+                   ? AS source,
+                   ? AS observed_at
+            FROM src.observations
             WHERE {' AND '.join(obs_where)}
+              AND n IS NOT NULL
+              AND r IS NOT NULL
             GROUP BY braid_digest, prime, n, r
-        """
+            """,
+            [source_text, utc_now(), *obs_params],
+        )
+        image_rows_inserted = conn.total_changes - before
 
-        image_rows_inserted = 0
-        for row in src.execute(obs_sql, obs_params):
-            if row["n"] is None or row["r"] is None:
-                continue
-            cur = conn.execute(
-                """
-                INSERT OR REPLACE INTO projlen_images
-                (braid_digest, p, n, r, representation, projlen, identity_defect,
-                 scalar_identity, verifier_version, source, observed_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    row["braid_digest"],
-                    row["p"],
-                    row["n"],
-                    row["r"],
-                    f"JonesSummand(n={row['n']},r={row['r']})",
-                    row["projlen"],
-                    row["identity_defect"],
-                    row["scalar_identity"],
-                    "observed-imported-v1",
-                    source_text,
-                    utc_now(),
-                ),
-            )
-            image_rows_inserted += int(cur.rowcount)
-
-        src.close()
+        conn.commit()
+        conn.execute("DETACH DATABASE src")
         conn.execute(
             """
             INSERT OR REPLACE INTO projlen_imports
