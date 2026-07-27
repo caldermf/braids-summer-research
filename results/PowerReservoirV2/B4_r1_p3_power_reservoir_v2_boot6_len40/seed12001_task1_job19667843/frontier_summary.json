@@ -1,0 +1,426 @@
+{
+  "best_metrics_by_heuristic": {
+    "base_projlen": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -11,
+        "collapse_ratio_milli": 83,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -17,
+        "collapse_ratio_milli": 56,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -29,
+        "collapse_ratio_milli": 33,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "4": {
+        "base_projlen": 8,
+        "collapse_excess": -35,
+        "collapse_ratio_milli": 28,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -47,
+        "collapse_ratio_milli": 21,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "6": {
+        "base_projlen": 11,
+        "collapse_excess": -53,
+        "collapse_ratio_milli": 19,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      }
+    },
+    "collapse_excess": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -11,
+        "collapse_ratio_milli": 83,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -17,
+        "collapse_ratio_milli": 56,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -29,
+        "collapse_ratio_milli": 33,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "4": {
+        "base_projlen": 8,
+        "collapse_excess": -35,
+        "collapse_ratio_milli": 28,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -47,
+        "collapse_ratio_milli": 21,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "6": {
+        "base_projlen": 11,
+        "collapse_excess": -53,
+        "collapse_ratio_milli": 19,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      }
+    },
+    "collapse_ratio": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -11,
+        "collapse_ratio_milli": 83,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -17,
+        "collapse_ratio_milli": 56,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -29,
+        "collapse_ratio_milli": 33,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "4": {
+        "base_projlen": 8,
+        "collapse_excess": -35,
+        "collapse_ratio_milli": 28,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -47,
+        "collapse_ratio_milli": 21,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "6": {
+        "base_projlen": 11,
+        "collapse_excess": -53,
+        "collapse_ratio_milli": 19,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      }
+    },
+    "power_identity": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -11,
+        "collapse_ratio_milli": 83,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -17,
+        "collapse_ratio_milli": 56,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -29,
+        "collapse_ratio_milli": 33,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "4": {
+        "base_projlen": 8,
+        "collapse_excess": -35,
+        "collapse_ratio_milli": 28,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -47,
+        "collapse_ratio_milli": 21,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "6": {
+        "base_projlen": 11,
+        "collapse_excess": -53,
+        "collapse_ratio_milli": 19,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      }
+    },
+    "power_projlen": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -11,
+        "collapse_ratio_milli": 83,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -17,
+        "collapse_ratio_milli": 56,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -29,
+        "collapse_ratio_milli": 33,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "4": {
+        "base_projlen": 8,
+        "collapse_excess": -35,
+        "collapse_ratio_milli": 28,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -47,
+        "collapse_ratio_milli": 21,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "6": {
+        "base_projlen": 11,
+        "collapse_excess": -53,
+        "collapse_ratio_milli": 19,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      }
+    },
+    "power_sparse": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -11,
+        "collapse_ratio_milli": 83,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -17,
+        "collapse_ratio_milli": 56,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -29,
+        "collapse_ratio_milli": 33,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "4": {
+        "base_projlen": 8,
+        "collapse_excess": -35,
+        "collapse_ratio_milli": 28,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -47,
+        "collapse_ratio_milli": 21,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "6": {
+        "base_projlen": 11,
+        "collapse_excess": -53,
+        "collapse_ratio_milli": 19,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      }
+    },
+    "random": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -11,
+        "collapse_ratio_milli": 83,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -17,
+        "collapse_ratio_milli": 56,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -29,
+        "collapse_ratio_milli": 33,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "4": {
+        "base_projlen": 8,
+        "collapse_excess": -35,
+        "collapse_ratio_milli": 28,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -47,
+        "collapse_ratio_milli": 21,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "6": {
+        "base_projlen": 11,
+        "collapse_excess": -53,
+        "collapse_ratio_milli": 19,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      }
+    },
+    "two_level": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -11,
+        "collapse_ratio_milli": 83,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -17,
+        "collapse_ratio_milli": 56,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -29,
+        "collapse_ratio_milli": 33,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "4": {
+        "base_projlen": 8,
+        "collapse_excess": -35,
+        "collapse_ratio_milli": 28,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -47,
+        "collapse_ratio_milli": 21,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      },
+      "6": {
+        "base_projlen": 11,
+        "collapse_excess": -53,
+        "collapse_ratio_milli": 19,
+        "power_identity_defect": 0,
+        "power_nonzero_terms": 3,
+        "power_projlen": 1
+      }
+    }
+  },
+  "elapsed_seconds": 41.16,
+  "frontier_loaded": 203970,
+  "heuristic_bucket_counts": {
+    "base_projlen": 31,
+    "collapse_excess": 261,
+    "collapse_ratio": 429,
+    "power_identity": 128,
+    "power_projlen": 140,
+    "power_sparse": 224,
+    "random": 6,
+    "two_level": 226
+  },
+  "heuristic_population_sizes": {
+    "base_projlen": 29696,
+    "collapse_excess": 98974,
+    "collapse_ratio": 107170,
+    "power_identity": 83250,
+    "power_projlen": 83470,
+    "power_sparse": 93498,
+    "random": 7168,
+    "two_level": 97110
+  }
+}

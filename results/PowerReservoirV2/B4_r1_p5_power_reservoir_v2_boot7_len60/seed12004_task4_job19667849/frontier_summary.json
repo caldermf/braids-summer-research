@@ -1,0 +1,490 @@
+{
+  "best_metrics_by_heuristic": {
+    "base_projlen": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -16,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 5,
+        "power_nonzero_terms": 5,
+        "power_projlen": 3
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -28,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 6,
+        "power_nonzero_terms": 5,
+        "power_projlen": 5
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -40,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 7
+      },
+      "4": {
+        "base_projlen": 9,
+        "collapse_excess": -48,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 14,
+        "power_nonzero_terms": 13,
+        "power_projlen": 9
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -64,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 11
+      },
+      "6": {
+        "base_projlen": 12,
+        "collapse_excess": -76,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 10,
+        "power_nonzero_terms": 9,
+        "power_projlen": 13
+      },
+      "7": {
+        "base_projlen": 13,
+        "collapse_excess": -88,
+        "collapse_ratio_milli": 188,
+        "power_identity_defect": 11,
+        "power_nonzero_terms": 10,
+        "power_projlen": 15
+      }
+    },
+    "collapse_excess": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -16,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 5,
+        "power_nonzero_terms": 5,
+        "power_projlen": 3
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -28,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 6,
+        "power_nonzero_terms": 5,
+        "power_projlen": 5
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -40,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 7
+      },
+      "4": {
+        "base_projlen": 9,
+        "collapse_excess": -48,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 14,
+        "power_nonzero_terms": 13,
+        "power_projlen": 9
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -64,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 11
+      },
+      "6": {
+        "base_projlen": 12,
+        "collapse_excess": -76,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 10,
+        "power_nonzero_terms": 9,
+        "power_projlen": 13
+      },
+      "7": {
+        "base_projlen": 13,
+        "collapse_excess": -88,
+        "collapse_ratio_milli": 188,
+        "power_identity_defect": 11,
+        "power_nonzero_terms": 10,
+        "power_projlen": 15
+      }
+    },
+    "collapse_ratio": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -16,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 5,
+        "power_nonzero_terms": 5,
+        "power_projlen": 3
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -28,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 6,
+        "power_nonzero_terms": 5,
+        "power_projlen": 5
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -40,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 7
+      },
+      "4": {
+        "base_projlen": 9,
+        "collapse_excess": -48,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 14,
+        "power_nonzero_terms": 13,
+        "power_projlen": 9
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -64,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 11
+      },
+      "6": {
+        "base_projlen": 12,
+        "collapse_excess": -76,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 10,
+        "power_nonzero_terms": 9,
+        "power_projlen": 13
+      },
+      "7": {
+        "base_projlen": 13,
+        "collapse_excess": -88,
+        "collapse_ratio_milli": 188,
+        "power_identity_defect": 11,
+        "power_nonzero_terms": 10,
+        "power_projlen": 15
+      }
+    },
+    "power_identity": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -16,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 5,
+        "power_nonzero_terms": 5,
+        "power_projlen": 3
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -28,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 6,
+        "power_nonzero_terms": 5,
+        "power_projlen": 5
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -40,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 7
+      },
+      "4": {
+        "base_projlen": 9,
+        "collapse_excess": -48,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 14,
+        "power_nonzero_terms": 13,
+        "power_projlen": 9
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -64,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 11
+      },
+      "6": {
+        "base_projlen": 12,
+        "collapse_excess": -76,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 10,
+        "power_nonzero_terms": 9,
+        "power_projlen": 13
+      },
+      "7": {
+        "base_projlen": 13,
+        "collapse_excess": -88,
+        "collapse_ratio_milli": 188,
+        "power_identity_defect": 11,
+        "power_nonzero_terms": 10,
+        "power_projlen": 15
+      }
+    },
+    "power_projlen": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -16,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 5,
+        "power_nonzero_terms": 5,
+        "power_projlen": 3
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -28,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 6,
+        "power_nonzero_terms": 5,
+        "power_projlen": 5
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -40,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 7
+      },
+      "4": {
+        "base_projlen": 9,
+        "collapse_excess": -48,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 14,
+        "power_nonzero_terms": 13,
+        "power_projlen": 9
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -64,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 11
+      },
+      "6": {
+        "base_projlen": 12,
+        "collapse_excess": -76,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 10,
+        "power_nonzero_terms": 9,
+        "power_projlen": 13
+      },
+      "7": {
+        "base_projlen": 13,
+        "collapse_excess": -88,
+        "collapse_ratio_milli": 188,
+        "power_identity_defect": 11,
+        "power_nonzero_terms": 10,
+        "power_projlen": 15
+      }
+    },
+    "power_sparse": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -16,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 5,
+        "power_nonzero_terms": 5,
+        "power_projlen": 3
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -28,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 6,
+        "power_nonzero_terms": 5,
+        "power_projlen": 5
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -40,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 7
+      },
+      "4": {
+        "base_projlen": 9,
+        "collapse_excess": -48,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 14,
+        "power_nonzero_terms": 13,
+        "power_projlen": 9
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -64,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 11
+      },
+      "6": {
+        "base_projlen": 12,
+        "collapse_excess": -76,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 10,
+        "power_nonzero_terms": 9,
+        "power_projlen": 13
+      },
+      "7": {
+        "base_projlen": 13,
+        "collapse_excess": -88,
+        "collapse_ratio_milli": 188,
+        "power_identity_defect": 11,
+        "power_nonzero_terms": 10,
+        "power_projlen": 15
+      }
+    },
+    "random": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -16,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 5,
+        "power_nonzero_terms": 5,
+        "power_projlen": 3
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -28,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 6,
+        "power_nonzero_terms": 5,
+        "power_projlen": 5
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -40,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 7
+      },
+      "4": {
+        "base_projlen": 9,
+        "collapse_excess": -48,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 14,
+        "power_nonzero_terms": 13,
+        "power_projlen": 9
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -64,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 11
+      },
+      "6": {
+        "base_projlen": 12,
+        "collapse_excess": -76,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 10,
+        "power_nonzero_terms": 9,
+        "power_projlen": 13
+      },
+      "7": {
+        "base_projlen": 13,
+        "collapse_excess": -88,
+        "collapse_ratio_milli": 188,
+        "power_identity_defect": 11,
+        "power_nonzero_terms": 10,
+        "power_projlen": 15
+      }
+    },
+    "two_level": {
+      "1": {
+        "base_projlen": 3,
+        "collapse_excess": -16,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 5,
+        "power_nonzero_terms": 5,
+        "power_projlen": 3
+      },
+      "2": {
+        "base_projlen": 5,
+        "collapse_excess": -28,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 6,
+        "power_nonzero_terms": 5,
+        "power_projlen": 5
+      },
+      "3": {
+        "base_projlen": 7,
+        "collapse_excess": -40,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 7
+      },
+      "4": {
+        "base_projlen": 9,
+        "collapse_excess": -48,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 14,
+        "power_nonzero_terms": 13,
+        "power_projlen": 9
+      },
+      "5": {
+        "base_projlen": 10,
+        "collapse_excess": -64,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 9,
+        "power_nonzero_terms": 8,
+        "power_projlen": 11
+      },
+      "6": {
+        "base_projlen": 12,
+        "collapse_excess": -76,
+        "collapse_ratio_milli": 200,
+        "power_identity_defect": 10,
+        "power_nonzero_terms": 9,
+        "power_projlen": 13
+      },
+      "7": {
+        "base_projlen": 13,
+        "collapse_excess": -88,
+        "collapse_ratio_milli": 188,
+        "power_identity_defect": 11,
+        "power_nonzero_terms": 10,
+        "power_projlen": 15
+      }
+    }
+  },
+  "elapsed_seconds": 755.03,
+  "frontier_loaded": 1114336,
+  "heuristic_bucket_counts": {
+    "base_projlen": 39,
+    "collapse_excess": 733,
+    "collapse_ratio": 833,
+    "power_identity": 322,
+    "power_projlen": 303,
+    "power_sparse": 681,
+    "random": 7,
+    "two_level": 490
+  },
+  "heuristic_population_sizes": {
+    "base_projlen": 93636,
+    "collapse_excess": 413350,
+    "collapse_ratio": 414108,
+    "power_identity": 451176,
+    "power_projlen": 360982,
+    "power_sparse": 435986,
+    "random": 21168,
+    "two_level": 391040
+  }
+}

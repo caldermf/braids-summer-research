@@ -34,7 +34,7 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
   --checkpoint "$CHECKPOINT" \
   --calibration "$CALIBRATION" \
   --output-dir "$OUTPUT_DIR" \
-  --n 4 --r 1 --p "${P:-5}" \
+  --n "${N:-4}" --r "${R:-1}" --p "${P:-5}" \
   --target-power "$TARGET_POWER" \
   --target-length "$TARGET_LENGTH" \
   --seed "$SEED" \
@@ -43,5 +43,4 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
   --nll-bin-width "${NLL_BIN_WIDTH:-0.25}" \
   --exploit-fraction "${EXPLOIT_FRACTION:-0.60}" \
   --inference-batch-size "${INFERENCE_BATCH_SIZE:-256}" \
-  --device cuda
-
+  --device "${DEVICE:-cuda}"

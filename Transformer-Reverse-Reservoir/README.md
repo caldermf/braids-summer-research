@@ -1,7 +1,7 @@
 # Transformer Reverse Reservoir
 
-This module uses the frozen p=5 exact-degree-v3 last-factor transformer as a probabilistic inverse
-oracle.  Starting from a projective target `rho(Delta^k)`, it reconstructs a positive Garside normal
+This module uses a frozen exact-degree-v3 last-factor transformer as a probabilistic inverse
+oracle. Starting from a projective target `rho(Delta^k)`, it reconstructs a positive Garside normal
 form from right to left.  A proposed final factor `s` changes the exact projective residual by
 
 ```text
@@ -13,8 +13,7 @@ unbounded average negative-log-likelihood bins. At each depth, 60% of the parent
 lowest-NLL bins and 40% is drawn round-robin across all retained bins. No probability or NLL cap is
 used. Exact `peyl` arithmetic verifies every completion and every residual collision.
 
-The existing transformer, `last_factor_confusion`, BraidZero, and GPU-Frontier-Reservoir code are not
-modified.
+For a p=7 search, train a p=7 last-factor model first. Do not use a p=5 checkpoint on p=7 residuals.
 
 ## Search semantics
 
@@ -45,6 +44,96 @@ export CALIBRATION="$PWD/last_factor_confusion/artifacts/calibration/p5_v3_seed1
 export KERNEL_DB="/nfs/roberts/project/pi_com36/as4843/burau-experiments/src/kernel_db.json"
 
 mkdir -p slurm_logs results/Transformer-Reverse-Reservoir
+```
+
+## 0. Train the p=7 last-factor oracle
+
+The reverse reservoir needs a p=7 oracle because it ranks predecessor factors from p=7 exact
+matrices. Generate the sharded p=7 dataset from the `last_factor_confusion` directory:
+
+```bash
+cd /nfs/roberts/project/pi_com36/as4843/braids-summer-research/last_factor_confusion
+mkdir -p slurm_logs artifacts/data artifacts/models artifacts/calibration artifacts/scored
+
+export PYTHON="$HOME/braids-torch-cu130-fresh/bin/python"
+export LFC_ROOT="$PWD"
+export AUTHOR_REPO="/nfs/roberts/project/pi_com36/as4843/burau-experiments"
+export CONFIG="$PWD/configs/p7_medium_dataset.json"
+export DATASET="$PWD/artifacts/data/p7_medium_v1"
+
+SPLIT=train sbatch --export=ALL --array=0-79 jobs/generate_shards.slurm
+SPLIT=validation sbatch --export=ALL --array=0-9 jobs/generate_shards.slurm
+SPLIT=calibration sbatch --export=ALL --array=0-19 jobs/generate_shards.slurm
+SPLIT=test sbatch --export=ALL --array=0-19 jobs/generate_shards.slurm
+SPLIT=extrapolation_test sbatch --export=ALL --array=0-9 jobs/generate_shards.slurm
+```
+
+After all five arrays finish cleanly, validate and write the manifest:
+
+```bash
+cd /nfs/roberts/project/pi_com36/as4843/braids-summer-research/last_factor_confusion
+export PYTHON="$HOME/braids-torch-cu130-fresh/bin/python"
+export PYTHONPATH="$PWD/src"
+export CONFIG="$PWD/configs/p7_medium_dataset.json"
+export DATASET="$PWD/artifacts/data/p7_medium_v1"
+
+"$PYTHON" -m last_factor_confusion.validate_dataset --config "$CONFIG" --dataset "$DATASET"
+```
+
+Train the exact-degree-v3 model:
+
+```bash
+cd /nfs/roberts/project/pi_com36/as4843/braids-summer-research/last_factor_confusion
+mkdir -p slurm_logs
+
+export PYTHON="$HOME/braids-torch-cu130-fresh/bin/python"
+export LFC_ROOT="$PWD"
+export DATASET="$PWD/artifacts/data/p7_medium_v1"
+export SEED=707
+export OUT="$PWD/artifacts/models/p7_medium_seed707"
+export EPOCHS=20
+export BATCH_SIZE=96
+
+sbatch --export=ALL jobs/train_v3.slurm
+```
+
+Score the calibration split and fit the temperature/control file:
+
+```bash
+cd /nfs/roberts/project/pi_com36/as4843/braids-summer-research/last_factor_confusion
+mkdir -p slurm_logs artifacts/scored artifacts/calibration
+
+export PYTHON="$HOME/braids-torch-cu130-fresh/bin/python"
+export LFC_ROOT="$PWD"
+export DATASET="$PWD/artifacts/data/p7_medium_v1"
+export SPLIT=calibration
+export CHECKPOINT="$PWD/artifacts/models/p7_medium_seed707/best_model.pt"
+export OUTPUT="$PWD/artifacts/scored/p7_medium_seed707_calibration.jsonl"
+
+sbatch --export=ALL jobs/score_sharded_v3.slurm
+```
+
+When scoring completes:
+
+```bash
+cd /nfs/roberts/project/pi_com36/as4843/braids-summer-research/last_factor_confusion
+
+export PYTHON="$HOME/braids-torch-cu130-fresh/bin/python"
+export LFC_ROOT="$PWD"
+export SCORED="$PWD/artifacts/scored/p7_medium_seed707_calibration.jsonl"
+export OUTPUT="$PWD/artifacts/calibration/p7_medium_seed707_hierarchical.json"
+
+sbatch --export=ALL jobs/calibrate_hierarchical.slurm
+```
+
+For an urgent first reverse-search smoke run, this uncalibrated temperature file is acceptable while
+the full calibration is still queued:
+
+```bash
+cd /nfs/roberts/project/pi_com36/as4843/braids-summer-research/last_factor_confusion
+mkdir -p artifacts/calibration
+printf '{"schema_version":0,"status":"manual_default","temperature":1.0}\n' \
+  > artifacts/calibration/p7_medium_seed707_temperature1.json
 ```
 
 ## 1. Arithmetic/model smoke test
@@ -137,3 +226,65 @@ Every completed depth writes an atomic `checkpoint.pt`; resubmitting the same ta
 group resumes from the next depth. Outputs include `config.json`, `progress.jsonl`, `candidates.jsonl`,
 `collisions.jsonl`, `summary.json`, and `status.json`.
 
+## 6. p=7 reverse target reservoir
+
+Run this only after `artifacts/models/p7_medium_seed707/best_model.pt` exists. Use the calibrated JSON
+if available; otherwise use the temporary temperature-1 file for a pilot.
+
+Identity target:
+
+```bash
+cd /nfs/roberts/project/pi_com36/as4843/braids-summer-research
+mkdir -p slurm_logs results/Transformer-Reverse-Reservoir
+
+export PYTHON="$HOME/braids-torch-cu130-fresh/bin/python"
+export REPO_ROOT="$PWD"
+export AUTHOR_REPO="/nfs/roberts/project/pi_com36/as4843/burau-experiments"
+export CHECKPOINT="$PWD/last_factor_confusion/artifacts/models/p7_medium_seed707/best_model.pt"
+export CALIBRATION="$PWD/last_factor_confusion/artifacts/calibration/p7_medium_seed707_hierarchical.json"
+export N=4
+export R=1
+export P=7
+export TARGET_POWER=0
+export TARGET_LENGTH=80
+export BASE_SEED=97000
+export RUN_GROUP="p7_reverse_identity_len80_seed707"
+export BUCKET_SIZE=3000
+export USE_BEST=50000
+export NLL_BIN_WIDTH=0.25
+export EXPLOIT_FRACTION=0.60
+export INFERENCE_BATCH_SIZE=256
+export DEVICE=cuda
+
+sbatch --array=1-16%4 --export=ALL \
+  Transformer-Reverse-Reservoir/jobs/run_reverse_array.slurm
+```
+
+Delta target:
+
+```bash
+cd /nfs/roberts/project/pi_com36/as4843/braids-summer-research
+mkdir -p slurm_logs results/Transformer-Reverse-Reservoir
+
+export PYTHON="$HOME/braids-torch-cu130-fresh/bin/python"
+export REPO_ROOT="$PWD"
+export AUTHOR_REPO="/nfs/roberts/project/pi_com36/as4843/burau-experiments"
+export CHECKPOINT="$PWD/last_factor_confusion/artifacts/models/p7_medium_seed707/best_model.pt"
+export CALIBRATION="$PWD/last_factor_confusion/artifacts/calibration/p7_medium_seed707_hierarchical.json"
+export N=4
+export R=1
+export P=7
+export TARGET_POWER=1
+export TARGET_LENGTH=80
+export BASE_SEED=98000
+export RUN_GROUP="p7_reverse_delta1_len80_seed707"
+export BUCKET_SIZE=3000
+export USE_BEST=50000
+export NLL_BIN_WIDTH=0.25
+export EXPLOIT_FRACTION=0.60
+export INFERENCE_BATCH_SIZE=256
+export DEVICE=cuda
+
+sbatch --array=1-16%4 --export=ALL \
+  Transformer-Reverse-Reservoir/jobs/run_reverse_array.slurm
+```

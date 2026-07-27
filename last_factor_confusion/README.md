@@ -54,12 +54,16 @@ PYTHONPATH=src:.. python -m last_factor_confusion.generate \
 Terminology: all outputs use `projlen`; the stored value is `degree - valuation`, so a monomial
 projective matrix has `projlen = 0`.
 
-## V2 medium dataset
+## Medium sharded datasets
 
 `configs/p5_medium_dataset.json` defines fixed train, validation, calibration, test, and
 length-extrapolation splits. Each trajectory contributes stratified random prefix lengths. Data is
 stored in atomic `.npz` shards; `validate_dataset` creates `manifest.json` only after every expected
 shard, checksum, shape, and count passes.
+
+`configs/p7_medium_dataset.json` is the corresponding p=7 dataset for the transformer-guided reverse
+reservoir. It uses the same shard structure, with in-range lengths 5 to 180 and extrapolation lengths
+181 to 260.
 
 On Bouchet, submit the split arrays from this directory (250 trajectories per shard):
 

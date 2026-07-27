@@ -1,0 +1,27 @@
+{
+  "bucket_size": 2000,
+  "candidate_variable": "x",
+  "exact_check": "rho(x^power) scalar",
+  "heuristics": [
+    "power_projlen",
+    "two_level",
+    "power_identity",
+    "power_sparse",
+    "base_projlen",
+    "collapse_ratio",
+    "collapse_excess",
+    "random"
+  ],
+  "mode": "power_reservoir_v2_multi_heuristic",
+  "score_notes": {
+    "base_projlen": "(length, projlen(rho(x)))",
+    "collapse_excess": "power_projlen - power * base_projlen",
+    "collapse_ratio": "power_projlen / max(1, power * base_projlen)",
+    "power_identity": "(length, binned identity_defect(rho(x)^power))",
+    "power_projlen": "(length, projlen(rho(x)^power))",
+    "power_sparse": "(length, binned power_projlen, binned nonzero_terms(rho(x)^power))",
+    "random": "(length, 0)",
+    "two_level": "(length, binned projlen(rho(x)^power), binned projlen(rho(x)))"
+  },
+  "use_best_per_heuristic": 10000
+}

@@ -1,0 +1,358 @@
+{
+  "base_projlen": {
+    "best_keys": [
+      {
+        "key": [
+          30,
+          1
+        ],
+        "seen": 72,
+        "states": 72
+      },
+      {
+        "key": [
+          30,
+          3
+        ],
+        "seen": 984,
+        "states": 984
+      },
+      {
+        "key": [
+          30,
+          4
+        ],
+        "seen": 1552,
+        "states": 1552
+      },
+      {
+        "key": [
+          30,
+          5
+        ],
+        "seen": 11053,
+        "states": 2000
+      },
+      {
+        "key": [
+          30,
+          6
+        ],
+        "seen": 14797,
+        "states": 2000
+      }
+    ],
+    "buckets": 74,
+    "states": 44193
+  },
+  "collapse_excess": {
+    "best_keys": [
+      {
+        "key": [
+          30,
+          -104,
+          25
+        ],
+        "seen": 1,
+        "states": 1
+      },
+      {
+        "key": [
+          30,
+          -96,
+          33
+        ],
+        "seen": 2,
+        "states": 2
+      },
+      {
+        "key": [
+          30,
+          -88,
+          41
+        ],
+        "seen": 2,
+        "states": 2
+      },
+      {
+        "key": [
+          30,
+          -88,
+          45
+        ],
+        "seen": 2,
+        "states": 2
+      },
+      {
+        "key": [
+          30,
+          -80,
+          49
+        ],
+        "seen": 2,
+        "states": 2
+      }
+    ],
+    "buckets": 345,
+    "states": 97968
+  },
+  "collapse_ratio": {
+    "best_keys": [
+      {
+        "key": [
+          30,
+          25,
+          1
+        ],
+        "seen": 4311,
+        "states": 2000
+      },
+      {
+        "key": [
+          30,
+          50,
+          1
+        ],
+        "seen": 807,
+        "states": 807
+      },
+      {
+        "key": [
+          30,
+          100,
+          1
+        ],
+        "seen": 1414,
+        "states": 1414
+      },
+      {
+        "key": [
+          30,
+          100,
+          3
+        ],
+        "seen": 6,
+        "states": 6
+      },
+      {
+        "key": [
+          30,
+          125,
+          3
+        ],
+        "seen": 68,
+        "states": 68
+      }
+    ],
+    "buckets": 488,
+    "states": 128348
+  },
+  "power_identity": {
+    "best_keys": [
+      {
+        "key": [
+          30,
+          0
+        ],
+        "seen": 2133,
+        "states": 2000
+      },
+      {
+        "key": [
+          30,
+          4
+        ],
+        "seen": 15710,
+        "states": 2000
+      },
+      {
+        "key": [
+          30,
+          8
+        ],
+        "seen": 19146,
+        "states": 2000
+      },
+      {
+        "key": [
+          30,
+          12
+        ],
+        "seen": 24916,
+        "states": 2000
+      },
+      {
+        "key": [
+          30,
+          16
+        ],
+        "seen": 21565,
+        "states": 2000
+      }
+    ],
+    "buckets": 89,
+    "states": 85533
+  },
+  "power_projlen": {
+    "best_keys": [
+      {
+        "key": [
+          30,
+          1
+        ],
+        "seen": 6859,
+        "states": 2000
+      },
+      {
+        "key": [
+          30,
+          3
+        ],
+        "seen": 491,
+        "states": 491
+      },
+      {
+        "key": [
+          30,
+          4
+        ],
+        "seen": 323,
+        "states": 323
+      },
+      {
+        "key": [
+          30,
+          5
+        ],
+        "seen": 13063,
+        "states": 2000
+      },
+      {
+        "key": [
+          30,
+          6
+        ],
+        "seen": 792,
+        "states": 792
+      }
+    ],
+    "buckets": 148,
+    "states": 68884
+  },
+  "power_sparse": {
+    "best_keys": [
+      {
+        "key": [
+          30,
+          1,
+          0
+        ],
+        "seen": 6859,
+        "states": 2000
+      },
+      {
+        "key": [
+          30,
+          3,
+          0
+        ],
+        "seen": 491,
+        "states": 491
+      },
+      {
+        "key": [
+          30,
+          4,
+          0
+        ],
+        "seen": 323,
+        "states": 323
+      },
+      {
+        "key": [
+          30,
+          5,
+          0
+        ],
+        "seen": 13063,
+        "states": 2000
+      },
+      {
+        "key": [
+          30,
+          6,
+          0
+        ],
+        "seen": 792,
+        "states": 792
+      }
+    ],
+    "buckets": 296,
+    "states": 76322
+  },
+  "random": {
+    "best_keys": [
+      {
+        "key": [
+          30,
+          0
+        ],
+        "seen": 274677,
+        "states": 2000
+      }
+    ],
+    "buckets": 1,
+    "states": 2000
+  },
+  "two_level": {
+    "best_keys": [
+      {
+        "key": [
+          30,
+          1,
+          0
+        ],
+        "seen": 327,
+        "states": 327
+      },
+      {
+        "key": [
+          30,
+          1,
+          4
+        ],
+        "seen": 2095,
+        "states": 2000
+      },
+      {
+        "key": [
+          30,
+          1,
+          8
+        ],
+        "seen": 155,
+        "states": 155
+      },
+      {
+        "key": [
+          30,
+          1,
+          12
+        ],
+        "seen": 1966,
+        "states": 1966
+      },
+      {
+        "key": [
+          30,
+          1,
+          16
+        ],
+        "seen": 2316,
+        "states": 2000
+      }
+    ],
+    "buckets": 358,
+    "states": 102900
+  }
+}
