@@ -51,6 +51,8 @@ POWER="${POWER:-0}"
 BASE_SEED="${BASE_SEED:-81000}"
 SEED="${SEED:-$((BASE_SEED + TASK_ZERO))}"
 GLOBAL_DB="${GLOBAL_DB:-$REPO_ROOT/results/BraidExperienceDB/cross_prime_projlen.sqlite}"
+AUTO_MERGE="${AUTO_MERGE:-0}"
+MERGE_LOCK="${MERGE_LOCK:-$REPO_ROOT/results/BraidExperienceDB/cross_prime_projlen.merge.lock}"
 SEED_MAX_PROJLEN="${SEED_MAX_PROJLEN:-16}"
 SEED_LIMIT="${SEED_LIMIT:-0}"
 SEED_SHARD_COUNT="${SEED_SHARD_COUNT:-${SLURM_ARRAY_TASK_COUNT:-1}}"
@@ -106,3 +108,17 @@ echo "OUTPUT_DIR=$OUTPUT_DIR"
   --target-length "$TARGET_LENGTH" \
   --bucket-size "$BUCKET_SIZE" \
   --use-best "$USE_BEST"
+
+if [[ "$AUTO_MERGE" == "1" || "$AUTO_MERGE" == "true" || "$AUTO_MERGE" == "TRUE" ]]; then
+  LOCAL_DB="$OUTPUT_DIR/local_run.sqlite"
+  if [[ -f "$LOCAL_DB" ]]; then
+    echo "Auto-merging $LOCAL_DB into $GLOBAL_DB"
+    mkdir -p "$(dirname "$MERGE_LOCK")"
+    flock "$MERGE_LOCK" "$PYTHON_PATH" -u -m braid_experience_db.cli merge-local-run \
+      --global-db "$GLOBAL_DB" \
+      --local-db "$LOCAL_DB" \
+      --source "$OUTPUT_DIR"
+  else
+    echo "Local DB missing, skipping auto-merge: $LOCAL_DB" >&2
+  fi
+fi
