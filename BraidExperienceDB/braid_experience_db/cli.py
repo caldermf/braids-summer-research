@@ -1595,6 +1595,56 @@ def summarize_projlen_db(path: Path, n: Optional[int], r: Optional[int]) -> Dict
     return out
 
 
+def merge_local_run_db(*, global_db: Path, local_db: Path, force_source: Optional[str] = None) -> Dict[str, Any]:
+    conn = sqlite3.connect(str(global_db))
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA synchronous=NORMAL")
+    conn.execute("PRAGMA busy_timeout=60000")
+    create_projlen_schema(conn)
+    local_db = Path(local_db).resolve()
+    conn.execute("ATTACH DATABASE ? AS local", (str(local_db),))
+    source = force_source or str(local_db)
+    before = conn.total_changes
+    conn.execute(
+        """
+        INSERT OR IGNORE INTO braids
+        (braid_digest, n, infimum, garside_power, length, factor_ids_json,
+         factor_ids_text, first_seen_at, source_db)
+        SELECT braid_digest, n, 0, 0, length, factor_ids_json,
+               replace(replace(replace(factor_ids_json, '[', ''), ']', ''), ' ', ''),
+               ?, ?
+        FROM local.evaluated_braids
+        """,
+        (utc_now(), source),
+    )
+    braids_inserted = conn.total_changes - before
+    before = conn.total_changes
+    conn.execute(
+        """
+        INSERT OR REPLACE INTO projlen_images
+        (braid_digest, p, n, r, representation, projlen, identity_defect,
+         scalar_identity, verifier_version, source, observed_at)
+        SELECT braid_digest, p, n, r,
+               'JonesSummand(n=' || n || ',r=' || r || ')',
+               projlen, identity_defect, scalar_identity,
+               verifier_version, ?, evaluated_at
+        FROM local.evaluated_braids
+        """,
+        (source,),
+    )
+    images_inserted = conn.total_changes - before
+    conn.commit()
+    conn.execute("DETACH DATABASE local")
+    conn.close()
+    return {
+        "status": "clean",
+        "global_db": str(global_db),
+        "local_db": str(local_db),
+        "braids_inserted": braids_inserted,
+        "projlen_images_merged": images_inserted,
+    }
+
+
 def cmd_import_root(args: argparse.Namespace) -> None:
     roots = [Path(item) for item in args.results_root]
     manager = ImportManager(
@@ -1685,6 +1735,20 @@ def cmd_summarize_projlen_db(args: argparse.Namespace) -> None:
     print(json.dumps(summarize_projlen_db(Path(args.db), args.n, args.r), indent=2, sort_keys=True))
 
 
+def cmd_merge_local_run(args: argparse.Namespace) -> None:
+    print(
+        json.dumps(
+            merge_local_run_db(
+                global_db=Path(args.global_db),
+                local_db=Path(args.local_db),
+                force_source=args.source,
+            ),
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Build and query per-prime braid experience databases")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1750,6 +1814,12 @@ def build_parser() -> argparse.ArgumentParser:
     summarize_projlen.add_argument("--n", type=int)
     summarize_projlen.add_argument("--r", type=int)
     summarize_projlen.set_defaults(func=cmd_summarize_projlen_db)
+
+    merge_local = sub.add_parser("merge-local-run", help="Merge a cumulative reservoir local DB into the cross-prime DB")
+    merge_local.add_argument("--global-db", required=True)
+    merge_local.add_argument("--local-db", required=True)
+    merge_local.add_argument("--source")
+    merge_local.set_defaults(func=cmd_merge_local_run)
     return parser
 
 
