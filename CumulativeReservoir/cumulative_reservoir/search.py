@@ -262,7 +262,19 @@ def insert_candidate(
     )
 
 
-def load_seed_rows(global_db: Path, *, p: int, n: int, r: int, max_projlen: int, limit: int) -> list[tuple[str, tuple[int, ...], int]]:
+def load_seed_rows(
+    global_db: Path,
+    *,
+    p: int,
+    n: int,
+    r: int,
+    seed_length: int,
+    min_projlen: int,
+    max_projlen: int,
+    limit: int,
+    order: str,
+    rng: random.Random,
+) -> list[tuple[str, tuple[int, ...], int]]:
     conn = sqlite3.connect(str(global_db))
     rows = conn.execute(
         """
@@ -272,14 +284,23 @@ def load_seed_rows(global_db: Path, *, p: int, n: int, r: int, max_projlen: int,
         WHERE i.p=? AND i.n=? AND i.r=?
           AND i.verifier_version='braidzero-exact-peyl-v1'
           AND i.source='computed-exact'
-          AND b.length=8
+          AND b.length=?
+          AND i.projlen >= ?
           AND i.projlen <= ?
         ORDER BY i.projlen, b.braid_digest
         """,
-        (int(p), int(n), int(r), int(max_projlen)),
+        (int(p), int(n), int(r), int(seed_length), int(min_projlen), int(max_projlen)),
     ).fetchall()
     conn.close()
     out = [(row[0], tuple(int(x) for x in json.loads(row[1])), int(row[2])) for row in rows]
+    if order == "random":
+        rng.shuffle(out)
+    elif order == "hash":
+        out.sort(key=lambda row: row[0])
+    elif order == "projlen":
+        pass
+    else:
+        raise ValueError(f"unknown seed order {order}")
     return out[: int(limit)] if limit else out
 
 
@@ -335,8 +356,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             p=args.p,
             n=args.n,
             r=args.r,
+            seed_length=args.seed_length,
+            min_projlen=args.seed_min_projlen,
             max_projlen=args.seed_max_projlen,
             limit=args.seed_limit,
+            order=args.seed_order,
+            rng=rng,
         )
         assigned = [
             item for idx, item in enumerate(seeds)
@@ -395,6 +420,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "phase": "length_done",
             "mode": args.mode,
             "length": current_length,
+            "seed_length": args.seed_length,
+            "seed_min_projlen": args.seed_min_projlen,
+            "seed_max_projlen": args.seed_max_projlen,
+            "seed_order": args.seed_order,
             "parents": len(parents),
             "length_evaluated": length_evaluated,
             "total_evaluated": total_evaluated,
@@ -414,6 +443,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "n": args.n,
         "r": args.r,
         "seed": args.seed,
+        "seed_length": args.seed_length,
+        "seed_min_projlen": args.seed_min_projlen,
+        "seed_max_projlen": args.seed_max_projlen,
+        "seed_order": args.seed_order,
         "seed_shard_index": args.seed_shard_index,
         "seed_shard_count": args.seed_shard_count,
         "target_length": args.target_length,
@@ -440,8 +473,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--power", type=int, default=0)
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--seed-length", type=int, default=8)
+    parser.add_argument("--seed-min-projlen", type=int, default=0)
     parser.add_argument("--seed-max-projlen", type=int, default=16)
     parser.add_argument("--seed-limit", type=int, default=0)
+    parser.add_argument("--seed-order", choices=["projlen", "hash", "random"], default="projlen")
     parser.add_argument("--seed-shard-count", type=int, default=1)
     parser.add_argument("--seed-shard-index", type=int, default=0)
     parser.add_argument("--target-length", type=int, default=40)

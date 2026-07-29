@@ -54,7 +54,10 @@ GLOBAL_DB="${GLOBAL_DB:-$REPO_ROOT/results/BraidExperienceDB/cross_prime_projlen
 AUTO_MERGE="${AUTO_MERGE:-0}"
 MERGE_LOCK="${MERGE_LOCK:-$REPO_ROOT/results/BraidExperienceDB/cross_prime_projlen.merge.lock}"
 SEED_MAX_PROJLEN="${SEED_MAX_PROJLEN:-16}"
+SEED_MIN_PROJLEN="${SEED_MIN_PROJLEN:-0}"
+SEED_LENGTH="${SEED_LENGTH:-8}"
 SEED_LIMIT="${SEED_LIMIT:-0}"
+SEED_ORDER="${SEED_ORDER:-projlen}"
 SEED_SHARD_COUNT="${SEED_SHARD_COUNT:-${SLURM_ARRAY_TASK_COUNT:-1}}"
 SEED_SHARD_INDEX="${SEED_SHARD_INDEX:-$((TASK_ZERO % SEED_SHARD_COUNT))}"
 TARGET_LENGTH="${TARGET_LENGTH:-40}"
@@ -89,6 +92,7 @@ fi
 echo "Using AUTHOR_REPO=$AUTHOR_REPO"
 echo "Using GLOBAL_DB=$GLOBAL_DB"
 echo "MODE=$MODE P=$P N=$N R=$R SEED=$SEED SEED_SHARD_INDEX=$SEED_SHARD_INDEX/$SEED_SHARD_COUNT"
+echo "SEED_LENGTH=$SEED_LENGTH SEED_MIN_PROJLEN=$SEED_MIN_PROJLEN SEED_MAX_PROJLEN=$SEED_MAX_PROJLEN SEED_ORDER=$SEED_ORDER SEED_LIMIT=$SEED_LIMIT"
 echo "OUTPUT_DIR=$OUTPUT_DIR"
 
 "$PYTHON_PATH" -u -m cumulative_reservoir.search \
@@ -101,8 +105,11 @@ echo "OUTPUT_DIR=$OUTPUT_DIR"
   --p "$P" \
   --power "$POWER" \
   --seed "$SEED" \
+  --seed-length "$SEED_LENGTH" \
+  --seed-min-projlen "$SEED_MIN_PROJLEN" \
   --seed-max-projlen "$SEED_MAX_PROJLEN" \
   --seed-limit "$SEED_LIMIT" \
+  --seed-order "$SEED_ORDER" \
   --seed-shard-count "$SEED_SHARD_COUNT" \
   --seed-shard-index "$SEED_SHARD_INDEX" \
   --target-length "$TARGET_LENGTH" \
