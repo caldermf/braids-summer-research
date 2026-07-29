@@ -1597,7 +1597,9 @@ def summarize_projlen_db(path: Path, n: Optional[int], r: Optional[int]) -> Dict
 
 def merge_local_run_db(*, global_db: Path, local_db: Path, force_source: Optional[str] = None) -> Dict[str, Any]:
     conn = sqlite3.connect(str(global_db))
-    conn.execute("PRAGMA journal_mode=WAL")
+    # Bouchet stores these DBs on NFS. WAL can hang or fail with locking
+    # protocol errors there, so keep the merge in rollback-journal mode.
+    conn.execute("PRAGMA journal_mode=DELETE")
     conn.execute("PRAGMA synchronous=NORMAL")
     conn.execute("PRAGMA busy_timeout=60000")
     create_projlen_schema(conn)
