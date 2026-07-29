@@ -71,7 +71,7 @@ OUTPUT_DIR="${OUTPUT_DIR:-$REPO_ROOT/results/CumulativeReservoir/$RUN_NAME}"
 cd "$REPO_ROOT"
 mkdir -p slurm_logs "$OUTPUT_DIR"
 export PYTHONUNBUFFERED=1
-export PYTHONPATH="$REPO_ROOT/CumulativeReservoir:$REPO_ROOT/BraidZero:$AUTHOR_REPO:${PYTHONPATH:-}"
+export PYTHONPATH="$REPO_ROOT/CumulativeReservoir:$REPO_ROOT/BraidZero:$REPO_ROOT/BraidExperienceDB:$AUTHOR_REPO:${PYTHONPATH:-}"
 export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
 export OPENBLAS_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
 export MKL_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
