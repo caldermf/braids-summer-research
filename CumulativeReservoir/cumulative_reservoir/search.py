@@ -383,9 +383,35 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     candidates_path = output_dir / "candidates.jsonl"
     total_evaluated = 0
     total_candidates = 0
+    stop_status = "clean"
+    stop_reason = ""
 
     while current_length < int(args.target_length):
         parents = reservoir.select(current_length, args.use_best)
+        if not parents:
+            stop_status = "empty_reservoir"
+            stop_reason = f"no live parents available at length {current_length}"
+            row = {
+                "phase": "stopped",
+                "status": stop_status,
+                "reason": stop_reason,
+                "mode": args.mode,
+                "length": current_length,
+                "seed_length": args.seed_length,
+                "seed_min_projlen": args.seed_min_projlen,
+                "seed_max_projlen": args.seed_max_projlen,
+                "seed_order": args.seed_order,
+                "parents": 0,
+                "length_evaluated": 0,
+                "total_evaluated": total_evaluated,
+                "total_candidates": total_candidates,
+                "elapsed_seconds": round(time.time() - start, 2),
+                **reservoir.stats(),
+            }
+            with progress_path.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(row, sort_keys=True) + "\n")
+            print(json.dumps(row, sort_keys=True), flush=True)
+            break
         next_length = current_length + 1
         next_reservoir = Reservoir(bucket_size=args.bucket_size, rng=rng)
         length_evaluated = 0
@@ -436,7 +462,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         print(json.dumps(row, sort_keys=True), flush=True)
 
     summary = {
-        "status": "clean",
+        "status": stop_status,
+        "reason": stop_reason,
         "method": "cumulative_local_db_reservoir",
         "mode": args.mode,
         "prime": args.p,
