@@ -37,13 +37,27 @@ INPUT_GLOB="$PWD/results/CumulativeReservoir/p7_gen200*/*/local_run.sqlite" \
 
 ## Query Coverage
 
+The default coverage query is lightweight: it reports row counts per length. Exact distinct counts can be very expensive on large lakes.
+
 ```bash
 cd /nfs/roberts/project/pi_com36/as4843/braids-summer-research
 
 PYTHONPATH="$PWD/BraidLake" \
   /home/as4843/braids-torch/bin/python -m braid_lake.query_lake coverage \
   --lake-root results/BraidLake \
-  --p 7 --n 4 --r 1
+  --p 7 --n 4 --r 1 \
+  --memory-limit 3GB --threads 1
+```
+
+For a cheap estimate of distinct braids per length:
+
+```bash
+PYTHONPATH="$PWD/BraidLake" \
+  /home/as4843/braids-torch/bin/python -m braid_lake.query_lake coverage \
+  --lake-root results/BraidLake \
+  --p 7 --n 4 --r 1 \
+  --distinct approx \
+  --memory-limit 3GB --threads 1
 ```
 
 ## Sample Parents Across All Lengths

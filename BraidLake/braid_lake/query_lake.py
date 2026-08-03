@@ -29,6 +29,17 @@ def read_parquet_expr(args: argparse.Namespace) -> str:
     return f"read_parquet({sql_quote(parquet_glob(Path(args.lake_root), args.p, args.n, args.r))}, union_by_name=true)"
 
 
+def connect_duckdb(args: argparse.Namespace):
+    duckdb = import_duckdb()
+    conn = duckdb.connect(database=":memory:")
+    temp_dir = Path(args.temp_dir)
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    conn.execute(f"SET memory_limit={sql_quote(args.memory_limit)}")
+    conn.execute(f"SET temp_directory={sql_quote(str(temp_dir))}")
+    conn.execute(f"SET threads={int(args.threads)}")
+    return conn
+
+
 def where_clause(args: argparse.Namespace) -> str:
     clauses = []
     if args.p is not None:
@@ -61,15 +72,24 @@ def print_rows(rows: list[dict[str, Any]], fmt: str) -> None:
 
 
 def cmd_coverage(args: argparse.Namespace) -> None:
-    duckdb = import_duckdb()
-    conn = duckdb.connect(database=":memory:")
+    conn = connect_duckdb(args)
     expr = read_parquet_expr(args)
     where = where_clause(args)
-    count_expr = "COUNT(*)" if args.observations else "COUNT(DISTINCT braid_digest)"
+    distinct_mode = args.distinct
+    if args.observations:
+        distinct_mode = "none"
+    if distinct_mode == "exact":
+        braid_count_expr = "COUNT(DISTINCT braid_digest) AS distinct_braids"
+    elif distinct_mode == "approx":
+        braid_count_expr = "approx_count_distinct(braid_digest) AS approx_distinct_braids"
+    elif distinct_mode == "none":
+        braid_count_expr = "COUNT(*) AS observations"
+    else:
+        raise ValueError(f"unknown distinct mode {distinct_mode}")
     query = f"""
         SELECT
           length,
-          {count_expr} AS braids,
+          {braid_count_expr},
           COUNT(*) AS rows,
           MIN(projlen) AS min_projlen,
           MAX(projlen) AS max_projlen
@@ -83,8 +103,7 @@ def cmd_coverage(args: argparse.Namespace) -> None:
 
 
 def cmd_best(args: argparse.Namespace) -> None:
-    duckdb = import_duckdb()
-    conn = duckdb.connect(database=":memory:")
+    conn = connect_duckdb(args)
     expr = read_parquet_expr(args)
     where = where_clause(args)
     query = f"""
@@ -109,14 +128,20 @@ def cmd_best(args: argparse.Namespace) -> None:
 
 
 def cmd_summary(args: argparse.Namespace) -> None:
-    duckdb = import_duckdb()
-    conn = duckdb.connect(database=":memory:")
+    conn = connect_duckdb(args)
     expr = read_parquet_expr(args)
     where = where_clause(args)
+    distinct_expr = (
+        "COUNT(DISTINCT braid_digest)"
+        if args.distinct == "exact"
+        else "approx_count_distinct(braid_digest)"
+        if args.distinct == "approx"
+        else "NULL"
+    )
     query = f"""
         SELECT
           COUNT(*) AS rows,
-          COUNT(DISTINCT braid_digest) AS distinct_braids,
+          {distinct_expr} AS braid_count,
           MIN(length) AS min_length,
           MAX(length) AS max_length,
           MIN(projlen) AS min_projlen,
@@ -129,8 +154,7 @@ def cmd_summary(args: argparse.Namespace) -> None:
 
 
 def cmd_candidates(args: argparse.Namespace) -> None:
-    duckdb = import_duckdb()
-    conn = duckdb.connect(database=":memory:")
+    conn = connect_duckdb(args)
     expr = read_parquet_expr(args)
     where = where_clause(args)
     query = f"""
@@ -169,9 +193,18 @@ def build_parser() -> argparse.ArgumentParser:
     common.add_argument("--mode")
     common.add_argument("--source-like")
     common.add_argument("--format", choices=["json", "tsv"], default="tsv")
+    common.add_argument("--memory-limit", default="3GB")
+    common.add_argument("--threads", type=int, default=1)
+    common.add_argument("--temp-dir", default="results/BraidLake/tmp")
 
     coverage = sub.add_parser("coverage", parents=[common])
-    coverage.add_argument("--observations", action="store_true", help="Count rows instead of distinct braid digests")
+    coverage.add_argument(
+        "--distinct",
+        choices=["none", "approx", "exact"],
+        default="none",
+        help="none is safest; exact can be very expensive on huge lakes",
+    )
+    coverage.add_argument("--observations", action="store_true", help="Compatibility alias for --distinct none")
     coverage.set_defaults(func=cmd_coverage)
 
     best = sub.add_parser("best", parents=[common])
@@ -179,6 +212,12 @@ def build_parser() -> argparse.ArgumentParser:
     best.set_defaults(func=cmd_best)
 
     summary = sub.add_parser("summary", parents=[common])
+    summary.add_argument(
+        "--distinct",
+        choices=["none", "approx", "exact"],
+        default="none",
+        help="none is safest; exact can be very expensive on huge lakes",
+    )
     summary.set_defaults(func=cmd_summary)
 
     candidates = sub.add_parser("candidates", parents=[common])
