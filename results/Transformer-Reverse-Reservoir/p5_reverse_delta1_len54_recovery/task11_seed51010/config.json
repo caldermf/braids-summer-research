@@ -1,0 +1,32 @@
+{
+  "author_repo": "/nfs/roberts/project/pi_com36/as4843/burau-experiments",
+  "bucket_size": 3000,
+  "calibration": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/last_factor_confusion/artifacts/calibration/p5_v3_seed101_hierarchical.json",
+  "calibration_checksum": "f1498cc9083362e29e978a56305df3d4babc7ff86716c10840b19b696a5e2ae9",
+  "checkpoint": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/last_factor_confusion/artifacts/models/p5_v3_seed101/best_model.pt",
+  "checkpoint_checksum": "3a076bec23e793e8efd6163529857edd1454da2665d29d8ca3dc296597bd0588",
+  "detect_collisions": true,
+  "device": "cuda",
+  "exploit_fraction": 0.6,
+  "inference_batch_size": 256,
+  "method": "transformer_reverse_likelihood_reservoir_v1",
+  "n": 4,
+  "nll_bin_width": 0.25,
+  "output_dir": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/Transformer-Reverse-Reservoir/p5_reverse_delta1_len54_recovery/task11_seed51010",
+  "p": 5,
+  "r": 1,
+  "representation": "two-rowed (3,1) of B_4 over F_5",
+  "schema_version": 1,
+  "seed": 51010,
+  "t_values": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "target_label": "delta",
+  "target_length": 54,
+  "target_power": 1,
+  "use_best": 50000,
+  "verifier_version": "transformer-reverse-reservoir exact-projective-peyl-v1"
+}

@@ -1,0 +1,9 @@
+{
+  "plot_count": 4,
+  "plots": [
+    "results/last_factor_confusion_plots/training/p5_sparse_seed101/training_curves.png",
+    "results/last_factor_confusion_plots/training/p5_sparse_seed101/test_metrics.png",
+    "results/last_factor_confusion_plots/training/p5_v3_pilot_seed101/training_curves.png",
+    "results/last_factor_confusion_plots/training/p5_v3_seed101/training_curves.png"
+  ]
+}

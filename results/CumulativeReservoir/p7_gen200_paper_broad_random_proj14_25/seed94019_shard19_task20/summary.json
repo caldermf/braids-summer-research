@@ -1,0 +1,21 @@
+{
+  "elapsed_seconds": 65306.25,
+  "local_db": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/CumulativeReservoir/p7_gen200_paper_broad_random_proj14_25/seed94019_shard19_task20/local_run.sqlite",
+  "method": "cumulative_local_db_reservoir",
+  "mode": "paper",
+  "n": 4,
+  "prime": 7,
+  "r": 1,
+  "seed": 94019,
+  "seed_length": 8,
+  "seed_max_projlen": 25,
+  "seed_min_projlen": 14,
+  "seed_order": "random",
+  "seed_shard_count": 32,
+  "seed_shard_index": 19,
+  "status": "clean",
+  "target_length": 200,
+  "total_candidates": 0,
+  "total_evaluated": 80015292,
+  "verifier_version": "braidzero-exact-peyl-v1"
+}

@@ -1,0 +1,2 @@
+epoch,train_brier,train_correct,train_cross_entropy,train_loss
+1,0.05494531334770372,0.9591125,0.1351832460423233,0.1402516440000036

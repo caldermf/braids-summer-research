@@ -15,3 +15,10 @@ __pycache__/
 iterations.jsonl
 results/**/iterations.json
 results/**/iterations.jsonl
+
+# Large generated binary artifacts
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.pt
+*.pth

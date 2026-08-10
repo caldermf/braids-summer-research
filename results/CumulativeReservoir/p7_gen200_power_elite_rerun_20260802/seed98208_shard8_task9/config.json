@@ -1,0 +1,23 @@
+{
+  "author_repo": "/nfs/roberts/project/pi_com36/as4843/braids-project",
+  "bucket_size": 10000,
+  "global_db": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/BraidExperienceDB/cross_prime_projlen.sqlite",
+  "mode": "power_v2",
+  "n": 4,
+  "output_dir": "/nfs/roberts/project/pi_com36/as4843/braids-summer-research/results/CumulativeReservoir/p7_gen200_power_elite_rerun_20260802/seed98208_shard8_task9",
+  "p": 7,
+  "power": 7,
+  "r": 1,
+  "representation": "two-rowed (3,1) of B_4 over F_7",
+  "seed": 98208,
+  "seed_length": 8,
+  "seed_limit": 0,
+  "seed_max_projlen": 16,
+  "seed_min_projlen": 14,
+  "seed_order": "random",
+  "seed_shard_count": 16,
+  "seed_shard_index": 8,
+  "target_length": 200,
+  "use_best": 75000,
+  "verifier_version": "braidzero-exact-peyl-v1"
+}
